@@ -24,6 +24,6 @@ public class Teatro {
     @JoinColumn(name = "admin_id", referencedColumnName = "id")
     private Administrador administrador;
 
-    @OneToMany(mappedBy = "regras_preco", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<RegraPreco> itens = new ArrayList<>();
+    @OneToMany(mappedBy = "teatro", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RegraPreco> regras = new ArrayList<>();
 }

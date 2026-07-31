@@ -21,7 +21,7 @@ public class Administrador {
     private String nome;
     private String senha;
 
-    @OneToOne(mappedBy="teatro", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy="administrador", cascade = CascadeType.ALL, orphanRemoval = true)
     private Teatro teatro;
 
 
