@@ -9,4 +9,5 @@ import org.mapstruct.factory.Mappers;
 public interface AdministradorMapper {
     AdministradorMapper INSTANCE = Mappers.getMapper(AdministradorMapper.class);
     AdministradorDto administradorDtoToAdministrador(Administrador administrador);
+    Administrador administradorToAdministradorDto(AdministradorDto administradorDto);
 }
