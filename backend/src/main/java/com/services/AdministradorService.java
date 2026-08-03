@@ -1,14 +1,13 @@
 package com.services;
 
 
+import com.database.repository.projections.AdministradorProjection;
 import com.dto.AdministradorDto;
-import com.mapper.AdministradorMapper;
-import com.model.Administrador;
-import com.repository.AdministradorDao;
+import com.exception.NotFoundException;
+import com.database.model.Administrador;
+import com.database.repository.AdministradorDao;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -17,22 +16,23 @@ public class AdministradorService {
     private final AdministradorDao administradorDao;
 
     public void CadastrarAdministrador(AdministradorDto administradorDto) {
-        Administrador administrador = AdministradorMapper.INSTANCE.administradorToAdministradorDto(administradorDto);
+        Administrador administrador = Administrador.builder()
+                .nome(administradorDto.nome())
+                .email(administradorDto.email())
+                .senha(administradorDto.senha())
+                .build();
         administradorDao.save(administrador);
     }
 
-    public AdministradorDto getAdministradorById(Long id) {
-        Administrador administrador = administradorDao.findById(id).orElseThrow();
-        return AdministradorMapper.INSTANCE.administradorDtoToAdministrador(administrador);
+    public AdministradorProjection getAdministradorByEmail(String email) throws NotFoundException {
+        return administradorDao.getAdministradorByEmail(email).
+            orElseThrow(()-> new NotFoundException("Administrador não encontrado."));
     }
 
-    public List<AdministradorDto> getAllAdministradores() {
-        List<AdministradorDto> adms = new ArrayList<>();
-        for(Administrador administrador : administradorDao.findAll()) {
-            adms.add(AdministradorMapper.INSTANCE.administradorDtoToAdministrador(administrador));
-        }
-        return adms;
+    public List<AdministradorProjection> getAllAdministradores() {
+        return administradorDao.findAllProjecao();
     }
+
 
     public void deletarAdm(Long id){
         administradorDao.deleteById(id);

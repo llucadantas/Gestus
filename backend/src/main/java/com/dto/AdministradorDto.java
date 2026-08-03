@@ -2,11 +2,11 @@ package com.dto;
 
 import lombok.*;
 
-@AllArgsConstructor
-@NoArgsConstructor
-public class AdministradorDto {
-    private String email;
-    private String nome;
-    private String senha;
 
-}
+public record AdministradorDto (
+    String email,
+    String nome,
+    String senha
+
+){}
+
