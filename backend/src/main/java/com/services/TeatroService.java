@@ -4,8 +4,6 @@ import com.database.model.Administrador;
 import com.database.model.Teatro;
 import com.database.repository.AdministradorDao;
 import com.database.repository.TeatroDao;
-import com.database.repository.projections.TeatroProjection;
-import com.dto.AdministradorDto;
 import com.dto.TeatroDto;
 import com.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
