@@ -1,9 +1,6 @@
 package com.handler;
 
-import com.exception.ErroCampo;
-import com.exception.ErrorResponse;
-import com.exception.ErrorValidacaoDados;
-import com.exception.NotFoundException;
+import com.exception.*;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,14 +26,24 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ErrorResponse> tratarUniqueConstraint(DataIntegrityViolationException ex) {
-        ErrorResponse erro = new ErrorResponse(
-                "CONFLICT",
-                "Já existe um registro com os dados informados (campo duplicado).",
-                HttpStatus.CONFLICT.value()
-        );
+        ErrorResponse erro = ErrorResponse.builder()
+                .message("Dados cadastrados em conflito;")
+                .status(HttpStatus.CONFLICT.value())
+                .build();
 
         return ResponseEntity.status(HttpStatus.CONFLICT).body(erro);
+
     }
+
+    @ExceptionHandler(TeatroCadastroException.class)
+    public ResponseEntity<ErrorResponse> teatroException(TeatroCadastroException e) {
+        ErrorResponse response = ErrorResponse.builder()
+                .message(e.getMessage())
+                .status(HttpStatus.CONFLICT.value())
+                .build();
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorValidacaoDados> tratarErrosDeValidacao(MethodArgumentNotValidException ex) {
 

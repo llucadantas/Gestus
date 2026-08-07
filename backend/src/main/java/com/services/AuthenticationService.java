@@ -8,6 +8,7 @@ import com.dto.requests.RegisterRequest;
 import com.dto.response.TokenResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,6 +30,9 @@ public class AuthenticationService {
 
 
     public void register(RegisterRequest registerRequest) {
+        if(administradorDao.findByEmail(registerRequest.email()).isPresent()){
+            throw new DataIntegrityViolationException("");
+        }
         administradorDao.save(Administrador.builder()
                 .nome(registerRequest.nome())
                 .email(registerRequest.email())

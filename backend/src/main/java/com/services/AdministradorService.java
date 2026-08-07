@@ -1,7 +1,7 @@
 package com.services;
 
 
-import com.dto.requests.RegisterRequest;
+import com.database.model.Teatro;
 import com.dto.response.AdministradorResponse;
 import com.exception.NotFoundException;
 import com.database.model.Administrador;
@@ -9,6 +9,7 @@ import com.database.repository.AdministradorDao;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +29,8 @@ public class AdministradorService {
         return administradorDao.getAdministradorById(id)
                 .orElseThrow(()-> new NotFoundException("Administrador não encontrado."));
     }
+
+    
 
     public void deletarAdm(Long id){
         administradorDao.deleteById(id);

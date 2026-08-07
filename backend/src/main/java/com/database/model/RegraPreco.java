@@ -4,10 +4,14 @@ import com.database.model.enums.DiaSemana;
 import com.database.model.enums.Mes;
 import com.database.model.enums.Turno;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+
+import java.math.BigDecimal;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.Month;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "regras_preco")
@@ -15,21 +19,54 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
+@Builder
 public class RegraPreco {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Double preco;
+    private BigDecimal preco;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(
+            name = "dias_semana",
+            joinColumns = @JoinColumn(name = "regra_id"))
     @Enumerated(EnumType.STRING)
-    private DiaSemana diaSemana;
+    @Column(name = "dia_semana")
+    private Set<DayOfWeek> diaSemana = new HashSet<>();
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(
+            name = "mes",
+            joinColumns = @JoinColumn(name = "regra_id"))
     @Enumerated(EnumType.STRING)
-    private Mes mes;
+    private Set<Month> mes =  new HashSet<>();
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(
+            name = "turno",
+            joinColumns = @JoinColumn(name = "regra_id"))
     @Enumerated(EnumType.STRING)
-    private Turno turno;
-    private Integer intervaloHoras;
+    private Set<Turno> turno =  new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "teatro_id", nullable = false)
     private Teatro teatro;
 
+    public boolean isAplicavel(LocalDate dataAluguel, Turno turnoAluguel) {
+
+        Month mesAluguel = dataAluguel.getMonth();
+        DayOfWeek diaSemanaAluguel = dataAluguel.getDayOfWeek();
+
+        if (!this.mes.isEmpty() && !this.mes.contains(mesAluguel)) {
+            return false;
+        }
+        if (!this.diaSemana.isEmpty() && !this.diaSemana.contains(diaSemanaAluguel)) {
+            return false;
+        }
+        if (!this.turno.isEmpty() && !this.turno.contains(turnoAluguel)) {
+            return false;
+        }
+        return true;
+    }
 }
