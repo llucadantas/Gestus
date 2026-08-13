@@ -1,11 +1,11 @@
 package com.config;
 
+import com.dto.UserDto;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -21,24 +21,35 @@ public class TokenProvider {
 
     //gerar um token
     public String gerarToken(Authentication authentication) {
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        return buildToken(userDetails.getUsername());
+        Object principal = authentication.getPrincipal();
+
+        if (principal instanceof UserDto user) {
+            return buildToken(user.id(), user.nome(), user.getUsername(), user.idTeatro());
+        }
+
+        // Fallback caso seja apenas UserDetails genérico
+        return buildToken(null, null, authentication.getName(), null);
     }
 
-    private String buildToken(String username) {
-        Date now =  new Date();
+    public String buildToken(Long id, String nome, String username, Long idTeatro) {
+        Date now = new Date();
         Date expiration = new Date(now.getTime() + expirationTime);
 
-        return Jwts.builder()
+        var builder = Jwts.builder()
                 .subject(username)
                 .issuedAt(now)
                 .expiration(expiration)
-                .signWith(getSigninKey())
-                .compact();
+                .signWith(getSigninKey());
+
+        // Escreve os dados dentro do Payload do JWT (Claims)
+        if (id != null) builder.claim("id", id);
+        if (nome != null) builder.claim("nome", nome);
+        if (idTeatro != null) builder.claim("idTeatro", idTeatro);
+
+        return builder.compact();
     }
 
     private SecretKey getSigninKey() {
-        // Para chaves em texto puro com tamanho suficiente (HMAC-SHA):
         return Keys.hmacShaKeyFor(key.getBytes(java.nio.charset.StandardCharsets.UTF_8));
     }
 
@@ -65,4 +76,16 @@ public class TokenProvider {
     public String getUsername(String token) {
         return getClaims(token).getSubject();
     }
+
+    public UserDto getUserDetails(String token) {
+        Claims claims = getClaims(token);
+
+        Long id = claims.get("id", Long.class);
+        String nome = claims.get("nome", String.class);
+        String username = claims.getSubject();
+        Long idTeatro = claims.get("idTeatro", Long.class);
+
+        return new UserDto(id, nome, username, idTeatro, null);
+    }
+
 }

@@ -1,10 +1,7 @@
 package com.database.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,18 +12,20 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Peca {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nome;
     private String descricao;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "artista_id", nullable = false)
-    private Artista artista;
 
-    @OneToMany(mappedBy = "peca")
-    private List<IngressoVendido> ingressoVendidos = new ArrayList<>();
+    @OneToMany(mappedBy = "peca", cascade = CascadeType.ALL)
+    private List<Sessao> sessoes = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_teatro", nullable = false)
+    private Teatro teatro;
 
 
 

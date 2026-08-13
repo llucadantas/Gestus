@@ -3,9 +3,11 @@ package com.services;
 import com.config.TokenProvider;
 import com.database.model.Administrador;
 import com.database.repository.AdministradorDao;
+import com.dto.UserDto;
 import com.dto.requests.LoginRequest;
 import com.dto.requests.RegisterRequest;
 import com.dto.response.TokenResponse;
+import com.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -28,10 +30,9 @@ public class AuthenticationService {
     @Value("${spring.jwt.expiration}")
     private long expirationTime;
 
-
     public void register(RegisterRequest registerRequest) {
         if(administradorDao.findByEmail(registerRequest.email()).isPresent()){
-            throw new DataIntegrityViolationException("");
+            throw new DataIntegrityViolationException("B.O NOS DADOS");
         }
         administradorDao.save(Administrador.builder()
                 .nome(registerRequest.nome())
@@ -42,18 +43,32 @@ public class AuthenticationService {
 
     public TokenResponse login(LoginRequest loginRequest) {
         try {
-            Authentication a =  authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.email(), loginRequest.senha()));
+            Authentication a =  authenticationManager
+                    .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.email(), loginRequest.senha()));
             String token = tokenProvider.gerarToken(a);
-
             return new TokenResponse(token, expirationTime);
         } catch (BadCredentialsException bad){
-            throw new BadCredentialsException("Invalid username and password");
+            throw new BadCredentialsException("Senha invalida");
         } catch (Exception e) {
-
             throw new RuntimeException(e);
-
         }
 
+    }
+
+    public TokenResponse refreshToken(UserDto userLogado) throws NotFoundException {
+        Administrador adm = administradorDao.findById(userLogado.id())
+                .orElseThrow(() -> new NotFoundException("Usuário não encontrado"));
+
+        Long teatroId = (adm.getTeatro() != null) ? adm.getTeatro().getId() : null;
+
+        String novoToken = tokenProvider.buildToken(
+                adm.getId(),
+                adm.getNome(),
+                adm.getEmail(),
+                teatroId
+        );
+
+        return new TokenResponse(novoToken, expirationTime);
     }
 
 }

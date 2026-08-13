@@ -23,19 +23,19 @@ public class TeatroController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void cadastrarTeatro(@RequestBody @Valid TeatroRequest teatroRequest, @AuthenticationPrincipal Administrador administrador) throws NotFoundException, TeatroCadastroException {
-        teatroService.cadastrarTeatro(teatroRequest, administrador.getId());
+    public void cadastrarTeatro(@RequestBody @Valid TeatroRequest teatroRequest, @AuthenticationPrincipal(expression = "id") Long id) throws NotFoundException, TeatroCadastroException {
+        teatroService.cadastrarTeatro(teatroRequest, id);
     }
-
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public TeatroResponse getTeatro(@AuthenticationPrincipal(expression = "id") Long id) throws NotFoundException {
-        Teatro t = teatroService.getTeatro(id);
-        return new TeatroResponse(t.getId(), t.getNome(), t.getAdministrador().getId());
+    public TeatroResponse getTeatro(@AuthenticationPrincipal(expression = "idTeatro") Long id) throws NotFoundException {
+        return teatroService.getTeatroResponse(id);
     }
 
-
-
-
+    @PutMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public void atualizarTeatro(@AuthenticationPrincipal(expression = "idTeatro") Long id, @RequestBody @Valid TeatroRequest teatroRequest) throws NotFoundException {
+        teatroService.atualizarTeatro(teatroRequest, id);
+    }
 
 }

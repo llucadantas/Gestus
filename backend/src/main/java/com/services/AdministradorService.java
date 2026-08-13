@@ -15,6 +15,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AdministradorService {
     private final AdministradorDao administradorDao;
+
     public AdministradorResponse getAdministradorByEmail(String email) throws NotFoundException {
         return administradorDao.getAdministradorByEmail(email).
             orElseThrow(()-> new NotFoundException("Administrador não encontrado."));
@@ -30,9 +31,7 @@ public class AdministradorService {
                 .orElseThrow(()-> new NotFoundException("Administrador não encontrado."));
     }
 
-    
-
-    public void deletarAdm(Long id){
+   public void deletarAdm(Long id){
         administradorDao.deleteById(id);
     }
 }

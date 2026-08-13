@@ -21,6 +21,5 @@ public class Artista {
     private String nome;
     @Column(unique = true)
     private String email;
-    @OneToMany(mappedBy = "artista", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Peca> pecas;
+
 }
