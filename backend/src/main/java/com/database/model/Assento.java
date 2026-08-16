@@ -20,6 +20,6 @@ public class Assento {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "config_id")
-    private ConfigAssento configAssento;
+    private ColunaAssento colunaAssento;
 
 }

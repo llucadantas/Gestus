@@ -6,13 +6,13 @@ import lombok.*;
 import java.util.List;
 
 @Entity
-@Table(name = "config_assento")
+@Table(name = "coluna_assento")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Getter
 @Setter
-public class ConfigAssento {
+public class ColunaAssento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,7 +27,7 @@ public class ConfigAssento {
     @JoinColumn(name = "id_teatro", nullable = false)
     private Teatro teatro;
 
-    @OneToMany(mappedBy = "configAssento", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "colunaAssento", cascade = CascadeType.ALL)
     private List<Assento> assentos;
 
 }
