@@ -6,13 +6,13 @@ import lombok.*;
 import java.util.List;
 
 @Entity
-@Table(name = "coluna_assento")
+@Table(name = "coluna")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Getter
 @Setter
-public class ColunaAssento {
+public class Coluna {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,13 +21,13 @@ public class ColunaAssento {
     private String identificadorColuna;
 
     @Column(name = "qntd_assento")
-    private Integer qntdAssentos;
+    private Integer qntdAssento;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_teatro", nullable = false)
     private Teatro teatro;
 
-    @OneToMany(mappedBy = "colunaAssento", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "coluna", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Assento> assentos;
 
 }

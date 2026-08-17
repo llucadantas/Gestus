@@ -19,7 +19,7 @@ public class Assento {
     private String codigoPosicao;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "config_id")
-    private ColunaAssento colunaAssento;
+    @JoinColumn(name = "id_coluna")
+    private Coluna coluna;
 
 }

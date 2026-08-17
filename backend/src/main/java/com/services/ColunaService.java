@@ -1,9 +1,8 @@
 package com.services;
 
-import com.database.model.Assento;
-import com.database.model.ColunaAssento;
+import com.database.model.Coluna;
 import com.database.repository.ColunaAssentoDao;
-import com.dto.requests.ColunaAssentoRequest;
+import com.dto.requests.ColunaRequest;
 import com.dto.response.ColunaResponse;
 import com.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -12,27 +11,29 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ColunaAssentoService {
+public class ColunaService {
     private final ColunaAssentoDao colunaAssentoDao;
     private final TeatroService teatroService;
 
 
-    public void criarColuna(ColunaAssentoRequest colunaAssentoRequest, Long idTeatro) throws NotFoundException {
-        ColunaAssento colunaAssento = ColunaAssento.builder()
-                .qntdAssentos(colunaAssentoRequest.qntdAssentos())
-                .identificadorColuna(colunaAssentoRequest.identificadorColuna())
+    public void criarColuna(ColunaRequest colunaRequest, Long idTeatro) throws NotFoundException {
+        Coluna coluna = Coluna.builder()
+                .qntdAssento(colunaRequest.qntd())
+                .identificadorColuna(colunaRequest.identificador())
                 .teatro(teatroService.getTeatro(idTeatro))
                 .build();
-        colunaAssentoDao.save(colunaAssento);
+        colunaAssentoDao.save(coluna);
     }
 
+    //APAGAR PELO IDENTIFICADOR (ATUALIZAR)
     public void apagarColuna(Long idTeatro, Long idColuna) throws NotFoundException {
-        ColunaAssento c = colunaAssentoDao
+        Coluna c = colunaAssentoDao
                 .findByIdAndTeatro_Id(idColuna, idTeatro)
                 .orElseThrow(() -> new NotFoundException("Coluna inexistente"));
         colunaAssentoDao.delete(c);
     }
 
+    //BUSCAR PELO IDENTIFICADOR (ATUALIZAR)
     public ColunaResponse getColuna(Long idColuna, Long idTeatro) throws NotFoundException {
         return new ColunaResponse(colunaAssentoDao.findByIdAndTeatro_Id(idColuna, idTeatro)
                 .orElseThrow(() -> new NotFoundException("Coluna inexistente")));
@@ -46,12 +47,12 @@ public class ColunaAssentoService {
                 .toList();
     }
 
-    List<ColunaAssento> getColunas(Long idTeatro){
+    List<Coluna> getColunas(Long idTeatro){
         return colunaAssentoDao
                 .findAllByTeatro_Id(idTeatro);
     }
 
-    public void salvarColunaAssento(ColunaAssento c){
+    public void salvarColunaAssento(Coluna c){
         colunaAssentoDao.save(c);
     }
 

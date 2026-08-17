@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="200d1976-aa0c-4ad3-a621-6870bbff6e91" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/controller/SessaoController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/database/repository/ColunaAssentoDao.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/database/model/Assento.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/database/model/Assento.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/database/model/ConfigAssento.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/database/model/ColunaAssento.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/database/repository/ConfigAssentoDao.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/services/ConfigAssentoService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/services/ColunaAssentoService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/services/SessaoService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/services/SessaoService.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="EmbeddingIndexingInfo">
+    <option name="cachedIndexableFilesCount" value="71" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Enum" />
+        <option value="Exception" />
+        <option value="Interface" />
+        <option value="Record" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;llucadantas&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/llucadantas/Gestus.git&quot;,
+    &quot;accountId&quot;: &quot;9ae03124-962b-403e-8590-11bb394cfdeb&quot;
+  }
+}</component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="NextEditCompletionFeaturesState">
+    <decayedCancelled>
+      <entry key="MS100" value="6.142197743257607E-25" />
+      <entry key="MS500" value="1.73563117057478E-5" />
+      <entry key="S2" value="0.10312571165728258" />
+      <entry key="S5" value="0.6082387371000115" />
+      <entry key="S10" value="1.1189770776259538" />
+      <entry key="S30" value="2.064143501770828" />
+      <entry key="S60" value="3.05514203634274" />
+      <entry key="M2" value="4.879849301371148" />
+      <entry key="M5" value="10.524682860967516" />
+      <entry key="M10" value="20.81227681949671" />
+      <entry key="M15" value="29.69034515232605" />
+      <entry key="M30" value="46.86449039300403" />
+      <entry key="H1" value="61.66907625321486" />
+      <entry key="H2" value="71.89285313519909" />
+      <entry key="H4" value="92.76935142539485" />
+      <entry key="D1" value="958.2618395970553" />
+      <entry key="W1" value="2063.8346796403994" />
+    </decayedCancelled>
+    <decayedSelected>
+      <entry key="MS100" value="1.0000000075024036" />
+      <entry key="MS500" value="1.0237159258277195" />
+      <entry key="S2" value="1.3924280305746768" />
+      <entry key="S5" value="1.6878662609723123" />
+      <entry key="S10" value="1.8293770982867619" />
+      <entry key="S30" value="1.9435944489372086" />
+      <entry key="S60" value="2.0330780355656413" />
+      <entry key="M2" value="2.2682828017205114" />
+      <entry key="M5" value="3.5973794195102" />
+      <entry key="M10" value="6.769869704418077" />
+      <entry key="M15" value="9.59846352487507" />
+      <entry key="M30" value="14.965911332648576" />
+      <entry key="H1" value="19.449571944477086" />
+      <entry key="H2" value="22.542191017773806" />
+      <entry key="H4" value="32.95378030603233" />
+      <entry key="D1" value="508.99449292016783" />
+      <entry key="W1" value="1086.0723241931037" />
+    </decayedSelected>
+    <decayedShown>
+      <entry key="MS100" value="3.841234375875627E-6" />
+      <entry key="MS500" value="0.08778615269286005" />
+      <entry key="S2" value="0.8781633930332937" />
+      <entry key="S5" value="1.899856038400511" />
+      <entry key="S10" value="2.6952179264083975" />
+      <entry key="S30" value="3.8963547953155344" />
+      <entry key="S60" value="5.020261636863402" />
+      <entry key="M2" value="7.10291008303201" />
+      <entry key="M5" value="14.076424114678458" />
+      <entry key="M10" value="27.522104988665745" />
+      <entry key="M15" value="39.2262141159658" />
+      <entry key="M30" value="61.77794658529453" />
+      <entry key="H1" value="81.08374055904864" />
+      <entry key="H2" value="94.41469822413825" />
+      <entry key="H4" value="125.71005956233145" />
+      <entry key="D1" value="1467.2348977785307" />
+      <entry key="W1" value="3149.9005731290617" />
+    </decayedShown>
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 6,
+  &quot;fromUser&quot;: false
+}</component>
+  <component name="ProjectId" id="3HBHMX0Uh9XTLtYsu8rOkybwBCA" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.ProjetoApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Maven. [clean,install,-U].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.Gestus [clean,compile].executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Notification.DisplayName-DoNotAsk-DatabaseConfigFileWatcher.found&quot;: &quot;New/updated database configurations found&quot;,
+    &quot;Notification.DoNotAsk-DatabaseConfigFileWatcher.found&quot;: &quot;true&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;Spring Boot.ProjetoApplication.executor&quot;: &quot;Run&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/lucas/OneDrive/Desktop/Projeto/GerenciadorTeatro/Gestus/Gestus&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;onboarding.tips.debug.path&quot;: &quot;C:/Users/lucas/OneDrive/Desktop/Projeto/GerenciadorTeatro/Gestus/Gestus/src/main/java/com/Main.java&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="com.dto.requests" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\lucas\OneDrive\Desktop\Projeto\GerenciadorTeatro\Gestus\Gestus\backend" />
+      <recent name="C:\Users\lucas\OneDrive\Desktop\Projeto\GerenciadorTeatro\Gestus\Gestus\backend\src\main" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.dto.requests" />
+      <recent name="com.dto" />
+      <recent name="com.repository" />
+    </key>
+  </component>
+  <component name="RunAnythingCache">
+    <option name="myCommands">
+      <command value="mvn clean install -U" />
+      <command value="mvn clean compile" />
+    </option>
+  </component>
+  <component name="RunManager">
+    <configuration name="ProjetoApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="Gestus" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.ProjetoApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-30f59d01ecdd-37e91769500f-intellij.indexing.shared.core-IU-261.24374.151" />
+        <option value="bundled-js-predefined-d6986cc7102b-31caf2ab9e3c-JavaScript-IU-261.24374.151" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="200d1976-aa0c-4ad3-a621-6870bbff6e91" name="Changes" comment="" />
+      <created>1785334494594</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1785334494594</updated>
+      <workItem from="1785334498788" duration="2444000" />
+      <workItem from="1785347925979" duration="2466000" />
+      <workItem from="1785499265992" duration="4421000" />
+      <workItem from="1785514535049" duration="2681000" />
+      <workItem from="1785619594630" duration="1504000" />
+      <workItem from="1785630356533" duration="898000" />
+      <workItem from="1785688117060" duration="1081000" />
+      <workItem from="1785711998202" duration="2591000" />
+      <workItem from="1785759482927" duration="4629000" />
+      <workItem from="1785764143756" duration="11921000" />
+      <workItem from="1785793178565" duration="342000" />
+      <workItem from="1785801062575" duration="204000" />
+      <workItem from="1785852644194" duration="6757000" />
+      <workItem from="1785859890586" duration="519000" />
+      <workItem from="1785860433560" duration="2172000" />
+      <workItem from="1785894318540" duration="11873000" />
+      <workItem from="1786021434940" duration="11903000" />
+      <workItem from="1786114690017" duration="5306000" />
+      <workItem from="1786126513966" duration="6378000" />
+      <workItem from="1786141169043" duration="3332000" />
+      <workItem from="1786144579198" duration="1307000" />
+      <workItem from="1786243499103" duration="8204000" />
+      <workItem from="1786276586995" duration="9767000" />
+      <workItem from="1786380703518" duration="4257000" />
+      <workItem from="1786474701308" duration="2390000" />
+      <workItem from="1786490038591" duration="5827000" />
+      <workItem from="1786549533828" duration="9047000" />
+      <workItem from="1786586370678" duration="5511000" />
+      <workItem from="1786635187053" duration="10502000" />
+      <workItem from="1786715911899" duration="1257000" />
+      <workItem from="1786718541502" duration="41000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="org.springframework.data.core.PropertyReferenceException" package="org.springframework.data.core" />
+          <option name="timeStamp" value="1" />
+        </breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/backend/src/main/java/com/dto/requests/TeatroRequest.java</url>
+          <line>8</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>

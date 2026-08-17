@@ -1,10 +1,12 @@
 package com.controller;
 
-import com.dto.requests.ColunaAssentoRequest;
+import com.database.model.Assento;
+import com.dto.requests.ColunaRequest;
+import com.dto.response.AssentoResponse;
 import com.dto.response.ColunaResponse;
 import com.exception.NotFoundException;
 import com.services.AssentoService;
-import com.services.ColunaAssentoService;
+import com.services.ColunaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -15,14 +17,18 @@ import java.util.List;
 @RestController
 @RequestMapping("/v1/colunas")
 @RequiredArgsConstructor
-public class ConfigAssentosController {
-    private final ColunaAssentoService colunaAssentoService;
+public class MapAssentoController {
+    private final ColunaService colunaService;
     private final AssentoService assentoService;
+
+
+//    PADRAO STATE, ORGANIZAR CHAMADAS POR ID, EXCESSOES
+
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void criarColuna(@RequestBody ColunaAssentoRequest colunaAssentoRequest, @AuthenticationPrincipal(expression = "idTeatro") Long idTeatro) throws NotFoundException {
-        colunaAssentoService.criarColuna(colunaAssentoRequest, idTeatro);
+    public void criarColuna(@RequestBody ColunaRequest colunaRequest, @AuthenticationPrincipal(expression = "idTeatro") Long idTeatro) throws NotFoundException {
+        colunaService.criarColuna(colunaRequest, idTeatro);
     }
 
     @DeleteMapping
@@ -30,7 +36,7 @@ public class ConfigAssentosController {
     @RequestMapping("/excluir/{idColuna}")
     public void excluirColuna(@AuthenticationPrincipal(expression = "idTeatro") Long idTeatro,
                               @PathVariable Long idColuna) throws NotFoundException {
-        colunaAssentoService.apagarColuna(idTeatro, idColuna);
+        colunaService.apagarColuna(idTeatro, idColuna);
     }
 
     @PutMapping
@@ -43,7 +49,14 @@ public class ConfigAssentosController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<ColunaResponse> getColunas(@AuthenticationPrincipal(expression = "idTeatro") Long idTeatro) {
-        return colunaAssentoService.getColunasResponse(idTeatro);
+        return colunaService.getColunasResponse(idTeatro);
+    }
+
+    @GetMapping
+    @RequestMapping("/assentos")
+    @ResponseStatus(HttpStatus.OK)
+    public List<AssentoResponse> getAssentos(@AuthenticationPrincipal(expression = "idTeatro") Long idTeatro) {
+        return assentoService.getAssentos(idTeatro);
     }
 
 }
