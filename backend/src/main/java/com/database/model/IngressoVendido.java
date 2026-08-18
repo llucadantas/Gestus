@@ -1,24 +1,30 @@
 package com.database.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name = "ingresso_vendido")
 @Getter
 @Setter
-@AllArgsConstructor
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class IngressoVendido {
+
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne
-    @JoinColumn(name = "cliente_id",  nullable = false)
-    private Cliente cliente;
-    @ManyToOne
-    @JoinColumn(name = "peca_id",  nullable = false)
-    private Peca peca;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_sessao", nullable = false)
+    private Sessao sessao;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_assento", nullable = false)
+    private Assento assento;
+
+    // Novo campo para armazenar apenas o e-mail em vez da relação com a tabela Cliente
+    @Column(name = "email_comprador", nullable = false)
+    private String email;
 }

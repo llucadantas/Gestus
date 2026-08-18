@@ -10,11 +10,11 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ErrorResponse> handleException(NotFoundException e){
         ErrorResponse response = ErrorResponse.builder()
@@ -26,13 +26,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ErrorResponse> tratarUniqueConstraint(DataIntegrityViolationException ex) {
-        ErrorResponse erro = ErrorResponse.builder()
+        ErrorResponse response = ErrorResponse.builder()
                 .message("Dados cadastrados em conflito;")
                 .status(HttpStatus.CONFLICT.value())
                 .build();
-
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(erro);
-
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
     }
 
     @ExceptionHandler(TeatroCadastroException.class)
@@ -45,42 +43,46 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorValidacaoDados> tratarErrosDeValidacao(MethodArgumentNotValidException ex) {
-
-        // Mapeia todos os erros de campo capturados pelo Bean Validation
-        List<ErroCampo> listaErros = ex.getBindingResult()
+    public ResponseEntity<ErrorResponse> tratarErrosDeValidacao(MethodArgumentNotValidException ex) {
+        // Concatena os erros de validação em uma única String
+        String mensagemErros = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
-                .map(fieldError -> new ErroCampo(fieldError.getField(), fieldError.getDefaultMessage()))
-                .toList();
+                .map(fieldError -> fieldError.getField() + ": " + fieldError.getDefaultMessage())
+                .collect(Collectors.joining(", "));
 
-        ErrorValidacaoDados resposta = new ErrorValidacaoDados(
-                HttpStatus.BAD_REQUEST.value(),
-                "Erro de validação nos campos",
-                listaErros
-        );
+        ErrorResponse response = ErrorResponse.builder()
+                .message("Erro de validação - " + mensagemErros)
+                .status(HttpStatus.BAD_REQUEST.value())
+                .build();
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(resposta);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<Map<String, String>> handleBadCredentials(BadCredentialsException ex) {
-        return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED)
-                .body(Map.of("erro", "E-mail ou senha inválidos"));
+    public ResponseEntity<ErrorResponse> handleBadCredentials(BadCredentialsException ex) {
+        ErrorResponse response = ErrorResponse.builder()
+                .message("E-mail ou senha inválidos")
+                .status(HttpStatus.UNAUTHORIZED.value())
+                .build();
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
 
     @ExceptionHandler(UsernameNotFoundException.class)
-    public ResponseEntity<Map<String, String>> handleUserNotFound(UsernameNotFoundException ex) {
-        return ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
-                .body(Map.of("erro", ex.getMessage()));
+    public ResponseEntity<ErrorResponse> handleUserNotFound(UsernameNotFoundException ex) {
+        ErrorResponse response = ErrorResponse.builder()
+                .message(ex.getMessage())
+                .status(HttpStatus.NOT_FOUND.value())
+                .build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Map<String, String>> handleGeneral(Exception ex) {
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(Map.of("erro", ex.getMessage()));
+    public ResponseEntity<ErrorResponse> handleGeneral(Exception ex) {
+        ErrorResponse response = ErrorResponse.builder()
+                .message(ex.getMessage())
+                .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .build();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }
 }
