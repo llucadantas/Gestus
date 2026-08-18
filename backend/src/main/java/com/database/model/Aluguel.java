@@ -2,10 +2,7 @@ package com.database.model;
 
 import com.database.model.enums.Turno;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -16,11 +13,11 @@ import java.time.LocalDate;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Aluguel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private LocalDate data;
     private Turno turno;
     private BigDecimal valor;
@@ -30,15 +27,11 @@ public class Aluguel {
     private RegraPreco regraPreco;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "peca_id", nullable = false)
+    private Peca peca;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="artista_id", nullable=false)
     private Artista artista;
-
-    public Aluguel(LocalDate data, Turno turno, RegraPreco regraPreco, Artista artista) {
-        this.data = data;
-        this.turno = turno;
-        this.regraPreco = regraPreco;
-        this.artista = artista;
-        this.valor = this.regraPreco.getPreco();
-    }
 
 }
