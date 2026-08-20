@@ -21,11 +21,7 @@ import org.springframework.web.bind.annotation.*;
 public class TeatroController {
     private final TeatroService teatroService;
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public void cadastrarTeatro(@RequestBody @Valid TeatroRequest teatroRequest, @AuthenticationPrincipal(expression = "id") Long id) throws NotFoundException, TeatroCadastroException {
-        teatroService.cadastrarTeatro(teatroRequest, id);
-    }
+
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public TeatroResponse getTeatro(@AuthenticationPrincipal(expression = "idTeatro") Long id) throws NotFoundException {

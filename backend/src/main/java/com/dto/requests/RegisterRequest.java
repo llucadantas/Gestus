@@ -9,6 +9,8 @@ public record RegisterRequest(
         @NotBlank(message = "O email não pode estar em branco")
         String email,
         @NotBlank(message = "Senha vazia")
-        String senha
+        String senha,
+        @NotBlank(message = "O nome do teatro não pode estar em branco.")
+        String nomeTeatro
 ) {
 }

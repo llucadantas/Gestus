@@ -17,16 +17,13 @@ public class TeatroService {
     private final TeatroDao teatroDao;
     private final AdministradorDao administradorDao;
 
-    public void cadastrarTeatro(TeatroRequest teatro, Long idAdm) throws NotFoundException, TeatroCadastroException {
-        Administrador administrador = administradorDao.findById(idAdm)
-                .orElseThrow(()->new NotFoundException("Adm nãq encontrado"));
-
+    public void cadastrarTeatro(String nome, Administrador administrador) throws TeatroCadastroException {
         if(administrador.getTeatro() != null) {
             throw new TeatroCadastroException("Teatro já cadastrado");
         }
 
         Teatro teatroModel = Teatro.builder()
-                .nome(teatro.nome())
+                .nome(nome)
                 .administrador(administrador)
                 .build();
         teatroDao.save(teatroModel);
