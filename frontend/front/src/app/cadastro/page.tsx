@@ -1,12 +1,13 @@
 'use client';
-import Input from '@/src/components/login/Input';
-import AuthSidebar from '@/src/components/login/AuthSidebar';
+import Input from '@/src/components/auth/Input';
+import AuthSidebar from '@/src/components/auth/AuthSidebar';
 import { use, useState } from 'react';
 import { authService } from '../services/authService';
-import Button from '@/src/components/login/Button';
+import Button from '@/src/components/auth/Button';
+import { useRouter } from 'next/navigation';
 
 export default function Cadastro() {
-
+    const router = useRouter();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [nome, setNome] = useState('')
@@ -22,6 +23,8 @@ export default function Cadastro() {
         try {
             const dados = await authService.register(nome, password, nomeTeatro, email);
             console.log('Cadastro realizado com sucesso!', dados);
+            router.push('/login');
+            
 
         } catch (error: any) {
             console.error('Erro ao cadastrar:', error);

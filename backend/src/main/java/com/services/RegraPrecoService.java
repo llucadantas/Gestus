@@ -9,6 +9,7 @@ import com.dto.response.RegraResponse;
 import com.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -22,9 +23,9 @@ public class RegraPrecoService {
     private final TeatroService teatroService;
     private final RegraPrecoDao regraPrecoDao;
 
+    @Transactional
     public void cadastrarRegraPreco(RegraRequest regraRequest, Long idTeatro) throws NotFoundException {
         Teatro t = teatroService.getTeatro(idTeatro);
-
         RegraPreco regraPreco = RegraPreco.builder()
                 .preco(regraRequest.valor())
                 .mes(regraRequest.mes())
@@ -56,11 +57,13 @@ public class RegraPrecoService {
     }
 
 
+    @Transactional
     public void deletarRegraPreco(Long idTeatro, Long idRegraPreco) throws NotFoundException {
         RegraPreco r = getRegraPreco(idTeatro,idRegraPreco);
         regraPrecoDao.deleteById(r.getId());
     }
 
+    @Transactional
     public void atualizarRegra(Long idRegra, Long idTeatro, RegraRequest regraPreco) throws NotFoundException {
         RegraPreco r = getRegraPreco(idTeatro, idRegra);
         r.setPreco(regraPreco.valor());

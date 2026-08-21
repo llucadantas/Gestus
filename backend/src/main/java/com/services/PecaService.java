@@ -6,13 +6,12 @@ import com.database.repository.PecaDao;
 import com.database.repository.TeatroDao;
 import com.dto.requests.PecaRequest;
 import com.dto.response.PecaResponse;
-import com.dto.response.RegraResponse;
 import com.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -27,11 +26,12 @@ public class PecaService {
                 .toList();
     }
 
-    public PecaResponse bucarPeca(Long idPeca, Long idTeatro) throws NotFoundException {
+    public PecaResponse buscarPeca(Long idPeca, Long idTeatro) throws NotFoundException {
         return new PecaResponse(pecaDao.findByIdAndTeatro_id(idPeca, idTeatro)
                 .orElseThrow(()-> new NotFoundException("Peca não existe")));
     }
 
+    @Transactional
     public void cadastrarPeca(PecaRequest peca, Long idTeatro) throws NotFoundException {
         if(idTeatro==null){
             throw new NotFoundException("Teatro não existe");
@@ -46,6 +46,7 @@ public class PecaService {
                         .build());
     }
 
+    @Transactional
     public void atualizarPeca(Long idPeca,PecaRequest peca, Long idTeatro) throws NotFoundException {
         Peca p = getPeca(idTeatro, idPeca);
         p.setDescricao(peca.descricao());
@@ -53,6 +54,7 @@ public class PecaService {
         pecaDao.save(p);
     }
 
+    @Transactional
     public void deletarPeca(Long idPeca, Long idTeatro) throws NotFoundException {
         Peca p = getPeca(idTeatro, idPeca);
         pecaDao.deleteById(p.getId());

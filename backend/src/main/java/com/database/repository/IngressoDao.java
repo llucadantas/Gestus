@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface IngressoDao extends JpaRepository<IngressoVendido, Long> {
     List<IngressoVendido> findBySessao_Id(Long sessaoId);
+
+    Integer countBySessao_Peca_Teatro_Id(Long sessaoPecaTeatroId);
 }

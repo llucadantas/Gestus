@@ -34,8 +34,6 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final TokenProvider tokenProvider;
-    @Value("${spring.jwt.expiration}")
-    private long expirationTime;
 
     public void register(RegisterRequest registerRequest) throws TeatroCadastroException {
         if(administradorDao.findByEmail(registerRequest.email()).isPresent()){
@@ -54,52 +52,58 @@ public class AuthenticationService {
             Authentication a =  authenticationManager
                     .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.email(), loginRequest.senha()));
             String token = tokenProvider.gerarToken(a);
-            ResponseCookie cookie = ResponseCookie.from("jwt_gestus", token)
-                    .httpOnly(true)
-                    .secure(false) // Defina como true quando for para produção com HTTPS
-                    .path("/")
-                    .maxAge(7 * 24 * 60 * 60)
-                    .build();
+
             Administrador adm = administradorDao.
                     findByEmail(loginRequest.email())
                     .orElseThrow(()-> new NotFoundException("Usuario não existe"));
-
-            return ResponseEntity.ok()
-                    .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                    .body(new UserResponse(adm));
-            //return new TokenResponse(token, expirationTime);
+            return criarCookie(adm, adm.getTeatro().getId(), token);
         } catch (BadCredentialsException bad){
             throw new BadCredentialsException("Senha invalida");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
 
+    public ResponseEntity<Void> logout() {
+        ResponseCookie cookieLimpo = ResponseCookie.from("jwt_gestus", "")
+                .httpOnly(true)
+                .secure(false)
+                .path("/")
+                .maxAge(0) // 0 segundos: destrói o cookie no navegador
+                .sameSite("Lax")
+                .build();
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, cookieLimpo.toString())
+                .build();
     }
 
     public ResponseEntity<UserResponse> refreshToken(UserDto userLogado) throws NotFoundException {
         Administrador adm = administradorDao.findById(userLogado.id())
                 .orElseThrow(() -> new NotFoundException("Usuário não encontrado"));
 
-        Long teatroId = (adm.getTeatro() != null) ? adm.getTeatro().getId() : null;
+        Long idTeatro = (adm.getTeatro() != null) ? adm.getTeatro().getId() : null;
 
         String novoToken = tokenProvider.buildToken(
                 adm.getId(),
                 adm.getNome(),
                 adm.getEmail(),
-                teatroId
+                idTeatro
         );
 
-        ResponseCookie cookie = ResponseCookie.from("jwt_gestus", novoToken)
+        return criarCookie(adm,idTeatro, novoToken);
+    }
+
+    private ResponseEntity<UserResponse> criarCookie(Administrador adm, Long idTeatro, String token) {
+
+        ResponseCookie cookie = ResponseCookie.from("jwt_gestus", token)
                 .httpOnly(true)
                 .secure(false) // Defina como true quando for para produção com HTTPS
                 .path("/")
-                .maxAge(7 * 24 * 60 * 60)
                 .build();
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
                 .body(new UserResponse(adm));
-
     }
 
 }

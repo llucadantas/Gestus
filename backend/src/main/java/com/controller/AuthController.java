@@ -39,4 +39,9 @@ public class AuthController {
         return authService.refreshToken(userLogado);
     }
 
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(){
+        return authService.logout();
+    }
+
 }

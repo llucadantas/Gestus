@@ -19,7 +19,7 @@ public class TokenProvider {
     @Value("${spring.jwt.key}")
     private String key;
 
-    //gerar um token
+
     public String gerarToken(Authentication authentication) {
         Object principal = authentication.getPrincipal();
 
@@ -27,7 +27,6 @@ public class TokenProvider {
             return buildToken(user.id(), user.nome(), user.getUsername(), user.idTeatro());
         }
 
-        // Fallback caso seja apenas UserDetails genérico
         return buildToken(null, null, authentication.getName(), null);
     }
 
@@ -52,9 +51,6 @@ public class TokenProvider {
     private SecretKey getSigninKey() {
         return Keys.hmacShaKeyFor(key.getBytes(java.nio.charset.StandardCharsets.UTF_8));
     }
-
-
-    //validar um token
     public boolean isTokenValid(String token) {
         try {
             getClaims(token);
@@ -71,7 +67,6 @@ public class TokenProvider {
                 .parseSignedClaims(token)
                 .getPayload();
     }
-    //extrair info do token
 
     public String getUsername(String token) {
         return getClaims(token).getSubject();

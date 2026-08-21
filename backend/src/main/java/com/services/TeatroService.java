@@ -10,6 +10,7 @@ import com.exception.NotFoundException;
 import com.exception.TeatroCadastroException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +18,7 @@ public class TeatroService {
     private final TeatroDao teatroDao;
     private final AdministradorDao administradorDao;
 
+    @Transactional
     public void cadastrarTeatro(String nome, Administrador administrador) throws TeatroCadastroException {
         if(administrador.getTeatro() != null) {
             throw new TeatroCadastroException("Teatro já cadastrado");
@@ -29,6 +31,7 @@ public class TeatroService {
         teatroDao.save(teatroModel);
     }
 
+    @Transactional
     public void atualizarTeatro(TeatroRequest teatroRequest, Long idTeatro) throws NotFoundException {
         Teatro t = getTeatro(idTeatro);
         t.setNome(teatroRequest.nome());
