@@ -17,15 +17,10 @@ public class Peca {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(unique = true)
     private String nome;
     private String descricao;
 
-    @OneToMany(mappedBy = "peca", cascade = CascadeType.ALL)
-    private List<Sessao> sessoes = new ArrayList<>();
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_teatro", nullable = false)
-    private Teatro teatro;
 
 
 

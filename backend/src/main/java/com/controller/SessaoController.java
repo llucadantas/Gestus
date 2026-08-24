@@ -1,11 +1,12 @@
 package com.controller;
 
-import com.database.repository.SessaoDao;
-import com.dto.requests.SessaoRequest;
+import com.dto.response.SessaoProjection;
 import com.dto.response.SessaoResponse;
 import com.exception.NotFoundException;
 import com.services.SessaoService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -31,30 +32,15 @@ public class SessaoController {
         return sessaoService.getSessoes(idTeatro);
     }
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    @RequestMapping("/salvar/{idPeça}")
-    public void saveSessao(@RequestBody SessaoRequest sessao,
-                           @AuthenticationPrincipal(expression = "idTeatro") Long idTeatro,
-                           @PathVariable Long idPeca) throws NotFoundException {
-        sessaoService.cadastrarSessao(sessao, idTeatro, idPeca);
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    @RequestMapping("/resumo")
+    public List<SessaoProjection> getSessoes(@AuthenticationPrincipal(expression = "idTeatro") Long idTeatro,
+                                             @PageableDefault(size = 5) Pageable pageable) {
+        return sessaoService.sessoesRecentes(idTeatro, pageable);
     }
 
-    @PutMapping
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @RequestMapping("/atualizar/{idSessao}")
-    public void updateSessao(@RequestBody SessaoRequest sessao,
-                             @AuthenticationPrincipal(expression = "idTeatro") Long idTeatro,
-                             @PathVariable Long idSessao) throws NotFoundException {
-        sessaoService.atualizarSessao(sessao, idTeatro, idSessao);
-    }
 
-    @DeleteMapping
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @RequestMapping("/deletar/{idSessao}")
-    public void deleteSessao(@AuthenticationPrincipal(expression = "idTeatro") Long idTeatro,
-                             @PathVariable Long idSessao){
-        sessaoService.deleteSesao(idTeatro, idSessao);
-    }
+
 
 }

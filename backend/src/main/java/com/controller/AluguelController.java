@@ -24,7 +24,7 @@ public class AluguelController {
             @RequestBody @Valid ContratoAluguelRequest request,
             @AuthenticationPrincipal(expression = "idTeatro") Long idTeatro) throws NotFoundException {
 
-        aluguelService.criar(request, idTeatro);
+        aluguelService.cadastrar(request, idTeatro);
     }
 
     @GetMapping("/{id}")
@@ -33,25 +33,25 @@ public class AluguelController {
             @PathVariable Long id,
             @AuthenticationPrincipal(expression = "idTeatro") Long idTeatro) throws NotFoundException {
 
-        return aluguelService.buscarPorId(id, idTeatro);
+        return aluguelService.buscarContrato(id, idTeatro);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<ContratoAluguelResponse> listarTodos(
-            @AuthenticationPrincipal(expression = "idTeatro") Long idTeatrp) {
+            @AuthenticationPrincipal(expression = "idTeatro") Long idTeatro) {
 
-        return aluguelService.listarTodos(idTeatrp);
+        return aluguelService.buscarListaContrato(idTeatro);
     }
 
 
-    @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deletar(
-            @PathVariable Long id,
-            @AuthenticationPrincipal(expression = "idTeatro")Long idTeatro) {
-
-        aluguelService.deletar(id,idTeatro);
-    }
+//    @DeleteMapping("/{id}")
+//    @ResponseStatus(HttpStatus.NO_CONTENT)
+//    public void deletar(
+//            @PathVariable Long id,
+//            @AuthenticationPrincipal(expression = "idTeatro")Long idTeatro) {
+//
+//        aluguelService.deletar(id,idTeatro);
+//    }
 }
 

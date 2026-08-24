@@ -25,7 +25,7 @@ export default function Nav() {
                 <span>Regras de Preço</span>
             </a>
 
-            <a href="#" className="flex items-center gap-3 px-3 py-2.5 text-purple-100 hover:bg-white/10 rounded-xl font-medium transition-colors">
+            <a href="/menu/contrato" className="flex items-center gap-3 px-3 py-2.5 text-purple-100 hover:bg-white/10 rounded-xl font-medium transition-colors">
                 <i className="fa-solid fa-file-contract w-5 text-center"></i>
                 <span>Contratos de Aluguel</span>
             </a>

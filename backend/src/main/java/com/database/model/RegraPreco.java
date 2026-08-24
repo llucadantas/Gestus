@@ -22,51 +22,41 @@ import java.util.Set;
 @ToString
 @Builder
 public class RegraPreco {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private BigDecimal preco;
+
+    private String descricao;
+
+    private BigDecimal valor;
 
     @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(
-            name = "dias_semana",
-            joinColumns = @JoinColumn(name = "regra_id"))
+    @Column(name = "mes")
     @Enumerated(EnumType.STRING)
+    private Set<Mes> meses = new HashSet<>();
+
+    // Cria uma tabela auxiliar: tb_regra_dia_semana (regra_id, dia_semana)
+    @ElementCollection(fetch = FetchType.EAGER)
     @Column(name = "dia_semana")
-    private Set<DayOfWeek> diaSemana = new HashSet<>();
-
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(
-            name = "mes",
-            joinColumns = @JoinColumn(name = "regra_id"))
     @Enumerated(EnumType.STRING)
-    private Set<Month> mes =  new HashSet<>();
-
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(
-            name = "turno",
-            joinColumns = @JoinColumn(name = "regra_id"))
-    @Enumerated(EnumType.STRING)
-    private Set<Turno> turno =  new HashSet<>();
+    private Set<DiaSemana> diasSemana = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "teatro_id", nullable = false)
     private Teatro teatro;
 
-    public boolean isAplicavel(LocalDate dataAluguel, Turno turnoAluguel) {
 
-        Month mesAluguel = dataAluguel.getMonth();
-        DayOfWeek diaSemanaAluguel = dataAluguel.getDayOfWeek();
+    public boolean isAplicavel(LocalDate dataSessao) {
 
-        if (!this.mes.isEmpty() && !this.mes.contains(mesAluguel)) {
-            return false;
-        }
-        if (!this.diaSemana.isEmpty() && !this.diaSemana.contains(diaSemanaAluguel)) {
-            return false;
-        }
-        if (!this.turno.isEmpty() && !this.turno.contains(turnoAluguel)) {
-            return false;
-        }
-        return true;
+        // Se o Set de meses estiver vazio, significa "Qualquer Mês"
+        // Se tiver algo, a data da sessão TEM que estar lá dentro
+        boolean mesBate = this.meses.isEmpty() || this.meses.contains(dataSessao.getMonthValue());
+
+        // Mesma lógica para os dias da semana
+        boolean diaBate = this.diasSemana.isEmpty() || this.diasSemana.contains(dataSessao.getDayOfWeek().getValue());
+
+        return mesBate && diaBate;
     }
+
 }

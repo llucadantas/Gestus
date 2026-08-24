@@ -1,5 +1,6 @@
 package com.services;
 
+import com.database.model.Aluguel;
 import com.database.model.Peca;
 import com.database.model.Teatro;
 import com.database.repository.PecaDao;
@@ -17,55 +18,26 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PecaService {
     private final PecaDao pecaDao;
-    private final TeatroDao teatroDao;
-
-    public List<PecaResponse> listarPecas(Long idTeatro){
-        return pecaDao.findAllByTeatro_id(idTeatro)
+    public List<PecaResponse> listarPecas(){
+        return pecaDao.findAll()
                 .stream()
                 .map(PecaResponse::new)
                 .toList();
     }
 
-    public PecaResponse buscarPeca(Long idPeca, Long idTeatro) throws NotFoundException {
-        return new PecaResponse(pecaDao.findByIdAndTeatro_id(idPeca, idTeatro)
+    public PecaResponse buscarPeca(Long idPeca) throws NotFoundException {
+        return new PecaResponse(pecaDao.findById(idPeca)
                 .orElseThrow(()-> new NotFoundException("Peca não existe")));
     }
 
     @Transactional
-    public void cadastrarPeca(PecaRequest peca, Long idTeatro) throws NotFoundException {
-        if(idTeatro==null){
-            throw new NotFoundException("Teatro não existe");
-        }
-        Teatro t = teatroDao.findById(idTeatro)
-                .orElseThrow(()-> new NotFoundException("Teatro não existe"));
+    public void cadastrarPeca(PecaRequest peca) throws NotFoundException {
         pecaDao.save(Peca
-                        .builder()
-                        .nome(peca.nome())
-                        .descricao(peca.descricao())
-                        .teatro(t)
-                        .build());
+                .builder()
+                .nome(peca.nome())
+                .descricao(peca.descricao())
+                .build());
     }
-
-    @Transactional
-    public void atualizarPeca(Long idPeca,PecaRequest peca, Long idTeatro) throws NotFoundException {
-        Peca p = getPeca(idTeatro, idPeca);
-        p.setDescricao(peca.descricao());
-        p.setNome(peca.nome());
-        pecaDao.save(p);
-    }
-
-    @Transactional
-    public void deletarPeca(Long idPeca, Long idTeatro) throws NotFoundException {
-        Peca p = getPeca(idTeatro, idPeca);
-        pecaDao.deleteById(p.getId());
-    }
-
-    public Peca getPeca(Long idTeatro,Long idPeca) throws NotFoundException {
-        if(idTeatro==null){
-            throw new NotFoundException("Teatro não existe");
-        }
-        return pecaDao.findByIdAndTeatro_id(idPeca, idTeatro)
-                .orElseThrow(()->new NotFoundException("Peca não existe"));
-    }
-
 }
+
+

@@ -21,7 +21,6 @@ public class ArtistaService {
 
     @Transactional
     public void criar(ArtistaRequest request) {
-
         Artista artista = Artista.builder()
                 .nome(request.nome())
                 .email(request.email())
@@ -31,7 +30,7 @@ public class ArtistaService {
     }
 
     @Transactional(readOnly = true)
-    public ArtistaResponse buscarPorId(Long id, Long idTeatroContexto) throws NotFoundException {
+    public ArtistaResponse buscarPorId(Long id) throws NotFoundException {
         Artista artista = artistaDao.findById(id)
                 .orElseThrow(() -> new NotFoundException("Artista não encontrado."));
 
@@ -45,23 +44,28 @@ public class ArtistaService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional
-    public void atualizar(Long id, ArtistaRequest request) {
-        Artista artista = artistaDao.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Artista não encontrado para atualização."));
-
-        artista.setNome(request.nome());
-        artista.setEmail(request.email());
-
-       artistaDao.save(artista);
-
+    @Transactional(readOnly = true)
+    public Artista buscarPorEmail(String email) throws NotFoundException {
+        return artistaDao.findByEmail(email)
+                .orElseThrow(()-> new NotFoundException("Artista não existe."));
     }
 
-    @Transactional
-    public void deletar(Long id) {
-        if (!artistaDao.existsById(id)) {
-            throw new EntityNotFoundException("Artista não encontrado para deleção.");
-        }
-        artistaDao.deleteById(id);
+//    @Transactional
+//    public void atualizar(Long id, ArtistaRequest request) {
+//        Artista artista = artistaDao.findById(id)
+//                .orElseThrow(() -> new EntityNotFoundException("Artista não encontrado para atualização."));
+//
+//        artista.setNome(request.nome());
+//        artista.setEmail(request.email());
+//
+//       artistaDao.save(artista);
+//
+//    }
+//
+//    @Transactional
+//    public void deletar(Long id) {
+//        if (!artistaDao.existsById(id)) {
+//            throw new EntityNotFoundException("Artista não encontrado para deleção.");
+//        }
+//        artistaDao.deleteById(id);
     }
-}

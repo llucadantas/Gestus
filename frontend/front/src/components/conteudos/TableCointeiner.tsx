@@ -1,0 +1,13 @@
+interface TableContainerProps {
+    children: React.ReactNode;
+}
+
+export function TableContainer({ children }: TableContainerProps) {
+    return (
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            <div className="overflow-x-auto">
+                {children}
+            </div>
+        </div>
+    );
+}

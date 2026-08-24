@@ -58,14 +58,14 @@ public class RegraController {
         regraPrecoService.deletarRegraPreco(idTeatro, idRegra);
     }
 
-    @GetMapping
-    @RequestMapping("/preco")
-    @ResponseStatus(HttpStatus.OK)
-    public List<RegraResponse> buscarPreco(@AuthenticationPrincipal(expression = "idTeatro") Long id,
-                                  @RequestParam @DateTimeFormat(pattern = "dd/MM/yyyy") LocalDate data,
-                                           @RequestParam Turno turno) {
-        return regraPrecoService.obterPrecoAplicavel(data, turno, id);
-
-    }
+//    @GetMapping
+//    @RequestMapping("/preco")
+//    @ResponseStatus(HttpStatus.OK)
+//    public  buscarPreco(@AuthenticationPrincipal(expression = "idTeatro") Long id,
+//                                  @RequestParam @DateTimeFormat(pattern = "dd/MM/yyyy") LocalDate data,
+//                                           @RequestParam Turno turno) {
+//        return regraPrecoService.obterPrecoAplicavel(data, turno, id);
+//
+//    }
 
 }

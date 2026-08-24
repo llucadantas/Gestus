@@ -24,7 +24,4 @@ public class Teatro {
 
     @OneToMany(mappedBy = "teatro", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RegraPreco> regras = new ArrayList<>();
-
-    @OneToMany(mappedBy = "teatro",  cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Peca> pecas = new ArrayList<>();
 }

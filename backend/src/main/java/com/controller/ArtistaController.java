@@ -28,10 +28,9 @@ public class ArtistaController {
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ArtistaResponse buscarPorId(
-            @PathVariable Long id,
-            @AuthenticationPrincipal(expression = "idTeatro") Long idTeatro) throws NotFoundException {
+            @PathVariable Long id) throws NotFoundException {
 
-        return artistaService.buscarPorId(id, idTeatro);
+        return artistaService.buscarPorId(id);
     }
 
     @GetMapping
@@ -40,16 +39,4 @@ public class ArtistaController {
         return artistaService.listarTodos();
     }
 
-    @PutMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void atualizar(@PathVariable Long id, @RequestBody @Valid ArtistaRequest request) {
-
-        artistaService.atualizar(id, request);
-    }
-
-    @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deletar(@PathVariable Long id) {
-        artistaService.deletar(id);
-    }
 }

@@ -42,9 +42,17 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
     }
 
+    @ExceptionHandler(ValidacaoException.class)
+    public ResponseEntity<ErrorResponse> teatroException(ValidacaoException e) {
+        ErrorResponse response = ErrorResponse.builder()
+                .message(e.getMessage())
+                .status(HttpStatus.CONFLICT.value())
+                .build();
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> tratarErrosDeValidacao(MethodArgumentNotValidException ex) {
-        // Concatena os erros de validação em uma única String
         String mensagemErros = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()

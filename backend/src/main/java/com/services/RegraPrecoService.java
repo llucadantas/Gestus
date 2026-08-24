@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -27,10 +28,9 @@ public class RegraPrecoService {
     public void cadastrarRegraPreco(RegraRequest regraRequest, Long idTeatro) throws NotFoundException {
         Teatro t = teatroService.getTeatro(idTeatro);
         RegraPreco regraPreco = RegraPreco.builder()
-                .preco(regraRequest.valor())
-                .mes(regraRequest.mes())
-                .turno(regraRequest.turno())
-                .diaSemana(regraRequest.dia())
+                .valor(regraRequest.valor())
+                .meses(regraRequest.meses())
+                .diasSemana(regraRequest.diasSemana())
                 .teatro(t)
                 .build();
         regraPrecoDao.save(regraPreco);
@@ -38,7 +38,7 @@ public class RegraPrecoService {
 
     public RegraResponse getRegraResponse(Long idTeatro, Long idRegra) throws NotFoundException {
         if(idTeatro == null) {
-            throw new NotFoundException("Teatro não existente");
+            throw new NotFoundException("Teatro não existe");
         }
         RegraPreco r = regraPrecoDao
                 .findByIdAndTeatro_Id(idRegra, idTeatro)
@@ -48,7 +48,7 @@ public class RegraPrecoService {
 
     public List<RegraResponse> getRegrasListResponse(Long idTeatro) throws NotFoundException {
         if(idTeatro == null) {
-            throw new NotFoundException("Teatro não existente");
+            throw new NotFoundException("Teatro não existe");
         }
         return getRegrasModel(idTeatro)
                 .stream()
@@ -66,20 +66,20 @@ public class RegraPrecoService {
     @Transactional
     public void atualizarRegra(Long idRegra, Long idTeatro, RegraRequest regraPreco) throws NotFoundException {
         RegraPreco r = getRegraPreco(idTeatro, idRegra);
-        r.setPreco(regraPreco.valor());
-        r.setMes(regraPreco.mes());
-        r.setTurno(regraPreco.turno());
-        r.setDiaSemana(regraPreco.dia());
+        r.setValor(regraPreco.valor());
+        r.setMeses(regraPreco.meses());
+        r.setDiasSemana(regraPreco.diasSemana());
         regraPrecoDao.save(r);
     }
 
-    public List<RegraResponse> obterPrecoAplicavel(LocalDate dataAluguel, Turno turnoAluguel, Long idTeatro){
+    public BigDecimal obterPrecoAplicavel(LocalDate data, Long idTeatro){
         List<RegraPreco> todasAsRegras = getRegrasModel(idTeatro);
 
         return todasAsRegras.stream()
-                .filter(regra -> regra.isAplicavel(dataAluguel, turnoAluguel))
-                .map(RegraResponse::new)
-                .toList();
+                .filter(regra -> regra.isAplicavel(data))
+                .map(RegraPreco::getValor)
+                .max(BigDecimal::compareTo)
+                .orElse(BigDecimal.ZERO);
     }
 
     private List<RegraPreco> getRegrasModel(Long idTeatro){

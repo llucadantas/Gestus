@@ -19,38 +19,22 @@ public class PecaController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<PecaResponse> getPecas(@AuthenticationPrincipal(expression = "idTeatro") Long idTeatro) {
-        return pecaService.listarPecas(idTeatro);
+    public List<PecaResponse> getPecas() {
+        return pecaService.listarPecas();
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping("/{id}")
-    public PecaResponse getPeca(@AuthenticationPrincipal(expression = "idTeatro") Long idTeatro, @PathVariable Long id ) throws NotFoundException {
-        return pecaService.buscarPeca(id, idTeatro);
+    public PecaResponse getPeca(@PathVariable Long id ) throws NotFoundException {
+        return pecaService.buscarPeca(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void salvarPeca(@AuthenticationPrincipal(expression = "idTeatro") Long idTeatro, @RequestBody PecaRequest pecaRequest) throws NotFoundException {
-        pecaService.cadastrarPeca(pecaRequest, idTeatro);
+    public void salvarPeca(@RequestBody PecaRequest pecaRequest) throws NotFoundException {
+        pecaService.cadastrarPeca(pecaRequest);
     }
 
-    @PutMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    @RequestMapping("/atualizar/{id}")
-    public void atualizarPeca(@AuthenticationPrincipal(expression = "idTeatro") Long idTeatro,
-                              @RequestBody PecaRequest pecaRequest,
-                              @PathVariable Long id) throws NotFoundException {
-        pecaService.atualizarPeca(id, pecaRequest, idTeatro);
-    }
-
-    @DeleteMapping
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @RequestMapping("/delete/{id}")
-    public void deletarPeca(@AuthenticationPrincipal(expression = "idTeatro") Long idTeatro,
-                            @PathVariable Long id) throws NotFoundException {
-        pecaService.deletarPeca(id, idTeatro);
-    }
 
 }
