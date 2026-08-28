@@ -2,7 +2,7 @@ package com.services;
 
 import com.database.model.Assento;
 import com.database.model.Coluna;
-import com.database.repository.AssentoDao;
+import com.database.dao.AssentoDao;
 import com.dto.response.AssentoResponse;
 import com.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;

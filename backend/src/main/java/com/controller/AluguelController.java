@@ -44,6 +44,12 @@ public class AluguelController {
         return aluguelService.buscarListaContrato(idTeatro);
     }
 
+    @PostMapping("/renovar")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void renovarContrato(){
+
+    }
+
 
 //    @DeleteMapping("/{id}")
 //    @ResponseStatus(HttpStatus.NO_CONTENT)

@@ -1,7 +1,7 @@
 package com.services;
 
 import com.database.model.Administrador;
-import com.database.repository.AdministradorDao;
+import com.database.dao.AdministradorDao;
 import com.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -1,7 +1,7 @@
 package com.services;
 
 import com.database.model.Coluna;
-import com.database.repository.ColunaAssentoDao;
+import com.database.dao.ColunaAssentoDao;
 import com.dto.requests.ColunaRequest;
 import com.dto.response.ColunaResponse;
 import com.exception.NotFoundException;

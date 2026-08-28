@@ -22,7 +22,7 @@ public class Aluguel {
     private Long id;
 
     @Column(name = "valor_total", nullable = false)
-    private BigDecimal valorTotal;
+    private BigDecimal valorTotal = BigDecimal.ZERO;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "peca_id", nullable = false)
@@ -43,14 +43,14 @@ public class Aluguel {
         this.peca = peca;
     }
 
-    @PrePersist
-    @PreUpdate
+
     public void calcularValorTotal() {
         BigDecimal valorTotal = BigDecimal.ZERO;
 
         for (Sessao sessao : sessoes) {
             valorTotal = valorTotal.add(sessao.getValorSessao());
         }
+        setValorTotal(valorTotal);
     }
 
 

@@ -2,6 +2,7 @@ import { api } from "@/src/app/services/api"
 
 export const authService = {
     login: async (email: String, senha: String) => {
+      
       const response = await api.post('/v1/auth/login', { email, senha });
       const dadosUsuario = response.data;
       localStorage.setItem('usuarioGestus', JSON.stringify(dadosUsuario));

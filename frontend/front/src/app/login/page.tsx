@@ -16,7 +16,6 @@ export default function Login() {
     const [errorMessage, setErrorMessage] = useState('');
 
     const handleLogin = async (e: React.FormEvent) => {
-        
         e.preventDefault();
         setLoading(true);
         setErrorMessage('');
@@ -24,7 +23,6 @@ export default function Login() {
         try {
             await authService.login(email, password);
             router.push('/menu')
-            
         } catch (error: any) {
             console.error('Erro ao logar:', error);
             setErrorMessage(error.response?.data?.message || 'E-mail ou senha incorretos.');

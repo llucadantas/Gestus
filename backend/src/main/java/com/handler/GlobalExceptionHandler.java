@@ -43,7 +43,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ValidacaoException.class)
-    public ResponseEntity<ErrorResponse> teatroException(ValidacaoException e) {
+    public ResponseEntity<ErrorResponse> validacao(ValidacaoException e) {
         ErrorResponse response = ErrorResponse.builder()
                 .message(e.getMessage())
                 .status(HttpStatus.CONFLICT.value())

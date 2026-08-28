@@ -1,11 +1,10 @@
 package com.services;
 
 import com.database.model.Artista;
-import com.database.repository.ArtistaDao;
+import com.database.dao.ArtistaDao;
 import com.dto.requests.ArtistaRequest;
 import com.dto.response.ArtistaResponse;
 import com.exception.NotFoundException;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

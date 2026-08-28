@@ -32,15 +32,17 @@ public class RegraPreco {
     private BigDecimal valor;
 
     @ElementCollection(fetch = FetchType.EAGER)
-    @Column(name = "mes")
+    @CollectionTable(name = "regra_dias_semana", joinColumns = @JoinColumn(name = "regra_id"))
     @Enumerated(EnumType.STRING)
-    private Set<Mes> meses = new HashSet<>();
+    @Column(name = "dia")
+    private Set<DiaSemana> diasSemana;
 
-    // Cria uma tabela auxiliar: tb_regra_dia_semana (regra_id, dia_semana)
+    // CORRETO: Cria a tabela "regra_meses" e salva como String
     @ElementCollection(fetch = FetchType.EAGER)
-    @Column(name = "dia_semana")
+    @CollectionTable(name = "regra_meses", joinColumns = @JoinColumn(name = "regra_id"))
     @Enumerated(EnumType.STRING)
-    private Set<DiaSemana> diasSemana = new HashSet<>();
+    @Column(name = "mes")
+    private Set<Mes> meses;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "teatro_id", nullable = false)
@@ -49,12 +51,11 @@ public class RegraPreco {
 
     public boolean isAplicavel(LocalDate dataSessao) {
 
-        // Se o Set de meses estiver vazio, significa "Qualquer Mês"
-        // Se tiver algo, a data da sessão TEM que estar lá dentro
-        boolean mesBate = this.meses.isEmpty() || this.meses.contains(dataSessao.getMonthValue());
+        Mes mesSessao = Mes.converterDoJava(dataSessao.getMonth());
+        DiaSemana diaSessao = DiaSemana.converterDoJava(dataSessao.getDayOfWeek());
 
-        // Mesma lógica para os dias da semana
-        boolean diaBate = this.diasSemana.isEmpty() || this.diasSemana.contains(dataSessao.getDayOfWeek().getValue());
+        boolean mesBate = this.meses.isEmpty() || this.meses.contains(mesSessao);
+        boolean diaBate = this.diasSemana.isEmpty() || this.diasSemana.contains(diaSessao);
 
         return mesBate && diaBate;
     }

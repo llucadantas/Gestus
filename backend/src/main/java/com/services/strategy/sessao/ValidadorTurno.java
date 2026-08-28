@@ -8,9 +8,8 @@ import org.springframework.stereotype.Component;
 import java.time.LocalTime;
 
 @Component
-public class ValidadorTurno implements ValidadorSessao {
+public class ValidadorTurno implements ValidadorSessao{
 
-    @Override
     public void validar(Sessao sessao, Long idTeatro) {
         LocalTime ocupacaoInicio = sessao.getHorarioInicioPeca().minusHours(1);
         LocalTime ocupacaoFim = sessao.getHorarioFimPeca().plusHours(1);

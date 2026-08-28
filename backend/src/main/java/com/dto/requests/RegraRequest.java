@@ -23,3 +23,4 @@ public record RegraRequest(
         Set<Mes> meses
 ) {
 }
+

@@ -20,7 +20,7 @@ public class Sessao {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "proposta_aluguel_id", nullable = false)
+    @JoinColumn(name = "proposta_aluguel_id")
     private Aluguel propostaAluguel;
 
     @Column(name = "data_exibicao", nullable = false)
@@ -41,7 +41,7 @@ public class Sessao {
     @Column(name = "valor_sessao", nullable = false)
     private BigDecimal valorSessao;
 
-    @Column(name = "valor_ingresso", nullable = false)
+    @Column(name = "valor_ingresso")
     private BigDecimal valorIngresso;
 
     public Sessao(Aluguel propostaAluguel, LocalDate dataExibicao,
@@ -56,12 +56,17 @@ public class Sessao {
         this.valorIngresso = valorIngresso;
     }
 
-    @PrePersist
-    @PreUpdate
-    private void calcularHorariosDeOcupacao() {
-        if (this.horarioInicioPeca != null && this.horarioFimPeca != null) {
-            this.horarioOcupacaoInicio = this.horarioInicioPeca.minusHours(1);
-            this.horarioOcupacaoFim = this.horarioFimPeca.plusHours(1);
+    public void setHorarioInicioPeca(LocalTime horarioInicioPeca) {
+        this.horarioInicioPeca = horarioInicioPeca;
+        if (horarioInicioPeca != null) {
+            this.horarioOcupacaoInicio = horarioInicioPeca.minusHours(1);
+        }
+    }
+
+    public void setHorarioFimPeca(LocalTime horarioFimPeca) {
+        this.horarioFimPeca = horarioFimPeca;
+        if (horarioFimPeca != null) {
+            this.horarioOcupacaoFim = horarioFimPeca.plusHours(1);
         }
     }
 }

@@ -2,27 +2,29 @@ package com.services;
 
 import com.database.model.RegraPreco;
 import com.database.model.Teatro;
-import com.database.model.enums.Turno;
-import com.database.repository.RegraPrecoDao;
+
+import com.database.dao.RegraPrecoDao;
 import com.dto.requests.RegraRequest;
 import com.dto.response.RegraResponse;
 import com.exception.NotFoundException;
+import com.services.strategy.sessao.ValidadorRegra;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Comparator;
+
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
+
+
 
 @Service
 @RequiredArgsConstructor
 public class RegraPrecoService {
     private final TeatroService teatroService;
     private final RegraPrecoDao regraPrecoDao;
+    private final List<ValidadorRegra> validadores;
 
     @Transactional
     public void cadastrarRegraPreco(RegraRequest regraRequest, Long idTeatro) throws NotFoundException {
@@ -31,6 +33,7 @@ public class RegraPrecoService {
                 .valor(regraRequest.valor())
                 .meses(regraRequest.meses())
                 .diasSemana(regraRequest.diasSemana())
+                .descricao(regraRequest.descricao())
                 .teatro(t)
                 .build();
         regraPrecoDao.save(regraPreco);
@@ -40,27 +43,23 @@ public class RegraPrecoService {
         if(idTeatro == null) {
             throw new NotFoundException("Teatro não existe");
         }
-        RegraPreco r = regraPrecoDao
-                .findByIdAndTeatro_Id(idRegra, idTeatro)
+        return regraPrecoDao
+                .findByIdAndTeatro_IdResponse(idRegra, idTeatro)
                 .orElseThrow(() -> new NotFoundException("Regra não encontrada"));
-        return new RegraResponse(r);
     }
 
     public List<RegraResponse> getRegrasListResponse(Long idTeatro) throws NotFoundException {
         if(idTeatro == null) {
             throw new NotFoundException("Teatro não existe");
         }
-        return getRegrasModel(idTeatro)
-                .stream()
-                .map(RegraResponse::new)
-                .toList();
+        return regraPrecoDao.findAllByTeatro_IdResponse(idTeatro);
     }
 
 
     @Transactional
     public void deletarRegraPreco(Long idTeatro, Long idRegraPreco) throws NotFoundException {
         RegraPreco r = getRegraPreco(idTeatro,idRegraPreco);
-        regraPrecoDao.deleteById(r.getId());
+        regraPrecoDao.delete(r.getId());
     }
 
     @Transactional
@@ -73,6 +72,10 @@ public class RegraPrecoService {
     }
 
     public BigDecimal obterPrecoAplicavel(LocalDate data, Long idTeatro){
+        for(ValidadorRegra v: validadores){
+            v.validar(data, idTeatro);
+        }
+
         List<RegraPreco> todasAsRegras = getRegrasModel(idTeatro);
 
         return todasAsRegras.stream()

@@ -1,10 +1,7 @@
 package com.services;
 
-import com.database.model.Aluguel;
 import com.database.model.Peca;
-import com.database.model.Teatro;
-import com.database.repository.PecaDao;
-import com.database.repository.TeatroDao;
+import com.database.dao.PecaDao;
 import com.dto.requests.PecaRequest;
 import com.dto.response.PecaResponse;
 import com.exception.NotFoundException;
@@ -25,18 +22,19 @@ public class PecaService {
                 .toList();
     }
 
-    public PecaResponse buscarPeca(Long idPeca) throws NotFoundException {
-        return new PecaResponse(pecaDao.findById(idPeca)
-                .orElseThrow(()-> new NotFoundException("Peca não existe")));
+    public Peca buscarPeca(Long idPeca) throws NotFoundException {
+        return pecaDao.findById(idPeca)
+                .orElseThrow(()-> new NotFoundException("Peca não existe"));
     }
 
     @Transactional
-    public void cadastrarPeca(PecaRequest peca) throws NotFoundException {
-        pecaDao.save(Peca
-                .builder()
+    public Peca cadastrarPeca(PecaRequest peca) throws NotFoundException {
+        Peca p = Peca.builder()
                 .nome(peca.nome())
                 .descricao(peca.descricao())
-                .build());
+                .build();
+        pecaDao.save(p);
+        return p;
     }
 }
 

@@ -1,5 +1,6 @@
 package com.controller;
 
+import com.database.model.Peca;
 import com.dto.requests.PecaRequest;
 import com.dto.response.PecaResponse;
 import com.exception.NotFoundException;
@@ -26,14 +27,14 @@ public class PecaController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping("/{id}")
-    public PecaResponse getPeca(@PathVariable Long id ) throws NotFoundException {
+    public Peca getPeca(@PathVariable Long id ) throws NotFoundException {
         return pecaService.buscarPeca(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void salvarPeca(@RequestBody PecaRequest pecaRequest) throws NotFoundException {
-        pecaService.cadastrarPeca(pecaRequest);
+    public Peca salvarPeca(@RequestBody PecaRequest pecaRequest) throws NotFoundException {
+        return pecaService.cadastrarPeca(pecaRequest);
     }
 
 

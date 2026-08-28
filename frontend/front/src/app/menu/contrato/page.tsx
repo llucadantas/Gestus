@@ -33,10 +33,13 @@ export default function ContratosPage() {
         }
     };
 
-    const podeExcluir = (dataIso: string) => {
+    // A exclusão agora se baseia na data de INÍCIO do contrato.
+    // Só é possível excluir se a peça ainda não tiver começado.
+    const podeExcluir = (dataInicioIso: string) => {
+        if (!dataInicioIso) return false;
         const hoje = new Date();
         hoje.setHours(0, 0, 0, 0);
-        return new Date(dataIso + 'T00:00:00') > hoje;
+        return new Date(dataInicioIso + 'T00:00:00') > hoje;
     };
 
     const formatarData = (dataIso: string) => {
@@ -96,22 +99,32 @@ export default function ContratosPage() {
                         <tr className="border-b border-gray-100 bg-gray-50/50">
                             <th className="px-6 py-4 font-semibold text-sm text-gray-500 uppercase">Peça</th>
                             <th className="px-6 py-4 font-semibold text-sm text-gray-500 uppercase">Artista / Produtor</th>
-                            <th className="px-6 py-4 font-semibold text-sm text-gray-500 uppercase">Data e Turno</th>
+                            {/* Ajustado o título da coluna */}
+                            <th className="px-6 py-4 font-semibold text-sm text-gray-500 uppercase">Período e Turno</th>
                             <th className="px-6 py-4 font-semibold text-sm text-gray-500 uppercase">Valor</th>
                             <th className="px-6 py-4 font-semibold text-sm text-gray-500 uppercase text-right">Ações</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-100">
                         {contratos.map((c) => {
-                            const liberado = podeExcluir(c.data);
+                            // Verifica se a dataInicio é no futuro para habilitar o botão de exclusão
+                            const liberado = podeExcluir(c.dataInicio);
                             return (
                                 <tr key={c.id} className="hover:bg-gray-50/50 transition-colors">
                                     <td className="px-6 py-4 font-bold text-gray-800">{c.nomePeca}</td>
                                     <td className="px-6 py-4 text-gray-600">{c.nomeArtista}</td>
                                     <td className="px-6 py-4">
-                                        <div className="flex items-center gap-2">
-                                            <span className="font-medium text-gray-700">{formatarData(c.data)}</span>
-                                            <Badge texto={c.turno} cor="purple" />
+                                        <div className="flex flex-col gap-1">
+                                            {/* Exibindo Início e Fim */}
+                                            <span className="font-medium text-gray-700">
+                                                {formatarData(c.dataInicio)} a {formatarData(c.dataFim)}
+                                            </span>
+                                            {/* Mantemos o Badge caso o backend ainda retorne o turno predominante */}
+                                            {c.turno && (
+                                                <div className="self-start">
+                                                    <Badge texto={c.turno} cor="purple" />
+                                                </div>
+                                            )}
                                         </div>
                                     </td>
                                     <td className="px-6 py-4 font-semibold text-gray-800">{formatarMoeda(c.valor)}</td>
@@ -150,7 +163,7 @@ export default function ContratosPage() {
                         Renovando contrato de <strong>{contratoSelecionado?.nomePeca}</strong>.
                     </p>
                     <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">Nova Data</label>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">Nova Data de Início</label>
                         <input 
                             type="date" 
                             required

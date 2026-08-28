@@ -15,6 +15,7 @@ public record RegraResponse(
         Set<DiaSemana> diasSemana,
         Set<Mes> mes,
         BigDecimal valor,
+        String descricao,
         Long idTeatro
 
 ) {
@@ -24,6 +25,7 @@ public record RegraResponse(
                 regra.getDiasSemana(),
                 regra.getMeses(),
                 regra.getValor(),
+                regra.getDescricao(),
                 regra.getTeatro().getId()
         );
     }

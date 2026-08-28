@@ -1,7 +1,7 @@
 package com.services.strategy.sessao;
 
 import com.database.model.Sessao;
-import com.database.repository.SessaoDao;
+import com.database.dao.SessaoDao;
 import com.exception.ValidacaoException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

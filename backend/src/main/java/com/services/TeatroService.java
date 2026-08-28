@@ -2,8 +2,8 @@ package com.services;
 
 import com.database.model.Administrador;
 import com.database.model.Teatro;
-import com.database.repository.AdministradorDao;
-import com.database.repository.TeatroDao;
+import com.database.dao.AdministradorDao;
+import com.database.dao.TeatroDao;
 import com.dto.requests.TeatroRequest;
 import com.dto.response.TeatroResponse;
 import com.exception.NotFoundException;

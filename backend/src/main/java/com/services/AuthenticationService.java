@@ -2,17 +2,14 @@ package com.services;
 
 import com.config.TokenProvider;
 import com.database.model.Administrador;
-import com.database.repository.AdministradorDao;
+import com.database.dao.AdministradorDao;
 import com.dto.UserDto;
 import com.dto.requests.LoginRequest;
 import com.dto.requests.RegisterRequest;
-import com.dto.response.TokenResponse;
 import com.dto.response.UserResponse;
 import com.exception.NotFoundException;
 import com.exception.TeatroCadastroException;
-import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
@@ -21,7 +18,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.token.TokenService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

@@ -1,8 +1,7 @@
-package com.database.repository;
+package com.database.dao;
 
 import com.database.model.Teatro;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;

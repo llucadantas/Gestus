@@ -1,5 +1,7 @@
 package com.database.model.enums;
 
+import java.time.Month;
+
 public enum Mes {
     JANEIRO,
     FEVEREIRO,
@@ -12,5 +14,9 @@ public enum Mes {
     SETEMBRO,
     OUTUBRO,
     NOVEMBRO,
-    DEZEMBRO
+    DEZEMBRO;
+
+    public static Mes converterDoJava(Month mesJava) {
+        return values()[mesJava.getValue() - 1];
+    }
 }

@@ -1,4 +1,4 @@
-package com.database.repository;
+package com.database.dao;
 
 import com.database.model.Coluna;
 import org.springframework.data.jpa.repository.JpaRepository;
