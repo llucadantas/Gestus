@@ -7,6 +7,19 @@ spring:
   docker:
     compose:
       file: C:\Users\lucas\OneDrive\Desktop\Projeto\GerenciadorTeatro\Gestus\Gestus\backend\compose.yaml
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: lucas.dantasps26@gmail.com
+    password: oydj zycj tasd cvbm
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+
 
   datasource:
     url: ${POSTGRES_URL}
@@ -17,7 +30,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     show-sql: true
 
   jwt:

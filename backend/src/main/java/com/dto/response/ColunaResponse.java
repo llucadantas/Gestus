@@ -1,9 +1,11 @@
 package com.dto.response;
-
+import com.database.model.Assento;
 import com.database.model.Coluna;
 
-public record ColunaResponse(String identifcador, Integer qntd) {
+import java.util.List;
+
+public record ColunaResponse(Long id,String identificador, Integer qntd, List<Assento> assentos) {
     public ColunaResponse(Coluna c){
-        this(c.getIdentificadorColuna(), c.getQntdAssento());
+        this(c.getId(),c.getIdentificadorColuna(), c.getQntdAssento(), c.getAssentos());
     }
 }

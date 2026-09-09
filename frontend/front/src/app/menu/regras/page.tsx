@@ -1,12 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { regrasService } from '@/src/app/services/regrasService';
 import { PageHeader } from '@/src/components/conteudos/PageHeader';
 import { TableContainer } from '@/src/components/conteudos/TableCointeiner';
 import { Modal } from '@/src/components/conteudos/Modal';
 import { Badge } from '@/src/components/conteudos/Bradge';
+import { useRegras } from '@/src/hooks/useRegras';
 
 // CORRIGIDO: Retirado o 'Ç' de TERCA
 const DIAS_SEMANA = [
@@ -24,99 +22,27 @@ const MESES = [
 ];
 
 export default function RegrasPage() {
-    const router = useRouter();
-    const [carregando, setCarregando] = useState(true);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [regras, setRegras] = useState<any[]>([]);
-
-    // Form States
-    const [descricao, setDescricao] = useState('');
-    const [preco, setPreco] = useState('');
-    const [selectedDias, setSelectedDias] = useState<string[]>([]);
-    const [selectedMeses, setSelectedMeses] = useState<string[]>([]);
-
-    useEffect(() => {
-        carregarRegras();
-    }, []);
-
-    const carregarRegras = async () => {
-        try {
-            const dados = await regrasService.getRegras();
-            setRegras(dados.map((regra: any) => ({
-                id: regra.id,
-                descricao: regra.descricao,
-                valor: regra.valor,
-                diasSemana: regra.diasSemana || [],
-                meses: regra.mes || []
-            }))
-        
-        );
-        console.log(dados);
-        } catch (error: any) {
-            console.error("Erro ao carregar regras:", error);
-            if (error.response?.status === 401 || error.response?.status === 403) {
-                localStorage.removeItem('usuarioGestus');
-                router.push('/login');
-            }
-        } finally {
-            setCarregando(false);
-        }
-    };
-
-    const toggleSelection = (id: string, list: string[], setList: (val: string[]) => void) => {
-        if (list.includes(id)) {
-            setList(list.filter(item => item !== id));
-        } else {
-            setList([...list, id]);
-        }
-    };
-
-    const handleSalvar = async (e: React.FormEvent) => {
-        e.preventDefault();
-        try {
-            const novaRegraBackend = await regrasService.cadastrarRegra(
-                descricao,
-                parseFloat(preco),
-                selectedDias,
-                selectedMeses
-            );
-            
-            const novaRegraFormatada = {
-                id: novaRegraBackend?.id || Date.now(),
-                descricao: descricao,
-                valor: parseFloat(preco),
-                diasSemana: selectedDias,
-                meses: selectedMeses
-            };
-
-            setRegras([...regras, novaRegraFormatada]);
-            fecharModal();
-        } catch (error) {
-            console.error("Erro ao salvar:", error);
-            alert("Não foi possível salvar a regra.");
-        }
-    };
-
-    const fecharModal = () => {
-        setIsModalOpen(false);
-        setDescricao('');
-        setPreco('');
-        setSelectedDias([]);
-        setSelectedMeses([]);
-    };
-
-    const handleExcluir = async (id: number) => {
-        const confirmacao = window.confirm("Deseja realmente excluir esta regra?");
-        if (!confirmacao) return;
-
-        try {
-            await regrasService.deletarRegra(id);
-            setRegras(regras.filter(regra => regra.id !== id)); 
-        } catch (error) {
-            console.error("Erro ao excluir a regra:", error);
-            alert("Não foi possível excluir a regra.");
-        }
-    };
+    const{
+        carregando,
+        setCarregando,
+        setDescricao,
+        setIsModalOpen,
+        setPreco,
+        setRegras,
+        setSelectedDias,
+        setSelectedMeses,
+        isModalOpen,
+        regras,
+        descricao,
+        preco,
+        selectedDias,
+        selectedMeses,
+        handleExcluir,
+        handleSalvar,
+        carregarRegras,
+        toggleSelection,
+        fecharModal
+    } = useRegras();
 
     const formatarMoeda = (val: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val || 0);
 
@@ -126,7 +52,7 @@ export default function RegrasPage() {
         <div className="min-h-screen bg-gray-50 p-6 lg:p-8 font-sans">
             <PageHeader 
                 titulo="Regras de Preço"
-                descricao="Gerencie os valores de aluguel e as condições da regra."
+                descricao="Gerencie os valores de contrato e as condições da regra."
                 textoBotaoAcao="Nova Regra"
                 aoClicarAcao={() => setIsModalOpen(true)}
             />
@@ -155,14 +81,14 @@ export default function RegrasPage() {
                                 <td className="px-6 py-4">
                                     <div className="flex flex-wrap gap-1">
                                         {!regra.diasSemana?.length ? <Badge texto="Todos os dias" cor="gray" /> : 
-                                            regra.diasSemana.map((d: string) => <Badge key={d} texto={DIAS_SEMANA.find(x => x.id === d)?.label || d} cor="blue" />)
+                                            regra.diasSemana.map((d: any) => <Badge key={d} texto={DIAS_SEMANA.find(x => x.id === d)?.label || d} cor="blue" />)
                                         }
                                     </div>
                                 </td>
                                 <td className="px-6 py-4">
                                     <div className="flex flex-wrap gap-1">
                                         {!regra.meses?.length ? <Badge texto="O ano todo" cor="gray" /> : 
-                                            regra.meses.map((m: string) => <Badge key={m} texto={MESES.find(x => x.id === m)?.label || m} cor="emerald" />)
+                                            regra.meses.map((m: any) => <Badge key={m} texto={MESES.find(x => x.id === m)?.label || m} cor="emerald" />)
                                         }
                                     </div>
                                 </td>

@@ -2,37 +2,25 @@
 import Input from '@/src/components/auth/Input';
 import AuthSidebar from '@/src/components/auth/AuthSidebar';
 import { use, useState } from 'react';
-import { authService } from '../services/authService';
+import { authService } from '@/src/services/authService';
 import Button from '@/src/components/auth/Button';
 import { useRouter } from 'next/navigation';
+import useRegister from '@/src/hooks/useRegister';
 
 export default function Cadastro() {
-    const router = useRouter();
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [nome, setNome] = useState('')
-    const [nomeTeatro, setNomeTeatro] = useState('')
-    const [loading, setLoading] = useState(false);
-    const [errorMessage, setErrorMessage] = useState('');
-
-    const register = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setLoading(true);
-        setErrorMessage('');
-
-        try {
-            const dados = await authService.register(nome, password, nomeTeatro, email);
-            console.log('Cadastro realizado com sucesso!', dados);
-            router.push('/login');
-            
-
-        } catch (error: any) {
-            console.error('Erro ao cadastrar:', error);
-            setErrorMessage(error.response?.data?.message || "Erro de Requisição");
-        } finally {
-            setLoading(false);
-        }
-    };
+    const{
+            email,
+            setEmail,
+            setPassword,
+            nome,
+            setNome,
+            nomeTeatro,
+            setNomeTeatro,
+            password,
+            loading,
+            errorMessage,
+            handleRegister
+        } = useRegister();
 
     return (
         <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
@@ -61,7 +49,7 @@ export default function Cadastro() {
                             </div>
                         )}
 
-                        <form onSubmit={register} method='POST' className="space-y-6">
+                        <form onSubmit={handleRegister} method='POST' className="space-y-6">
 
                             <Input
                                 label="Nome do Administrador"

@@ -3,34 +3,18 @@
 import Input from '@/src/components/auth/Input';
 import Button from '@/src/components/auth/Button';
 import AuthSidebar from '@/src/components/auth/AuthSidebar';
-
-import { useState } from 'react';
-import { authService } from '../services/authService';
-import { useRouter } from 'next/navigation';
+import UseLogin from '@/src/hooks/useLogin';
 
 export default function Login() {
-    const router = useRouter();
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [loading, setLoading] = useState(false);
-    const [errorMessage, setErrorMessage] = useState('');
-
-    const handleLogin = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setLoading(true);
-        setErrorMessage('');
-
-        try {
-            await authService.login(email, password);
-            router.push('/menu')
-        } catch (error: any) {
-            console.error('Erro ao logar:', error);
-            setErrorMessage(error.response?.data?.message || 'E-mail ou senha incorretos.');
-        } finally {
-            setLoading(false);
-        }
-    };
-
+    const{
+        email,
+        setEmail,
+        setPassword,
+        password,
+        loading,
+        errorMessage,
+        handleLogin
+    } = UseLogin();
 
 
     return (

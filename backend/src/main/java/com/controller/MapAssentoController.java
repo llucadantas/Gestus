@@ -1,6 +1,7 @@
 package com.controller;
 
 import com.database.model.Assento;
+import com.dto.requests.AssentoAtualizacao;
 import com.dto.requests.ColunaRequest;
 import com.dto.response.AssentoResponse;
 import com.dto.response.ColunaResponse;
@@ -13,6 +14,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/v1/colunas")
@@ -25,10 +27,16 @@ public class MapAssentoController {
 //    PADRAO STATE, ORGANIZAR CHAMADAS POR ID, EXCESSOES
 
 
+//    @PostMapping
+//    @ResponseStatus(HttpStatus.CREATED)
+//    public void criarColunas(@RequestBody Set<ColunaRequest> colunaRequest, @AuthenticationPrincipal(expression = "idTeatro") Long idTeatro) throws NotFoundException {
+//        colunaService.salvarColunas(colunaRequest, idTeatro);
+//    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void criarColuna(@RequestBody ColunaRequest colunaRequest, @AuthenticationPrincipal(expression = "idTeatro") Long idTeatro) throws NotFoundException {
-        colunaService.criarColuna(colunaRequest, idTeatro);
+    public ColunaResponse criarColuna(@RequestBody ColunaRequest colunaRequest, @AuthenticationPrincipal(expression = "idTeatro") Long idTeatro) throws NotFoundException {
+        return colunaService.criarColuna(colunaRequest, idTeatro);
     }
 
     @DeleteMapping
@@ -39,11 +47,10 @@ public class MapAssentoController {
         colunaService.apagarColuna(idTeatro, idColuna);
     }
 
-    @PutMapping
+    @PatchMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @RequestMapping("/criar_assento")
-    public void criarAssentos(@AuthenticationPrincipal(expression = "idTeatro") Long idTeatro) throws NotFoundException {
-        assentoService.criarAssentos(idTeatro);
+    public void atualizarAssentos(@RequestBody AssentoAtualizacao a, @AuthenticationPrincipal(expression = "idTeatro") Long idTeatro) throws NotFoundException {
+        assentoService.atualizarAssento(a, idTeatro);
     }
 
     @GetMapping

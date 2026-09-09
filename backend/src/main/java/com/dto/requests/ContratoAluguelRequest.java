@@ -3,6 +3,7 @@ package com.dto.requests;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -26,6 +27,9 @@ public record ContratoAluguelRequest(
         LocalTime inicioPeca,
 
         @NotNull(message = "Horario de fim é obrigatorio")
-        LocalTime fimPeca
+        LocalTime fimPeca,
+
+
+        BigDecimal valorIngresso
 
 ) {}

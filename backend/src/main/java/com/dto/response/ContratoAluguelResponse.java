@@ -1,9 +1,7 @@
 package com.dto.response;
 
-import com.database.model.Aluguel;
+import com.database.model.Contrato;
 import com.database.model.Sessao;
-import com.database.model.enums.Turno;
-import com.services.AluguelService;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -14,10 +12,10 @@ public record ContratoAluguelResponse(
         String nomePeca,
         String nomeArtista,
         LocalDate dataInicio,
-        LocalDate dataFim
+        LocalDate dataFim,
+        String status
 ) {
-    // Construtor para facilitar a conversão da Entidade para DTO
-    public ContratoAluguelResponse(Aluguel contrato) {
+    public ContratoAluguelResponse(Contrato contrato) {
         this(
                 contrato.getId(),
                 contrato.getValorTotal(),
@@ -32,6 +30,7 @@ public record ContratoAluguelResponse(
                         .stream()
                         .map(Sessao::getDataExibicao)
                         .max(LocalDate::compareTo)
-                        .orElseThrow(() -> new IllegalStateException("Erro")))
-    ;}
+                        .orElseThrow(() -> new IllegalStateException("Erro")),
+
+                contrato.getStatus().toString());}
 }

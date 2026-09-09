@@ -18,8 +18,6 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
 }
 
-// O matcher aqui serve apenas para otimização de performance agora,
-// dizendo ao Next para não rodar esse código em imagens ou arquivos estáticos.
 export const config = {
     matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
 };

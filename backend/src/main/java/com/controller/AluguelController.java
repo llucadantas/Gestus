@@ -3,7 +3,7 @@ package com.controller;
 import com.dto.requests.ContratoAluguelRequest;
 import com.dto.response.ContratoAluguelResponse;
 import com.exception.NotFoundException;
-import com.services.AluguelService;
+import com.services.ContratoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,7 +16,7 @@ import java.util.List;
 @RequestMapping("/v1/aluguel")
 @RequiredArgsConstructor
 public class AluguelController {
-    private final AluguelService aluguelService;
+    private final ContratoService contratoService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -24,7 +24,7 @@ public class AluguelController {
             @RequestBody @Valid ContratoAluguelRequest request,
             @AuthenticationPrincipal(expression = "idTeatro") Long idTeatro) throws NotFoundException {
 
-        aluguelService.cadastrar(request, idTeatro);
+        contratoService.cadastrar(request, idTeatro);
     }
 
     @GetMapping("/{id}")
@@ -33,7 +33,7 @@ public class AluguelController {
             @PathVariable Long id,
             @AuthenticationPrincipal(expression = "idTeatro") Long idTeatro) throws NotFoundException {
 
-        return aluguelService.buscarContrato(id, idTeatro);
+        return contratoService.buscarContrato(id, idTeatro);
     }
 
     @GetMapping
@@ -41,7 +41,7 @@ public class AluguelController {
     public List<ContratoAluguelResponse> listarTodos(
             @AuthenticationPrincipal(expression = "idTeatro") Long idTeatro) {
 
-        return aluguelService.buscarListaContrato(idTeatro);
+        return contratoService.buscarListaContrato(idTeatro);
     }
 
     @PostMapping("/renovar")
@@ -50,14 +50,19 @@ public class AluguelController {
 
     }
 
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void cancelar(
+            @PathVariable Long id,
+            @AuthenticationPrincipal(expression = "idTeatro")Long idTeatro) {
 
-//    @DeleteMapping("/{id}")
-//    @ResponseStatus(HttpStatus.NO_CONTENT)
-//    public void deletar(
-//            @PathVariable Long id,
-//            @AuthenticationPrincipal(expression = "idTeatro")Long idTeatro) {
-//
-//        aluguelService.deletar(id,idTeatro);
-//    }
+        contratoService.cancelarContrato(idTeatro,id);
+    }
+
+    @GetMapping("/assinar")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void assinar(@RequestParam String token){
+        contratoService.assinarContrato(token);
+    }
 }
 

@@ -1,9 +1,10 @@
 package com.database.model;
 
-import com.database.model.state.EstadoAssento;
-import com.database.model.state.EstadoInativo;
-import com.database.model.state.EstadoLivre;
-import com.database.model.state.EstadoOcupado;
+import com.database.model.state.assento.EstadoAssento;
+import com.database.model.state.assento.EstadoInativo;
+import com.database.model.state.assento.EstadoLivre;
+import com.database.model.state.assento.EstadoOcupado;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,6 +26,7 @@ public class Assento {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_coluna")
+    @JsonIgnore
     private Coluna coluna;
 
     @Builder.Default
@@ -32,37 +34,6 @@ public class Assento {
     private String statusDb = "LIVRE";
 
     @Builder.Default
-    @Transient
-    private EstadoAssento estadoAtual = new EstadoLivre();
-
-
-    public void ocupar() {
-        this.estadoAtual.ocupar(this);
-    }
-
-    public void liberar() {
-        this.estadoAtual.liberar(this);
-    }
-
-    public void inativar() {
-        this.estadoAtual.inativar(this);
-    }
-
-    @PostLoad
-    private void carregarEstadoEmMemoria() {
-        switch (this.statusDb) {
-            case "LIVRE" -> this.estadoAtual = new EstadoLivre();
-            case "OCUPADO" -> this.estadoAtual = new EstadoOcupado();
-            case "INATIVO" -> this.estadoAtual = new EstadoInativo();
-            default -> throw new IllegalStateException("Estado de assento desconhecido no banco de dados.");
-        }
-    }
-
-    @PrePersist
-    @PreUpdate
-    private void salvarEstadoNoBanco() {
-        if (this.estadoAtual != null) {
-            this.statusDb = this.estadoAtual.getStatus();
-        }
-    }
+    @Column(name = "tipo_assento", nullable = false)
+    private String tipoAssento = "PADRAO";
 }

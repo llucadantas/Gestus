@@ -3,6 +3,7 @@ package com.services;
 
 import com.database.model.*;
 import com.database.dao.SessaoDao;
+import com.database.model.enums.StatusSessao;
 import com.dto.requests.ContratoAluguelRequest;
 import com.dto.response.SessaoProjection;
 import com.dto.response.SessaoResponse;
@@ -46,7 +47,7 @@ public class SessaoService {
     }
 
     @Transactional
-    public List<Sessao> cadastrarSessoes(ContratoAluguelRequest request, Teatro t, Aluguel aluguel) {
+    public List<Sessao> cadastrarSessoes(ContratoAluguelRequest request, Teatro t, Contrato contrato) {
         List<Sessao> sessoes = new ArrayList<>();
         if (request.dataInicio() == null || request.dataFim() == null) {
             throw new ValidacaoException("As datas de início e fim do contrato são obrigatórias e devem estar no formato YYYY-MM-DD.");
@@ -59,7 +60,8 @@ public class SessaoService {
 
             Sessao sessao = Sessao.builder()
                     .dataExibicao(data)
-                    .propostaAluguel(aluguel)
+                    .propostaContrato(contrato)
+                    .statusSessao(StatusSessao.AGUARDANDO_ASSINATURA)
                     .build();
 
             sessao.setHorarioInicioPeca(request.inicioPeca());

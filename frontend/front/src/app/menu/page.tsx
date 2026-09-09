@@ -1,108 +1,26 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { teatroService } from '../services/teatroService';
-import { sessaoService } from '@/src/app/services/sessaoService';
-import Sidebar from '@/src/components/util/sideBar';
+import Sidebar from '@/src/components/menu/sideBar';
+import { useMenu } from '@/src/hooks/useMenu';
+import ModalTodasSessoes from '@/src/components/menu/ModalTodasSessoes';
+import router from 'next/router';
 
-export default function Dashboard() {
-    const router = useRouter();
+export default function Menu() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-    // =========================================================================
-    // ESTADOS PRINCIPAIS
-    // =========================================================================
-    const [usuario, setUsuario] = useState<any>(null);
-    const [teatro, setTeatro] = useState<any>(null);
-    const [carregando, setCarregando] = useState(true);
+    // Injeção de Dependência: A View consome o Hook
+    const {
+        usuario,
+        teatro,
+        sessoesDestaque,
+        carregando,
+        carregandoSessoes
+    } = useMenu();
 
-    // Estados da Tabela do Dashboard (Prévia)
-    const [sessoesDestaque, setSessoesDestaque] = useState<any[]>([]);
-    const [carregandoSessoes, setCarregandoSessoes] = useState(true);
-
-    // Estados do Modal "Ver Todas" (Paginação)
     const [modalSessoesAberto, setModalSessoesAberto] = useState(false);
-    const [sessoesPaginadas, setSessoesPaginadas] = useState<any[]>([]);
-    const [carregandoModal, setCarregandoModal] = useState(false);
-    const [paginaAtual, setPaginaAtual] = useState(0);
-    const [totalPaginas, setTotalPaginas] = useState(0);
 
-    // =========================================================================
-    // EFEITOS (Carregamento Inicial)
-    // =========================================================================
-    
-    useEffect(() => {
-        const carregarDados = async () => {
-            const userSalvo = localStorage.getItem('usuarioGestus');
-
-            if (!userSalvo) {
-                router.push('/login');
-                return;
-            }
-            setUsuario(JSON.parse(userSalvo));
-
-            try {
-                const dadosTeatro = await teatroService.getTeatro();
-                setTeatro(dadosTeatro);
-            } catch (error: any) {
-                console.error("Erro ao carregar dados do teatro:", error);
-                if (error.response?.status === 401 || error.response?.status === 403) {
-                    localStorage.removeItem('usuarioGestus');
-                    router.push('/login');
-                }
-            } finally {
-                setCarregando(false);
-            }
-        };
-        carregarDados();
-    }, [router]);
-
-    useEffect(() => {
-        // Carrega apenas 5 itens para a prévia do Dashboard
-        carregarSessoesDashboard();
-    }, []);
-
-    // =========================================================================
-    // FUNÇÕES
-    // =========================================================================
-    
-    const carregarSessoesDashboard = async () => {
-        setCarregandoSessoes(true);
-        try {
-            // Supondo que seu service aceite (pagina, tamanho)
-            const response = await sessaoService.getSessoes(0, 5);
-            // Se o backend retorna Page<T>, pegamos o .content. Se retornar lista direto, pegamos a response.
-            setSessoesDestaque(response.content || response); 
-        } catch (error) {
-            console.error("Erro ao carregar sessões em destaque:", error);
-        } finally {
-            setCarregandoSessoes(false);
-        }
-    };
-
-    const abrirModalVerTodas = () => {
-        setModalSessoesAberto(true);
-        carregarSessoesModal(0); // Sempre abre na primeira página
-    };
-
-    const carregarSessoesModal = async (pagina: number) => {
-        setCarregandoModal(true);
-        try {
-            // Busca 10 itens por vez para o modal
-            const response = await sessaoService.getSessoes(pagina, 5);
-            
-            setSessoesPaginadas(response.content || response);
-            setPaginaAtual(pagina);
-            setTotalPaginas(response.totalPages || 1); 
-        } catch (error) {
-            console.error("Erro ao carregar todas as sessões:", error);
-        } finally {
-            setCarregandoModal(false);
-        }
-    };
-
-    const formatarDataBR = (dataIso: string) => {
+    const formatarDataBR = (dataIso: String) => {
         if (!dataIso) return '';
         return new Intl.DateTimeFormat('pt-BR').format(new Date(dataIso + 'T00:00:00'));
     };
@@ -129,15 +47,16 @@ export default function Dashboard() {
 
     return (
         <div className="min-h-screen bg-gray-50 flex font-sans relative">
-            <Sidebar />
+            <Sidebar
+                color="#5D1B85"
+                activePage="menu"
+            />
 
             <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
+                {/* HEADER */}
                 <header className="bg-white shadow-sm border-b border-gray-100 px-6 py-4 flex items-center justify-between sticky top-0 z-30">
                     <div className="flex items-center gap-4">
-                        <button
-                            onClick={() => setIsSidebarOpen(true)}
-                            className="lg:hidden text-gray-500 hover:text-gestus focus:outline-none"
-                        >
+                        <button onClick={() => setIsSidebarOpen(true)} className="lg:hidden text-gray-500 hover:text-gestus focus:outline-none">
                             <i className="fa-solid fa-bars text-xl"></i>
                         </button>
                         <div>
@@ -164,6 +83,7 @@ export default function Dashboard() {
                 </header>
 
                 <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
+                    {/* KPIS */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                         {kpis.map((kpi, index) => (
                             <div key={index} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex items-center gap-4 hover:shadow-md transition-shadow">
@@ -184,8 +104,10 @@ export default function Dashboard() {
                             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                                 <div className="px-6 py-5 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
                                     <h3 className="text-lg font-bold text-gray-800">Sessões em Destaque</h3>
-                                    <button 
-                                        onClick={abrirModalVerTodas}
+
+                                    {/* AQUI NÓS MUDAMOS O ESTADO PARA ABRIR O MODAL */}
+                                    <button
+                                        onClick={() => setModalSessoesAberto(true)}
                                         className="text-sm font-medium text-gestus hover:text-gestus-dark transition-colors">
                                         Ver todas
                                     </button>
@@ -257,8 +179,8 @@ export default function Dashboard() {
                                             </div>
                                         </div>
                                     ))}
-                                    <button 
-                                        onClick={() => router.push('/menu/contrato/cadastrar')} 
+                                    <button
+                                        onClick={() => router.push('/menu/contrato/cadastrar')}
                                         className="w-full py-2 border-2 border-dashed border-gray-200 text-gray-500 rounded-xl font-medium hover:border-gestus hover:text-gestus transition-colors text-sm"
                                     >
                                         + Novo Contrato
@@ -266,93 +188,17 @@ export default function Dashboard() {
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </main>
 
             {/* =========================================================================
-                MODAL: TODAS AS SESSÕES (PAGINADO)
-                ========================================================================= */}
+                RENDERIZAÇÃO DO MODAL EXTRAÍDO
+            ========================================================================= */}
             {modalSessoesAberto && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
-                    <div className="bg-white rounded-2xl shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col animate-fade-in-up">
-                        {/* Header Modal */}
-                        <div className="px-6 py-5 border-b border-gray-100 flex justify-between items-center bg-gray-50/50 rounded-t-2xl">
-                            <h3 className="text-xl font-bold text-gray-800">Todas as Sessões</h3>
-                            <button 
-                                onClick={() => setModalSessoesAberto(false)}
-                                className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 flex items-center justify-center transition-colors">
-                                <i className="fa-solid fa-xmark"></i>
-                            </button>
-                        </div>
-                        
-                        {/* Body Modal (Tabela) */}
-                        <div className="flex-1 overflow-y-auto p-0">
-                            <table className="w-full text-left border-collapse">
-                                <thead className="sticky top-0 bg-white shadow-sm">
-                                    <tr className="border-b border-gray-100">
-                                        <th className="px-6 py-4 font-semibold text-sm text-gray-500 uppercase tracking-wider">Peça</th>
-                                        <th className="px-6 py-4 font-semibold text-sm text-gray-500 uppercase tracking-wider">Artista</th>
-                                        <th className="px-6 py-4 font-semibold text-sm text-gray-500 uppercase tracking-wider">Data</th>
-                                        <th className="px-6 py-4 font-semibold text-sm text-gray-500 uppercase tracking-wider">Horário</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-gray-100">
-                                    {carregandoModal ? (
-                                        <tr>
-                                            <td colSpan={4} className="px-6 py-12 text-center text-gray-500">
-                                                <i className="fa-solid fa-circle-notch fa-spin text-gestus text-2xl mb-2"></i>
-                                                <p>Buscando sessões...</p>
-                                            </td>
-                                        </tr>
-                                    ) : sessoesPaginadas.length === 0 ? (
-                                        <tr>
-                                            <td colSpan={4} className="px-6 py-12 text-center text-gray-500">
-                                                Nenhuma sessão encontrada.
-                                            </td>
-                                        </tr>
-                                    ) : (
-                                        sessoesPaginadas.map((sessao, index) => (
-                                            <tr key={index} className="hover:bg-gray-50 transition-colors">
-                                                <td className="px-6 py-4 whitespace-nowrap font-semibold text-gray-800">{sessao.nomePeca}</td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-gray-600">{sessao.nomeArtista}</td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-gray-600">{formatarDataBR(sessao.data)}</td>
-                                                <td className="px-6 py-4 whitespace-nowrap">
-                                                    <span className="px-3 py-1 text-xs font-bold rounded-full bg-blue-50 text-blue-700">
-                                                        {sessao.horarioInicioPeca} às {sessao.horarioFimPeca}
-                                                    </span>
-                                                </td>
-                                            </tr>
-                                        ))
-                                    )}
-                                </tbody>
-                            </table>
-                        </div>
-
-                        {/* Footer Modal (Controles de Paginação) */}
-                        <div className="px-6 py-4 border-t border-gray-100 bg-gray-50/50 rounded-b-2xl flex items-center justify-between">
-                            <span className="text-sm text-gray-500">
-                                Página <span className="font-semibold text-gray-700">{paginaAtual + 1}</span> de <span className="font-semibold text-gray-700">{totalPaginas === 0 ? 1 : totalPaginas}</span>
-                            </span>
-                            <div className="flex items-center gap-2">
-                                <button 
-                                    disabled={paginaAtual === 0 || carregandoModal}
-                                    onClick={() => carregarSessoesModal(paginaAtual - 1)}
-                                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
-                                    <i className="fa-solid fa-chevron-left mr-1"></i> Anterior
-                                </button>
-                                <button 
-                                    disabled={paginaAtual >= totalPaginas - 1 || carregandoModal}
-                                    onClick={() => carregarSessoesModal(paginaAtual + 1)}
-                                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
-                                    Próxima <i className="fa-solid fa-chevron-right ml-1"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <ModalTodasSessoes onClose={() => setModalSessoesAberto(false)} />
             )}
+
         </div>
     );
 }

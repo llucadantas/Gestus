@@ -2,9 +2,9 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
-import { pecaService } from '@/src/app/services/PecaService';
-import { artistaService } from '@/src/app/services/ArtistaService';
-import { contratoService } from '@/src/app/services/contratoService';
+import { pecaService } from '@/src/services/PecaService';
+import { artistaService } from '@/src/services/ArtistaService';
+import { contratoService } from '@/src/services/contratoService';
 
 export default function ContratoAluguel() {
     const router = useRouter();

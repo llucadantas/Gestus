@@ -28,7 +28,7 @@ public class SessaoDao {
     public List<Sessao> findAllByPropostaAluguel_Teatro_Id(Long idTeatro) {
         TypedQuery<Sessao> query = em.createQuery(
                 """
-    FROM Sessao s where s.propostaAluguel.teatro = :idTeatro
+    FROM Sessao s where s.propostaContrato.teatro = :idTeatro
 """, Sessao.class
         ).setParameter("idTeatro", idTeatro);
         return query.getResultList();
@@ -38,7 +38,7 @@ public class SessaoDao {
     public Optional<Sessao> findByIdAndPropostaAluguel_Teatro_Id(Long id, Long idTeatro) {
         try{
             TypedQuery<Sessao> query = em.createQuery("""
-            FROM Sessao s WHERE s.id = :id AND s.propostaAluguel.teatro.id = :idTeatro
+            FROM Sessao s WHERE s.id = :id AND s.propostaContrato.teatro.id = :idTeatro
             """, Sessao.class)
                     .setParameter("id", id)
                     .setParameter("idTeatro", idTeatro);
@@ -57,7 +57,7 @@ public class SessaoDao {
                         """
                 SELECT COUNT(s) > 0 
                 FROM Sessao s
-                WHERE s.propostaAluguel.teatro.id = :idTeatro
+                WHERE s.propostaContrato.teatro.id = :idTeatro
                 AND s.dataExibicao = :data
                 AND s.horarioOcupacaoInicio < :ocupacaoFim
                 AND s.horarioOcupacaoFim > :ocupacaoInicio
@@ -73,21 +73,20 @@ public class SessaoDao {
 
 
     public Page<SessaoProjection> buscarSessoesRecentes(Long idTeatro, int pagina, int tamanho) {
-
         Pageable pageable = PageRequest.of(pagina, tamanho);
 
         TypedQuery<SessaoProjection> query = em.createQuery(
                         """
                         SELECT new com.dto.response.SessaoProjection(
-                            s.propostaAluguel.peca.nome,
+                            s.propostaContrato.peca.nome,
                             s.horarioInicioPeca,
                             s.horarioFimPeca,
                             s.dataExibicao,
-                            s.propostaAluguel.artista.nome
+                            s.propostaContrato.artista.nome
                         ) 
                         FROM Sessao s 
-                        WHERE s.propostaAluguel.teatro.id = :idTeatro 
-                        ORDER BY s.dataExibicao DESC, s.horarioInicioPeca DESC
+                        WHERE s.propostaContrato.teatro.id = :idTeatro and s.statusSessao = StatusSessao.CONFIRMADO
+                        ORDER BY s.dataExibicao ASC, s.horarioInicioPeca ASC
                         """, SessaoProjection.class)
                 .setParameter("idTeatro", idTeatro);
 
@@ -96,9 +95,8 @@ public class SessaoDao {
 
         List<SessaoProjection> content = query.getResultList();
 
-        // 3. Faz a contagem total de registros (necessário para calcular as páginas)
         Long totalElements = em.createQuery(
-                        "SELECT COUNT(s) FROM Sessao s WHERE s.propostaAluguel.teatro.id = :idTeatro", Long.class)
+                        "SELECT COUNT(s) FROM Sessao s WHERE s.propostaContrato.teatro.id = :idTeatro and s.statusSessao = StatusSessao.CONFIRMADO", Long.class)
                 .setParameter("idTeatro", idTeatro)
                 .getSingleResult();
 

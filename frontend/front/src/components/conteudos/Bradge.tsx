@@ -1,5 +1,5 @@
 interface BadgeProps {
-    texto: string;
+    texto: String;
     cor: 'blue' | 'emerald' | 'purple' | 'gray';
 }
 

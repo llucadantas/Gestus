@@ -1,5 +1,6 @@
 package com.database.model;
 
+import com.database.model.enums.StatusSessao;
 import jakarta.persistence.*;
 import lombok.*;
 import java.math.BigDecimal;
@@ -21,7 +22,7 @@ public class Sessao {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "proposta_aluguel_id")
-    private Aluguel propostaAluguel;
+    private Contrato propostaContrato;
 
     @Column(name = "data_exibicao", nullable = false)
     private LocalDate dataExibicao;
@@ -44,11 +45,14 @@ public class Sessao {
     @Column(name = "valor_ingresso")
     private BigDecimal valorIngresso;
 
-    public Sessao(Aluguel propostaAluguel, LocalDate dataExibicao,
-                         LocalTime horarioInicioPeca, LocalTime horarioFimPeca,
-                         BigDecimal valorSessao,
+    @Enumerated(EnumType.STRING)
+    private StatusSessao statusSessao =  StatusSessao.AGUARDANDO_ASSINATURA;
+
+    public Sessao(Contrato propostaContrato, LocalDate dataExibicao,
+                  LocalTime horarioInicioPeca, LocalTime horarioFimPeca,
+                  BigDecimal valorSessao,
                   BigDecimal valorIngresso) {
-        this.propostaAluguel = propostaAluguel;
+        this.propostaContrato = propostaContrato;
         this.dataExibicao = dataExibicao;
         this.horarioInicioPeca = horarioInicioPeca;
         this.horarioFimPeca = horarioFimPeca;

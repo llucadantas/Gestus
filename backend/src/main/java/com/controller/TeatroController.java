@@ -25,10 +25,4 @@ public class TeatroController {
         return teatroService.getTeatroResponse(id);
     }
 
-    @PutMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public void atualizarTeatro(@AuthenticationPrincipal(expression = "idTeatro") Long id, @RequestBody @Valid TeatroRequest teatroRequest) throws NotFoundException {
-        teatroService.atualizarTeatro(teatroRequest, id);
-    }
-
 }
