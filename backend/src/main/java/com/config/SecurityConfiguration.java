@@ -65,7 +65,7 @@ public class SecurityConfiguration {
         configuration.setAllowedOrigins(List.of("http://localhost:3000"));
 
         // Permite os métodos comuns e o OPTIONS (necessário para o preflight)
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
 
         // Permite todos os cabeçalhos (como Authorization para o seu JWT)
         configuration.setAllowedHeaders(List.of("*"));

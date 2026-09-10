@@ -27,7 +27,7 @@ export const contratoService = {
     },
 
     excluirContrato: async (idContrato: number) => {
-        const response = await api.delete(`/v1/aluguel/${idContrato}`);
+        const response = await api.put(`/v1/aluguel/${idContrato}`);
         return response.data;
     }
 };

@@ -21,16 +21,22 @@ public record ContratoAluguelResponse(
                 contrato.getValorTotal(),
                 contrato.getPeca().getNome(),
                 contrato.getArtista().getNome(),
-                contrato.getSessoes()
+
+                // Troca o orElseThrow por orElse(null)
+                contrato.getSessoes() == null ? null : contrato.getSessoes()
                         .stream()
                         .map(Sessao::getDataExibicao)
                         .min(LocalDate::compareTo)
-                        .orElseThrow(() -> new IllegalStateException("Erro")),
-                contrato.getSessoes()
+                        .orElse(null),
+
+                // Troca o orElseThrow por orElse(null)
+                contrato.getSessoes() == null ? null : contrato.getSessoes()
                         .stream()
                         .map(Sessao::getDataExibicao)
                         .max(LocalDate::compareTo)
-                        .orElseThrow(() -> new IllegalStateException("Erro")),
+                        .orElse(null),
 
-                contrato.getStatus().toString());}
+                contrato.getStatus().toString()
+        );
+    }
 }

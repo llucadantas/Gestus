@@ -6,6 +6,8 @@ import lombok.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "sessao")
@@ -45,8 +47,11 @@ public class Sessao {
     @Column(name = "valor_ingresso")
     private BigDecimal valorIngresso;
 
+    @OneToMany(mappedBy = "sessao", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AssentoSessao> assentosSessao =  new ArrayList<>();
+
     @Enumerated(EnumType.STRING)
-    private StatusSessao statusSessao =  StatusSessao.AGUARDANDO_ASSINATURA;
+    private StatusSessao statusSessao = StatusSessao.AGUARDANDO_ASSINATURA;
 
     public Sessao(Contrato propostaContrato, LocalDate dataExibicao,
                   LocalTime horarioInicioPeca, LocalTime horarioFimPeca,

@@ -19,7 +19,7 @@ interface SidebarProps {
 // Estrutura de dados para alimentar o menu dinamicamente
 const MENU_GERAL = [
   { id: 'menu', label: 'Menu', icon: LayoutDashboard, href: '../menu' },
-  { id: 'tickets', label: 'Vender Ingressos', icon: Ticket, href: '' },
+  { id: 'tickets', label: 'Vender Ingressos', icon: Ticket, href: '/menu/venda' },
   { id: 'seats', label: 'Mapa de Assentos', icon: Armchair, href: '/menu/mapeamento' },
 ] as const;
 

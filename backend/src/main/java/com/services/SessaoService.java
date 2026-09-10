@@ -79,18 +79,11 @@ public class SessaoService {
     }
 
     public BigDecimal calcularValorFinal(Sessao s, Long idTeatro) {
-        // Busca a regra aplicável (ex: R$ 100,00 por hora)
         BigDecimal valorDia = regraPrecoService.obterPrecoAplicavel(s.getDataExibicao(), idTeatro);
-
-        // 1. Pega a duração exata em minutos
         long minutosOcupacao = Duration.between(s.getHorarioOcupacaoInicio(), s.getHorarioOcupacaoFim()).toMinutes();
 
-        // 2. Converte para horas decimais (ex: 210 minutos / 60 = 3.5 horas)
-        // O RoundingMode.HALF_UP garante que dízimas sejam arredondadas corretamente (ex: 3.33)
         BigDecimal horasFracionadas = BigDecimal.valueOf(minutosOcupacao)
                 .divide(BigDecimal.valueOf(60), 2, RoundingMode.HALF_UP);
-
-        // 3. Multiplica o valor do dia pela quantidade de horas exatas
         return valorDia.multiply(horasFracionadas);
     }
 

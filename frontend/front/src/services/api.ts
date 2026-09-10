@@ -17,10 +17,7 @@ api.interceptors.response.use(
                 
             } 
             
-            else if (error.code === 'ERR_NETWORK' || error.message === 'Network Error') {
-                localStorage.removeItem('usuarioGestus'); // Opcional
-                window.location.href = '/login'; 
-            }
+            
         }
         
         return Promise.reject(error);

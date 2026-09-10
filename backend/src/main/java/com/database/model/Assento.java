@@ -28,12 +28,4 @@ public class Assento {
     @JoinColumn(name = "id_coluna")
     @JsonIgnore
     private Coluna coluna;
-
-    @Builder.Default
-    @Column(name = "status_assento", nullable = false)
-    private String statusDb = "LIVRE";
-
-    @Builder.Default
-    @Column(name = "tipo_assento", nullable = false)
-    private String tipoAssento = "PADRAO";
 }

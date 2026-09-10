@@ -28,6 +28,7 @@ public class ContratoService {
     private final ContratoDao contratoDao;
     private final List<ValidadorContrato> validadoresContrato;
     private final EmailService emailService;
+    private final EstadoContratoFactory estadoContratoFactory;
 
     @Transactional
     public void cadastrar(ContratoAluguelRequest request, Long idTeatro) {
@@ -87,7 +88,7 @@ public class ContratoService {
         Contrato contrato = contratoDao.findByTokenAssinatura(token)
                 .orElseThrow(() -> new RuntimeException("Deu erro na assinatura paeeeeeeee"));
 
-        EstadoContrato estadoAtual = EstadoContratoFactory.obterEstado(contrato.getStatus());
+        EstadoContrato estadoAtual = estadoContratoFactory.obterEstado(contrato.getStatus());
 
         estadoAtual.assinar(contrato);
 
@@ -100,7 +101,7 @@ public class ContratoService {
         Contrato contrato = contratoDao.findByIdAndTeatro_Id(id,  idTeatro)
                 .orElseThrow(() -> new RuntimeException("Contrato não encontrado"));
 
-        EstadoContrato estadoAtual = EstadoContratoFactory.obterEstado(contrato.getStatus());
+        EstadoContrato estadoAtual = estadoContratoFactory.obterEstado(contrato.getStatus());
         estadoAtual.cancelar(contrato);
 
         contratoDao.save(contrato);
@@ -114,7 +115,7 @@ public class ContratoService {
 
         // 2. Passa por cada contrato delegando a verificação de data para o Estado
         for (Contrato contrato : contratosPendentes) {
-            EstadoContrato estadoAtual = EstadoContratoFactory.obterEstado(contrato.getStatus());
+            EstadoContrato estadoAtual = estadoContratoFactory.obterEstado(contrato.getStatus());
 
             // O polimorfismo acontece aqui!
             // Se estiver em análise, checa a data limite de assinatura.

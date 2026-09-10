@@ -1,7 +1,6 @@
 package com.controller;
 
 import com.database.model.Assento;
-import com.dto.requests.AssentoAtualizacao;
 import com.dto.requests.ColunaRequest;
 import com.dto.response.AssentoResponse;
 import com.dto.response.ColunaResponse;
@@ -47,11 +46,6 @@ public class MapAssentoController {
         colunaService.apagarColuna(idTeatro, idColuna);
     }
 
-    @PatchMapping
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void atualizarAssentos(@RequestBody AssentoAtualizacao a, @AuthenticationPrincipal(expression = "idTeatro") Long idTeatro) throws NotFoundException {
-        assentoService.atualizarAssento(a, idTeatro);
-    }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)

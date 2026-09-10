@@ -76,6 +76,4 @@ public class ColunaService {
         colunaAssentoDao.save(c);
     }
 
-
-
 }

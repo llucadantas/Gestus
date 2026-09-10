@@ -16,6 +16,7 @@ public class EstadoAtivo implements EstadoContrato{
 
     @Override
     public void cancelar(Contrato contrato) {
+        contrato.getSessoes().clear();
         contrato.setStatus(StatusContrato.CANCELADO);
     }
 
