@@ -15,11 +15,12 @@ export const regrasService = {
         };
 
         const response = await api.post('/v1/regra', payload);
+
         return response.data; 
     },
 
-    deletarRegra:  async (id: any) =>{
-        const response = await api.post('/v1/regra/'+id);
+    deletarRegra:  async (id: number) =>{
+        const response = await api.delete('/v1/regra/'+id);
         return response.status;
     }
   };

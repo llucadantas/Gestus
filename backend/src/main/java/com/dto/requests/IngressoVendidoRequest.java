@@ -13,5 +13,8 @@ public record IngressoVendidoRequest(
 
         @NotBlank(message = "O e-mail do comprador é obrigatório.")
         @Email(message = "Formato de e-mail inválido.")
-        String email
+        String email,
+
+        @NotNull(message = "O ID do assento é obrigatório.")
+        String nome
 ) {}

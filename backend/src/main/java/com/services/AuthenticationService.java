@@ -95,11 +95,13 @@ public class AuthenticationService {
                 .httpOnly(true)
                 .secure(false) // Defina como true quando for para produção com HTTPS
                 .path("/")
+                .maxAge(24 * 60 * 60) // 1 dia
+                .sameSite("Strict") // O bloqueio contra CSRF
                 .build();
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                .body(new UserResponse(adm));
+                .body(new UserResponse(adm, idTeatro));
     }
 
 }

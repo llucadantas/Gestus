@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { pecaService } from '@/src/services/PecaService';
 import { artistaService } from '@/src/services/ArtistaService';
 import { contratoService } from '@/src/services/contratoService';
+import { ContratoAluguelRequest } from '@/src/types/contrato';
 
 export default function ContratoAluguel() {
     const router = useRouter();
@@ -31,8 +32,9 @@ export default function ContratoAluguel() {
         
         dataInicio: '',
         dataFim: '',
-        horarioInicioPeca: '',
-        horarioFimPeca: ''
+        inicioPeca: '',
+        fimPeca: '',
+        valorIngresso: ''
     });
 
     useEffect(() => {
@@ -41,7 +43,7 @@ export default function ContratoAluguel() {
                 const pecas = await pecaService.getPecas();
                 setPecasExistentes(pecas);
             } catch (error:any) {
-                setErrorMessage(error.response?.data?.message)
+                setErrorMessage(error.response?.data?.message || "Erro inesperado");
             }
         };
         carregarPecas();
@@ -78,7 +80,7 @@ export default function ContratoAluguel() {
             }
         } catch (error:any) {
             console.error("Erro ao buscar artista:", error);
-            setErrorMessage(error.response?.data?.message)
+            setErrorMessage(error.response?.data?.message || "Erro inesperado");
         } finally {
             setCarregando(false);
         }
@@ -95,10 +97,13 @@ export default function ContratoAluguel() {
                 : formData.pecaNome.trim() !== ''; 
         }
         if (etapa === 3) {
+            const cronologiaValida = formData.dataInicio <= formData.dataFim;
             return formData.dataInicio !== '' && 
                    formData.dataFim !== '' &&
-                   formData.horarioInicioPeca !== '' &&
-                   formData.horarioFimPeca !== '';
+                   formData.inicioPeca !== '' &&
+                   cronologiaValida &&
+                   formData.fimPeca !== '' &&
+                   formData.valorIngresso !== '';
         }
         return false;
     };
@@ -133,7 +138,7 @@ export default function ContratoAluguel() {
             }
         } catch (error:any) {
             console.error("Erro ao processar etapa:", error);
-            setErrorMessage(error.response?.data?.message)
+            setErrorMessage(error.response?.data?.message || "Erro inesperado");
         } finally {
             setCarregando(false);
         }
@@ -149,23 +154,23 @@ export default function ContratoAluguel() {
         setCarregando(true);
 
         try {
-            // Como as etapas 1 e 2 já cuidaram de cadastrar/selecionar,
-            // aqui temos a garantia de que pecaId e emailBuscaArtista existem no banco.
-            await contratoService.cadastrarContrato(
-                Number(formData.pecaId),
-                formData.emailBuscaArtista,
-                formData.dataInicio as any, 
-                formData.dataFim as any,
-                formData.horarioInicioPeca,
-                formData.horarioFimPeca
-            );
+            const payload: ContratoAluguelRequest = {
+                idPeca: Number(formData.pecaId),
+                emailArtista: formData.emailBuscaArtista,
+                dataInicio: formData.dataInicio,
+                dataFim: formData.dataFim,
+                inicioPeca: formData.inicioPeca,
+                fimPeca: formData.fimPeca,
+                valorIngresso: Number(formData.valorIngresso)
+            };
+            await contratoService.cadastrarContrato(payload);
             
             alert("Contrato validado e cadastrado com sucesso no sistema!");
             router.push('/menu/');
             
         } catch (error:any) {
             console.error("Erro ao fechar o contrato:", error);
-            setErrorMessage(error.response?.data?.message)
+            setErrorMessage(error.response?.data?.message || "Erro inesperado");
         } finally {
             setCarregando(false);
         }
@@ -302,8 +307,8 @@ export default function ContratoAluguel() {
                     <label className="block text-sm font-semibold text-gray-700 mb-2">Horário Início da Peça <span className="text-red-500">*</span></label>
                     <input 
                         type="time" 
-                        value={formData.horarioInicioPeca}
-                        onChange={(e) => handleChange('horarioInicioPeca', e.target.value)}
+                        value={formData.inicioPeca}
+                        onChange={(e) => handleChange('inicioPeca', e.target.value)}
                         className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl outline-none"
                     />
                 </div>
@@ -311,10 +316,25 @@ export default function ContratoAluguel() {
                     <label className="block text-sm font-semibold text-gray-700 mb-2">Horário Fim da Peça <span className="text-red-500">*</span></label>
                     <input 
                         type="time" 
-                        value={formData.horarioFimPeca}
-                        onChange={(e) => handleChange('horarioFimPeca', e.target.value)}
+                        value={formData.fimPeca}
+                        onChange={(e) => handleChange('fimPeca', e.target.value)}
                         className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl outline-none"
                     />
+                </div>
+                <div className="col-span-2">
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Valor do Ingresso <span className="text-red-500">*</span></label>
+                    <div className="relative">
+                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 font-medium">R$</span>
+                        <input 
+                            type="number" 
+                            step="0.01"
+                            min="0"
+                            value={formData.valorIngresso}
+                            onChange={(e) => handleChange('valorIngresso', e.target.value)}
+                            className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl outline-none"
+                            placeholder="0,00"
+                        />
+                    </div>
                 </div>
             </div>
             

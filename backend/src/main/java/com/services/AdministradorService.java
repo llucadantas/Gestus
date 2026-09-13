@@ -16,5 +16,4 @@ public class AdministradorService {
         return administradorDao.findByIdResponse(id)
                 .orElseThrow(()-> new NotFoundException("Administrador não encontrado."));
     }
-
 }

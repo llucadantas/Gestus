@@ -9,7 +9,7 @@ export const authService = {
       return dadosUsuario
     },
 
-    register: async (nome: any, senha: any, nomeTeatro: any, email: any) => {
+    register: async (nome: string, senha: string, nomeTeatro: string, email: string) => {
       const response = await api.post('/v1/auth/register', { email, senha, nome, nomeTeatro });
       return response.status;
     },

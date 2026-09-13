@@ -5,10 +5,5 @@ export const teatroService = {
       const response = await api.get('/v1/teatro');
       const dadosTeatro = response.data;
       return dadosTeatro;
-    },
-
-    putTeatro: async (nome: String) => {
-      const response = await api.post('/v1/teatro', { nome });
-      return response.status;
     }
   };

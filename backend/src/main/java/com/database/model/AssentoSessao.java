@@ -28,8 +28,17 @@ public class AssentoSessao {
     @JoinColumn(name = "id_sessao")
     private Sessao sessao;
 
+    private String fileira;
+
     public AssentoSessao(Assento a){
         this.nAssento = a.getNAssento();
         this.codigoPosicao = a.getCodigoPosicao();
+        this.fileira = a.getColuna().getIdentificadorColuna();
+    }
+
+    public boolean isDisponivel() {
+        if(this.estadoAssento == StatusAssento.LIVRE)
+            return true;
+        return false;
     }
 }

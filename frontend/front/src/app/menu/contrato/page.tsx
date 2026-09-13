@@ -3,7 +3,6 @@
 
 import { PageHeader } from '@/src/components/conteudos/PageHeader';
 import { TableContainer } from '@/src/components/conteudos/TableCointeiner';
-import { Modal } from '@/src/components/conteudos/Modal';
 import useContrato from '@/src/hooks/useContrato';
 import { useCallback, useEffect } from 'react';
 import { mapAssentoService } from '@/src/services/mapAssentoService';
@@ -13,18 +12,7 @@ export default function ContratosPage() {
         handleExcluir,
         carregarContratos,
         podeExcluir,
-        handleConfirmarRenovacao,
-        abrirRenovacao,
         contratos,
-        setContratos,
-        modalRenovar,
-        setModalRenovar,
-        contratoSelecionado,
-        setContratoSelecionado,
-        novaData,
-        setNovaData,
-        salvandoRenovacao,
-        setSalvandoRenovacao,
         carregando,
         setCarregando,
         router
@@ -46,8 +34,8 @@ export default function ContratosPage() {
         carregarAssento();
     }, [carregarAssento]);
 
-    const formatarData = (dataIso: Date) => {
-        if (!dataIso) return '';
+    const formatarData = (dataIso: string | Date | null) => {
+        if (!dataIso) return 'Data indefinida';
         return new Intl.DateTimeFormat('pt-BR').format(new Date(dataIso + 'T00:00:00'));
     };
 
@@ -120,13 +108,6 @@ export default function ContratosPage() {
                                     <td className="px-6 py-4 text-right">
                                         <div className="flex justify-end gap-2">
                                             <button
-                                                onClick={() => abrirRenovacao(c)}
-                                                title="Renovar Contrato"
-                                                className="w-9 h-9 flex items-center justify-center rounded-lg text-blue-500 hover:bg-blue-50 transition-colors"
-                                            >
-                                                <i className="fa-solid fa-copy"></i>
-                                            </button>
-                                            <button
                                                 onClick={() => handleExcluir(c.id)}
                                                 disabled={!liberado}
                                                 title={liberado ? "Excluir" : "Não permitido em contratos passados ou vigentes"}
@@ -149,30 +130,6 @@ export default function ContratosPage() {
                     </tbody>
                 </table>
             </TableContainer>
-
-            <Modal isOpen={modalRenovar} onClose={() => setModalRenovar(false)} titulo="Renovar Contrato" larguraMaxima="max-w-md">
-                <form onSubmit={handleConfirmarRenovacao} className="space-y-4">
-                    <p className="text-sm text-gray-600">
-                        Renovando contrato de <strong>{contratoSelecionado?.nomePeca}</strong>.
-                    </p>
-                    <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">Nova Data de Início</label>
-                        <input
-                            type="date"
-                            required
-                            value={novaData}
-                            onChange={(e) => setNovaData(e.target.value)}
-                            className="w-full px-4 py-3 bg-gray-50 border rounded-xl outline-none focus:bg-white focus:ring-2 focus:ring-gestus"
-                        />
-                    </div>
-                    <div className="flex justify-end gap-3 pt-4 border-t">
-                        <button type="button" onClick={() => setModalRenovar(false)} className="px-4 py-2 text-gray-600 rounded-xl hover:bg-gray-100">Cancelar</button>
-                        <button type="submit" disabled={salvandoRenovacao} className="px-5 py-2 bg-gestus hover:bg-gestus-dark text-white rounded-xl font-medium">
-                            {salvandoRenovacao ? 'Salvando...' : 'Confirmar'}
-                        </button>
-                    </div>
-                </form>
-            </Modal>
         </div>
     );
 }

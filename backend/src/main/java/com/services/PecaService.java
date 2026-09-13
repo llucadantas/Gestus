@@ -15,11 +15,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PecaService {
     private final PecaDao pecaDao;
+
     public List<PecaResponse> listarPecas(){
-        return pecaDao.findAll()
-                .stream()
-                .map(PecaResponse::new)
-                .toList();
+        return pecaDao.findAll();
     }
 
     public Peca buscarPeca(Long idPeca) throws NotFoundException {
@@ -28,13 +26,13 @@ public class PecaService {
     }
 
     @Transactional
-    public Peca cadastrarPeca(PecaRequest peca) throws NotFoundException {
+    public PecaResponse cadastrarPeca(PecaRequest peca) throws NotFoundException {
         Peca p = Peca.builder()
                 .nome(peca.nome())
                 .descricao(peca.descricao())
                 .build();
         pecaDao.save(p);
-        return p;
+        return new PecaResponse(p);
     }
 }
 

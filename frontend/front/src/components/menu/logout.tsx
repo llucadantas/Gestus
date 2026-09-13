@@ -1,3 +1,4 @@
+'use client';
 import { authService } from "@/src/services/authService"
 import { useRouter } from 'next/navigation';
 

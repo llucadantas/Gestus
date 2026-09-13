@@ -1,23 +1,25 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { SessaoDestaque, Teatro, Usuario } from "../types/menu";
-import { mapAssentoService } from "@/src/services/mapAssentoService";
 import { teatroService } from "@/src/services/teatroService";
-import { sessaoService } from "@/src/services/sessaoService";
+import { dashboardService } from "@/src/services/dashboardService";
+import { DashboardResponse } from "../types/dashboard";
 
-export function useMenu(){
+export function useMenu() {
     const router = useRouter();
     
     const [usuario, setUsuario] = useState<Usuario | null>(null);
     const [teatro, setTeatro] = useState<Teatro | null>(null);
-    const [sessoesDestaque, setSessoesDestaque] = useState<SessaoDestaque[]>([]);
+    
+    const [dashboardData, setDashboardData] = useState<DashboardResponse | null>(null);
     
     const [carregando, setCarregando] = useState(true);
-    const [carregandoSessoes, setCarregandoSessoes] = useState(true);
+    const [erro, setErro] = useState<string | null>(null);
 
     useEffect(() => {
         const inicializarDashboard = async () => {
             setCarregando(true);
+            setErro(null);
             
             const userSalvo = localStorage.getItem('usuarioGestus');
             if (!userSalvo) {
@@ -27,22 +29,19 @@ export function useMenu(){
             setUsuario(JSON.parse(userSalvo));
 
             try {
-                // const dadosColuna = await mapAssentoService.getColunas();
-                // if (!dadosColuna || dadosColuna.length === 0) {
-                //     router.push('/menu/mapeamento');
-                //     return;
-                // }
-
                 const dadosTeatro = await teatroService.getTeatro();
                 setTeatro(dadosTeatro);
                 
-                carregarSessoesDestaque();
+                const dadosDashboard = await dashboardService.getDashboard();
+                setDashboardData(dadosDashboard);
 
             } catch (error: any) {
                 console.error("Erro ao inicializar dashboard:", error);
-                if ([401, 403, 501].includes(error.response?.status)) {
+                if (error.response?.status === 401 || error.response?.status === 403 || error.response?.status === 501) {
                     localStorage.removeItem('usuarioGestus');
                     router.push('/login');
+                } else {
+                    setErro("Não foi possível carregar as informações do painel.");
                 }
             } finally {
                 setCarregando(false);
@@ -52,23 +51,11 @@ export function useMenu(){
         inicializarDashboard();
     }, [router]);
 
-    const carregarSessoesDestaque = async () => {
-        setCarregandoSessoes(true);
-        try {
-            const response = await sessaoService.getSessoes(0, 5);
-            setSessoesDestaque(response.content || response); 
-        } catch (error) {
-            console.error("Erro ao carregar sessões em destaque:", error);
-        } finally {
-            setCarregandoSessoes(false);
-        }
-    };
-
     return {
         usuario,
         teatro,
-        sessoesDestaque,
+        dashboardData,
         carregando,
-        carregandoSessoes
+        erro
     };
 }

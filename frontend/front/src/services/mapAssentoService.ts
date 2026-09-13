@@ -15,14 +15,5 @@ export const mapAssentoService = {
     deleteColuna: async(id: number)=>{
         const response = await api.delete(`/v1/colunas/excluir/${id}`)
         return response.data;
-    },
-    updateAssento: async(id: number, status: string, tipo: string)=>{
-        const payload = {
-            id: id,
-            status: status,
-            tipo: tipo
-        }
-        const response = await api.patch('/v1/colunas', payload);
-        return response.data;
     }
 }

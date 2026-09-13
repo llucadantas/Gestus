@@ -17,10 +17,12 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 public class Contrato {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Builder.Default
     @Column(name = "valor_total", nullable = false)
     private BigDecimal valorTotal = BigDecimal.ZERO;
 
@@ -28,6 +30,7 @@ public class Contrato {
     @JoinColumn(name = "peca_id", nullable = false)
     private Peca peca;
 
+    @Builder.Default
     @OneToMany(mappedBy = "propostaContrato", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<Sessao> sessoes = new ArrayList<>();
 
@@ -39,22 +42,33 @@ public class Contrato {
     @JoinColumn(name="artista_id", nullable=false)
     private Artista artista;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     private StatusContrato status = StatusContrato.EM_ANALISE;
 
     private String tokenAssinatura;
 
-    public void gerarTokenAssinatura(){
+    public void gerarTokenAssinatura() {
         this.tokenAssinatura = UUID.randomUUID().toString();
     }
 
     public void calcularValorTotal() {
-        BigDecimal valorTotal = BigDecimal.ZERO;
-
+        BigDecimal total = BigDecimal.ZERO;
         for (Sessao sessao : sessoes) {
-            valorTotal = valorTotal.add(sessao.getValorSessao());
+            if (sessao.getValorSessao() != null) { // Proteção extra
+                total = total.add(sessao.getValorSessao());
+            }
         }
-        setValorTotal(valorTotal);
+        this.valorTotal = total;
+    }
+
+    public void addSessao(Sessao sessao) {
+        sessoes.add(sessao);
+        sessao.setPropostaContrato(this); // Sincroniza o outro lado!
+    }
+
+    public void removeSessao(Sessao sessao) {
+        sessoes.remove(sessao);
+        sessao.setPropostaContrato(null); // Desfaz a ligação no outro lado!
     }
 }
-

@@ -16,6 +16,9 @@ public class EstadoAtivo implements EstadoContrato{
 
     @Override
     public void cancelar(Contrato contrato) {
+        if(contrato.getStatus().equals(StatusContrato.ATIVO)){
+            throw new IllegalStateException("Contrato ativo, não pode ser cancelado");
+        }
         contrato.getSessoes().clear();
         contrato.setStatus(StatusContrato.CANCELADO);
     }
@@ -29,7 +32,6 @@ public class EstadoAtivo implements EstadoContrato{
                 .orElseThrow(()-> new ValidacaoException("Problema na verificacao das datas"));
 
         if (LocalDate.now().isAfter(dataFim)) {
-            System.out.println("Prazo do aluguel chegou ao fim. Finalizando contrato...");
             contrato.setStatus(StatusContrato.FINALIZADO);
         }
     }

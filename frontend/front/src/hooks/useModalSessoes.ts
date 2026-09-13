@@ -11,7 +11,7 @@ export function useModalSessoes(){
     const carregarSessoesModal = useCallback(async (pagina: number) => {
         setCarregando(true);
         try {
-            const response = await sessaoService.getSessoes(pagina, 5);
+            const response = await sessaoService.getSessoesResumo(pagina, 5);
             setSessoesPaginadas(response.content || response);
             setPaginaAtual(pagina);
             setTotalPaginas(response.totalPages || 1); 

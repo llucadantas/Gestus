@@ -28,8 +28,7 @@ public class RegraController {
         return regraPrecoService.getRegrasListResponse(idTeatro);
     }
 
-    @GetMapping
-    @RequestMapping("/buscar/{id}")
+    @GetMapping("/buscar/{id}")
     @ResponseStatus(HttpStatus.OK)
     public RegraResponse getRegra(@AuthenticationPrincipal(expression = "idTeatro") Long idTeatro,@PathVariable Long id) throws NotFoundException {
         return regraPrecoService.getRegraResponse(idTeatro, id);
@@ -41,8 +40,7 @@ public class RegraController {
         regraPrecoService.cadastrarRegraPreco(regraPreco, idTeatro);
     }
 
-    @PutMapping
-    @RequestMapping("/atualizar/{id}")
+    @PutMapping("/atualizar/{id}")
     @ResponseStatus(HttpStatus.CREATED)
     public void atualizarRegra(@AuthenticationPrincipal(expression = "idTeatro") Long idTeatro,
                                @RequestBody RegraRequest regraPreco,
@@ -50,8 +48,7 @@ public class RegraController {
         regraPrecoService.atualizarRegra(id, idTeatro,regraPreco);
     }
 
-    @DeleteMapping
-    @RequestMapping("/{idRegra}")
+    @DeleteMapping("/{idRegra}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletarRegra(@AuthenticationPrincipal(expression = "idTeatro") Long idTeatro,
                                @PathVariable Long idRegra) throws NotFoundException {

@@ -1,4 +1,5 @@
 import { api } from './api';
+import { ContratoAluguelRequest } from '../types/contrato';
 
 export const contratoService = {
     getContratos: async () => {
@@ -6,23 +7,9 @@ export const contratoService = {
         return response.data;
     },
 
-    cadastrarContrato: async (idPeca: Number, emailArtista: String, dataInicio: Date, dataFim: Date, horarioInicio: String, horarioFim: String) => {
-        const payload = {
-            idPeca: idPeca,
-            emailArtista: emailArtista,
-            dataInicio: dataInicio,
-            dataFim: dataFim,
-            inicioPeca: horarioInicio,
-            fimPeca: horarioFim
-        };
-        const response = await api.post('/v1/aluguel', payload);
-        return response.data;
-    },
+    cadastrarContrato: async (payload: ContratoAluguelRequest) => {
 
-    renovarContrato: async (idContrato: number, novaData: string) => {
-        const response = await api.post(`/v1/contratos/${idContrato}/renovar`, null, {
-            params: { novaData }
-        });
+        const response = await api.post('/v1/aluguel', payload);
         return response.data;
     },
 

@@ -7,6 +7,7 @@ import { Assento } from '@/src/types/assento';
 // Importação dos seus componentes menores (SRP)
 import { AddColumnForm } from '@/src/components/mapeamento/formularioColuna';
 import { SeatItem } from '@/src/components/mapeamento/assentoRenderizacao';
+import Header from '@/src/components/menu/Header';
 
 export default function TheaterManager() {
   // 1. Consumindo o Hook
@@ -20,7 +21,7 @@ export default function TheaterManager() {
     reload
   } = useMapAssentos();
 
-  console.log("Dados do back-end:", columns);
+
 
   // 2. Estado puramente visual da tela (Modal de edição)
   const [seatToEdit, setSeatToEdit] = useState<Assento | null>(null);
@@ -35,19 +36,13 @@ export default function TheaterManager() {
       <Sidebar color="#5D1B85" activePage="seats" />
 
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        {/* HEADER BÁSICO */}
-        <header className="h-20 bg-white border-b border-slate-200 flex items-center justify-between px-8">
-          <div>
-            <h2 className="text-xl font-bold">Gerenciamento de Assentos</h2>
-            <p className="text-sm text-slate-500">Configure o mapa do seu teatro.</p>
-          </div>
-
+        <Header titulo="Gerenciamento de Assentos" descricao="Configure o mapa do seu teatro.">
           {isLoading && (
             <span className="text-sm text-purple-600 font-semibold animate-pulse">
               Carregando mapa...
             </span>
           )}
-        </header>
+        </Header>
 
         <div className="flex-1 overflow-auto p-6 md:p-8 custom-scrollbar">
           {error && (

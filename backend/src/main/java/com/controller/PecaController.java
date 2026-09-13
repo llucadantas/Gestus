@@ -24,16 +24,15 @@ public class PecaController {
         return pecaService.listarPecas();
     }
 
-    @GetMapping
+    @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @RequestMapping("/{id}")
     public Peca getPeca(@PathVariable Long id ) throws NotFoundException {
         return pecaService.buscarPeca(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Peca salvarPeca(@RequestBody PecaRequest pecaRequest) throws NotFoundException {
+    public PecaResponse salvarPeca(@RequestBody PecaRequest pecaRequest) throws NotFoundException {
         return pecaService.cadastrarPeca(pecaRequest);
     }
 

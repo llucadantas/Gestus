@@ -29,6 +29,7 @@ public class RegraPrecoService {
     @Transactional
     public void cadastrarRegraPreco(RegraRequest regraRequest, Long idTeatro) throws NotFoundException {
         Teatro t = teatroService.getTeatro(idTeatro);
+
         RegraPreco regraPreco = RegraPreco.builder()
                 .valor(regraRequest.valor())
                 .meses(regraRequest.meses())
@@ -36,6 +37,7 @@ public class RegraPrecoService {
                 .descricao(regraRequest.descricao())
                 .teatro(t)
                 .build();
+
         regraPrecoDao.save(regraPreco);
     }
 
@@ -72,6 +74,9 @@ public class RegraPrecoService {
     }
 
     public BigDecimal obterPrecoAplicavel(LocalDate data, Long idTeatro){
+        if(!regraPrecoDao.existByTeatro_Id(idTeatro)){
+            throw new NotFoundException("Nenhuma regra cadastrada");
+        }
         for(ValidadorRegra v: validadores){
             v.validar(data, idTeatro);
         }

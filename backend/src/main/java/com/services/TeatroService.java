@@ -42,13 +42,13 @@ public class TeatroService {
         if(idTeatro == null) {
             throw new NotFoundException("Teatro não cadastrado");
         }
-        return teatroDao.findById(idTeatro)
-                .orElseThrow(()-> new NotFoundException("Teatro não encontrado."));
+        Teatro teatro = teatroDao.findById(idTeatro);
+        if (teatro == null) {
+            throw new NotFoundException("Teatro não encontrado");
+        }
+        return teatro;
     }
 
     public TeatroResponse getTeatroResponse(Long id) throws NotFoundException {
-        Teatro t = getTeatro(id);
-        return new TeatroResponse(t.getId(), t.getNome(), t.getAdministrador().getId());
-    }
-
-}
+        return teatroDao.findByIdResponse(id);
+}}

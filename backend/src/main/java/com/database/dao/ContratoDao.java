@@ -1,6 +1,7 @@
 package com.database.dao;
 
 import com.database.model.Contrato;
+import com.dto.response.ContratoAluguelResponse;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
@@ -21,24 +22,52 @@ public class ContratoDao {
    public void save(Contrato contrato) {
       if (contrato.getId() == null) {
          em.persist(contrato);
+
       } else {
          em.merge(contrato);
       }
    }
 
-   public List<Contrato> findAllByTeatro_Id(Long idTeatro) {
+   public List<ContratoAluguelResponse> findAllByTeatro_Id(Long idTeatro) {
       TypedQuery<Contrato> query = em.createQuery(""" 
-            from Contrato c JOIN FETCH c.peca JOIN FETCH c.artista
-            WHERE c.teatro.id = :idTeatro
-                """, Contrato.class);
+            
+              SELECT c FROM Contrato c
+                      JOIN FETCH c.peca
+                      JOIN FETCH c.artista
+                      LEFT JOIN FETCH c.sessoes
+                      WHERE c.teatro.id = :idTeatro
+            """, Contrato.class);
       query.setParameter("idTeatro", idTeatro);
-      return query.getResultList();
+      return query.getResultList().stream()
+              .map(ContratoAluguelResponse::new)
+              .toList();
    }
 
+   public Optional<ContratoAluguelResponse> findByIdAndTeatro_IdResponse(Long idAluguel, Long idTeatro) {
+      try{
+         ContratoAluguelResponse contrato = em.createQuery("""
+            SELECT new com.dto.response.ContratoAluguelResponse(c) from Contrato c
+            JOIN FETCH c.peca
+            JOIN FETCH c.artista
+            JOIN FETCH c.sessoes
+            WHERE c.teatro.id = :idTeatro and c.id = :idAluguel
+                """, ContratoAluguelResponse.class)
+                 .setParameter("idTeatro", idTeatro)
+                 .setParameter("idAluguel", idAluguel)
+                 .getSingleResult();
+         return Optional.of(contrato);
+      } catch (NoResultException e) {
+         return Optional.empty();
+      }
+   }
    public Optional<Contrato> findByIdAndTeatro_Id(Long idAluguel, Long idTeatro) {
       try{
          Contrato contrato = em.createQuery("""
-            from Contrato c WHERE c.teatro.id = :idTeatro and c.id = :idAluguel
+            from Contrato c
+            JOIN FETCH c.peca
+            JOIN FETCH c.artista
+            JOIN FETCH c.sessoes
+            WHERE c.teatro.id = :idTeatro and c.id = :idAluguel
                 """, Contrato.class)
                  .setParameter("idTeatro", idTeatro)
                  .setParameter("idAluguel", idAluguel)
@@ -62,6 +91,7 @@ public class ContratoDao {
          }
    }
 
+   @Transactional
    public void delete(Long idAluguel) {
       em.remove(em.find(Contrato.class, idAluguel));
    }

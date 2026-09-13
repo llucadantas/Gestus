@@ -2,14 +2,11 @@ package com.database.model;
 
 import com.database.model.enums.DiaSemana;
 import com.database.model.enums.Mes;
-import com.database.model.enums.Turno;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.Month;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,7 +16,6 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @Builder
 public class RegraPreco {
 
@@ -27,30 +23,31 @@ public class RegraPreco {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(length = 60, nullable = false)
     private String descricao;
 
+    @Column(nullable = false)
     private BigDecimal valor;
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @Builder.Default
+    @ElementCollection
     @CollectionTable(name = "regra_dias_semana", joinColumns = @JoinColumn(name = "regra_id"))
     @Enumerated(EnumType.STRING)
-    @Column(name = "dia")
-    private Set<DiaSemana> diasSemana;
+    @Column(name = "dias", nullable = false)
+    private Set<DiaSemana> diasSemana = new HashSet<>();
 
-    // CORRETO: Cria a tabela "regra_meses" e salva como String
-    @ElementCollection(fetch = FetchType.EAGER)
+    @Builder.Default
+    @ElementCollection
     @CollectionTable(name = "regra_meses", joinColumns = @JoinColumn(name = "regra_id"))
     @Enumerated(EnumType.STRING)
-    @Column(name = "mes")
-    private Set<Mes> meses;
+    @Column(name = "meses", nullable = false)
+    private Set<Mes> meses = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "teatro_id", nullable = false)
     private Teatro teatro;
 
-
     public boolean isAplicavel(LocalDate dataSessao) {
-
         Mes mesSessao = Mes.converterDoJava(dataSessao.getMonth());
         DiaSemana diaSessao = DiaSemana.converterDoJava(dataSessao.getDayOfWeek());
 
@@ -59,5 +56,4 @@ public class RegraPreco {
 
         return mesBate && diaBate;
     }
-
 }

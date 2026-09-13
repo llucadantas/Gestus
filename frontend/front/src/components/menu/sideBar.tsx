@@ -1,4 +1,6 @@
+'use client';
 import React from 'react';
+import Link from 'next/link'; // Importação essencial para Next.js
 import {
   Armchair,
   LayoutDashboard,
@@ -8,6 +10,8 @@ import {
   LogOut,
 } from 'lucide-react';
 import Logo from './logo';
+import Logout from './logout';
+// import Logout from './logout'; // Comentado para não dar aviso de variável não usada, caso não seja um botão direto.
 
 export type Page = 'menu' | 'tickets' | 'seats' | 'pricing' | 'contracts';
 
@@ -16,9 +20,9 @@ interface SidebarProps {
   activePage: Page;
 }
 
-// Estrutura de dados para alimentar o menu dinamicamente
+// Caminho do "Menu" corrigido para a rota absoluta
 const MENU_GERAL = [
-  { id: 'menu', label: 'Menu', icon: LayoutDashboard, href: '../menu' },
+  { id: 'menu', label: 'Menu', icon: LayoutDashboard, href: '/menu' },
   { id: 'tickets', label: 'Vender Ingressos', icon: Ticket, href: '/menu/venda' },
   { id: 'seats', label: 'Mapa de Assentos', icon: Armchair, href: '/menu/mapeamento' },
 ] as const;
@@ -33,14 +37,14 @@ const Sidebar: React.FC<SidebarProps> = ({
   activePage 
 }) => {
   
-  // Função auxiliar para renderizar os links e aplicar o estado ativo corretamente
   const renderNavLink = (item: typeof MENU_GERAL[number] | typeof MENU_GESTAO[number]) => {
     const isActive = activePage === item.id;
     const Icon = item.icon;
 
     return (
       <li key={item.id}>
-        <a
+        {/* Substituído <a> por <Link> do Next.js para navegação rápida (SPA) */}
+        <Link
           href={item.href}
           className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors ${
             isActive
@@ -51,7 +55,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         >
           <Icon size={18} />
           <span className="font-medium text-sm">{item.label}</span>
-        </a>
+        </Link>
       </li>
     );
   };
@@ -65,7 +69,6 @@ const Sidebar: React.FC<SidebarProps> = ({
 
       <nav className="flex-1 px-4 py-4 space-y-6 overflow-y-auto custom-scrollbar">
         
-        {/* SESSÃO: GERAL */}
         <div>
           <p className="text-xs font-bold text-purple-300 mb-3 px-3 uppercase tracking-wider">
             Geral
@@ -75,7 +78,6 @@ const Sidebar: React.FC<SidebarProps> = ({
           </ul>
         </div>
 
-        {/* SESSÃO: GESTÃO E EVENTOS */}
         <div>
           <p className="text-xs font-bold text-purple-300 mb-3 px-3 uppercase tracking-wider">
             Gestão e Eventos
@@ -86,18 +88,8 @@ const Sidebar: React.FC<SidebarProps> = ({
         </div>
       </nav>
 
-      {/* SESSÃO: SAIR */}
-      <div className="p-4 border-t border-white/10">
-        <button
-          type="button"
-          className="flex items-center gap-3 px-3 py-2.5 w-full rounded-xl text-purple-200 hover:bg-white/10 transition-colors"
-        >
-          <div className="w-8 h-8 rounded-full bg-slate-900/40 flex items-center justify-center border border-white/10">
-            <LogOut size={14} />
-          </div>
-          <span className="font-medium text-sm">Sair do Sistema</span>
-        </button>
-      </div>
+        {/* Caso o seu './logout' seja o componente do botão inteiro, você pode substituir o <button> abaixo por <Logout /> */}
+        <Logout />
     </aside>
   );
 };

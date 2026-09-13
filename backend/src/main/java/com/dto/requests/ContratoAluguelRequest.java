@@ -29,7 +29,7 @@ public record ContratoAluguelRequest(
         @NotNull(message = "Horario de fim é obrigatorio")
         LocalTime fimPeca,
 
-
+        @NotNull(message = "Valor do ingresso obrigatorio")
         BigDecimal valorIngresso
 
 ) {}

@@ -29,7 +29,7 @@ export function AddColumnForm({ onAdd, isLoading }: AddColumnFormProps) {
       setNewColId('');
       setNewColSeats('');
     } catch (err: any) {
-      setError(err.message || 'Falha ao adicionar a fileira.');
+      setError(err.response?.data?.message || err.message || 'Falha ao adicionar a fileira.');
     }
   };
 

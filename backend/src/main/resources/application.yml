@@ -6,12 +6,14 @@ spring:
     name: Gestus
   docker:
     compose:
-      file: C:\Users\lucas\OneDrive\Desktop\Projeto\GerenciadorTeatro\Gestus\Gestus\backend\compose.yaml
+      file: ./compose.yaml
+  config:
+    import: "optional:file:.env[.properties]"
   mail:
     host: smtp.gmail.com
     port: 587
-    username: lucas.dantasps26@gmail.com
-    password: oydj zycj tasd cvbm
+    username: ${EMAIL_USERNAME}
+    password: ${EMAIL_PASSWORD}
     properties:
       mail:
         smtp:
@@ -30,12 +32,12 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     show-sql: true
 
   jwt:
     expiration: ${JWT_EXPIRATION:900000}
-    key: ${JWT_KEY:Bh_JiU$0VsJ7C8vUJT63s8Q!0M31I6E4hv4MuEKZbOv4mbb7yVPFpkwIWJ#2m6Ye0AThLuFr1XZDeRLkalS_wI4lZn89wKHRU1ZrE2doKJ=rR&UIBtFj2M9BDGTU4ErikFIWmJByGipik0o5em6LuKcaftUgmMaqlWYaEzF=2!oD=CM18-RGUvAwk9WzRshPBvnVl#uVwe7JXV6WmAv9Vq5Y5lW&mkSVJ66RoksGlhfU1k4-&dx5q7-Jy1KK$zm7PF_dDQnZ1fzZX8jyZZNFZU28aHP36ykOVzKytkT3OXJ06sVKYMCYAVgfK#872v=rLmpwFjlwIlC0e7WLGSOxTyjT}
+    key: ${JWT_KEY}
 
 
 

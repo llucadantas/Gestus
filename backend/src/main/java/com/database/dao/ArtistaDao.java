@@ -19,7 +19,7 @@ public class ArtistaDao {
     public Optional<Artista> findByEmail(String email) {
         try{
             Artista a = em.createQuery("""
-                                        FROM Artista a WHERE a.email = :email
+                           FROM Artista a WHERE a.email = :email
                             """, Artista.class)
                     .setParameter("email", email)
                     .getSingleResult();
@@ -27,7 +27,6 @@ public class ArtistaDao {
         }catch (NoResultException n){
             return Optional.empty();
         }
-
     }
 
     @Transactional

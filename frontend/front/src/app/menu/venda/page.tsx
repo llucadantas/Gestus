@@ -10,71 +10,68 @@ import {
     CheckCircle2,
     Trash2,
     Calendar,
-    CheckCircle
+    CheckCircle,
+    Loader2
 } from 'lucide-react';
+import { sessaoService } from '@/src/services/sessaoService';
+import { ingressoService } from '@/src/services/ingressoService';
+import Header from '@/src/components/menu/Header';
 
 // --- Tipagens baseadas no seu Backend Java ---
 type AssentoSessao = {
-    id: number;           // ID da tabela assento_sessao (PK)
-    codigoPosicao: string; // Ex: 'A-1', 'A-2' (Vindo do Assento original)
-    fileira: string;       // Ex: 'A', 'B' (Para facilitar o agrupamento na tela)
-    disponivel: boolean;   // true = livre, false = ocupado
+    id: number;
+    codigoPosicao: string;
+    fileira: string;
+    disponivel: boolean;
 };
 
 type Sessao = {
     id: number;
-    title: string;
-    date: string;
-    time: string;
+    nomePeca: string;
+    data: string;
+    horarioInicio: string;
     valorIngresso: number;
-    assentos: AssentoSessao[]; // A lista que o seu endpoint vai devolver
+    assentos: AssentoSessao[];
 };
-
-// --- Mock Data: Simulando a resposta do Backend ---
-// Função utilitária para gerar os assentos clonados no mock
-const gerarAssentosSessao = (sessaoId: number, fileiras: string[], assentosPorFileira: number, ocupados: string[]) => {
-    let assentos: AssentoSessao[] = [];
-    let idCounter = sessaoId * 1000;
-    
-    fileiras.forEach(fileira => {
-        for (let i = 1; i <= assentosPorFileira; i++) {
-            const codigo = `${fileira}-${i}`;
-            assentos.push({
-                id: idCounter++,
-                codigoPosicao: codigo,
-                fileira: fileira,
-                disponivel: !ocupados.includes(codigo) // Se estiver na lista de ocupados, fica false
-            });
-        }
-    });
-    return assentos;
-};
-
-const MOCK_SESSIONS: Sessao[] = [
-    { 
-        id: 1, title: 'O Fantasma da Ópera', date: '15/10/2026', time: '20:00', valorIngresso: 45.00,
-        assentos: gerarAssentosSessao(1, ['A', 'B', 'C', 'D'], 6, ['A-3', 'B-1', 'B-5', 'D-2', 'D-3'])
-    },
-    { 
-        id: 2, title: 'Stand Up Comedy - O Retorno', date: '16/10/2026', time: '21:30', valorIngresso: 35.00,
-        assentos: gerarAssentosSessao(2, ['A', 'B', 'C', 'D'], 6, ['A-1', 'A-2', 'C-3'])
-    },
-    { 
-        id: 3, title: 'Concerto Sinfônico', date: '18/10/2026', time: '19:00', valorIngresso: 80.00,
-        assentos: gerarAssentosSessao(3, ['A', 'B', 'C', 'D'], 6, [])
-    }
-];
 
 export default function PDV() {
+    // --- ESTADOS DE DADOS DA API ---
+    const [sessions, setSessions] = useState<Sessao[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    // --- ESTADOS DO PDV ---
     const [selectedSession, setSelectedSession] = useState<Sessao | null>(null);
-    // Agora guardamos o objeto inteiro do AssentoSessao, pois precisamos do ID para mandar pro backend depois
-    const [selectedSeats, setSelectedSeats] = useState<AssentoSessao[]>([]); 
-    
+    const [selectedSeats, setSelectedSeats] = useState<AssentoSessao[]>([]);
+
     const [customerName, setCustomerName] = useState('');
     const [customerEmail, setCustomerEmail] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isFormValid, setIsFormValid] = useState(false);
 
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    // --- BUSCAR SESSÕES AO CARREGAR A PÁGINA (AXIOS) ---
+    useEffect(() => {
+        const fetchSessoes = async () => {
+            try {
+                setIsLoading(true);
+
+                const response = await sessaoService.getSessoes();
+                setSessions(response.content || response);
+
+            } catch (err: any) {
+                console.error("Erro na requisição Axios:", err);
+                setError(err.response?.data?.message || 'Não foi possível carregar as sessões no momento.');
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchSessoes();
+    }, []);
+
+    // Validação do formulário
     useEffect(() => {
         const isValid =
             customerName.trim().length > 0 &&
@@ -95,27 +92,78 @@ export default function PDV() {
         setSelectedSeats(prev => {
             const isAlreadySelected = prev.some(seat => seat.id === assento.id);
             if (isAlreadySelected) {
-                return prev.filter(seat => seat.id !== assento.id); // Remove
+                return prev.filter(seat => seat.id !== assento.id);
             } else {
-                return [...prev, assento]; // Adiciona
+                return [...prev, assento];
             }
         });
     };
 
-    const handleFinalize = (e: React.FormEvent) => {
+    const handleFinalize = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!isFormValid) return;
+        if (!isFormValid || !selectedSession) return;
         
-        // AQUI VOCÊ FARIA O POST PARA O BACKEND:
-        // const payload = {
-        //     clienteNome: customerName,
-        //     clienteEmail: customerEmail,
-        //     sessaoId: selectedSession.id,
-        //     assentosSessaoIds: selectedSeats.map(seat => seat.id)
-        // };
-        // axios.post('/vendas', payload)...
+        setIsSubmitting(true);
 
-        setIsModalOpen(true);
+        try {
+            // Em Gestus, o endpoint exige 1 requisição por ingresso. 
+            // Fazemos todas em paralelo.
+            const userContext = JSON.parse(localStorage.getItem('usuarioGestus') || '{}');
+            const idTeatro = userContext.teatroId || 1; // Fallback se não estiver no storage
+            
+            const promessasVenda = selectedSeats.map(seat => 
+                ingressoService.realizarVenda(
+                    idTeatro, 
+                    selectedSession.id, 
+                    seat.id, 
+                    customerEmail, 
+                    customerName
+                )
+            );
+
+            await Promise.all(promessasVenda);
+
+            // Sucesso (201)! Atualizar a tela sem recarregar
+            setSessions(prevSessions => prevSessions.map(session => {
+                if (session.id === selectedSession.id) {
+                    return {
+                        ...session,
+                        assentos: session.assentos.map(assento => {
+                            // Se este assento estava nos selecionados, agora está ocupado
+                            if (selectedSeats.some(s => s.id === assento.id)) {
+                                return { ...assento, disponivel: false };
+                            }
+                            return assento;
+                        })
+                    };
+                }
+                return session;
+            }));
+            
+            // Atualiza também a sessão selecionada atual
+            setSelectedSession(prev => {
+                if (!prev) return prev;
+                return {
+                    ...prev,
+                    assentos: prev.assentos.map(assento => {
+                        if (selectedSeats.some(s => s.id === assento.id)) {
+                            return { ...assento, disponivel: false };
+                        }
+                        return assento;
+                    })
+                };
+            });
+
+            // Abre o modal de sucesso
+            setIsModalOpen(true);
+        } catch (err: any) {
+            console.error("Erro ao processar venda via Axios:", err);
+            // Capturando erro de concorrência e injetando a mensagem do backend
+            const errorMessage = err.response?.data?.message || 'Ops! Este assento acabou de ser reservado por outra pessoa. Por favor, escolha outro.';
+            alert(errorMessage);
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     const handleReset = () => {
@@ -124,15 +172,13 @@ export default function PDV() {
         setSelectedSeats([]);
         setCustomerName('');
         setCustomerEmail('');
+        // Aqui você pode chamar fetchSessoes() de novo se quiser atualizar os assentos
     };
 
     const formatCurrency = (value: number) => {
         return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
     };
 
-    // --- LÓGICA DE AGRUPAMENTO DOS ASSENTOS PARA A TELA ---
-    // Pega a lista plana do backend e transforma em um objeto agrupado pela fileira
-    // Ex: { 'A': [assento1, assento2], 'B': [assento3, assento4] }
     const groupedSeats = selectedSession?.assentos.reduce((acc, assento) => {
         if (!acc[assento.fileira]) {
             acc[assento.fileira] = [];
@@ -141,9 +187,7 @@ export default function PDV() {
         return acc;
     }, {} as Record<string, AssentoSessao[]>) || {};
 
-    // Extrai as chaves (A, B, C) e ordena alfabeticamente para renderizar de cima pra baixo
     const rowKeys = Object.keys(groupedSeats).sort();
-
     const currentTicketPrice = selectedSession?.valorIngresso || 0;
     const totalPrice = selectedSeats.length * currentTicketPrice;
     const sortedSelectedSeats = [...selectedSeats].sort((a, b) => a.codigoPosicao.localeCompare(b.codigoPosicao));
@@ -152,21 +196,10 @@ export default function PDV() {
         <div className="flex min-h-screen w-full bg-gray-50">
             <Sidebar activePage='tickets' />
             <div className="flex-1 flex flex-col h-screen overflow-hidden bg-gray-100 font-sans">
-
-                {/* Header */}
-                <header className="bg-white border-b border-gray-200 p-6 flex justify-between items-center shrink-0 shadow-sm z-10 relative">
-                    <div>
-                        <h2 className="text-2xl font-bold text-gray-800">Ponto de Venda (PDV)</h2>
-                        <p className="text-sm text-gray-500">Selecione a sessão e os assentos para realizar a venda.</p>
-                    </div>
-                    <div className="h-10 w-10 bg-gray-800 rounded-full flex items-center justify-center text-white font-bold cursor-pointer hover:bg-gray-700 transition">
-                        N
-                    </div>
-                </header>
+                <Header titulo="Ponto de Venda (PDV)" descricao="Selecione a sessão e os assentos para realizar a venda." />
 
                 {/* Main Content Area */}
                 <main className="flex-1 overflow-y-auto p-6 flex flex-col lg:flex-row gap-6">
-
                     {/* Left Column: Sessions & Seat Map */}
                     <div className="flex-1 flex flex-col gap-6 min-w-0">
 
@@ -177,32 +210,53 @@ export default function PDV() {
                                 Selecione a Sessão
                             </h3>
 
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                {MOCK_SESSIONS.map(session => {
-                                    const isSelected = selectedSession?.id === session.id;
-                                    return (
-                                        <div
-                                            key={session.id}
-                                            onClick={() => handleSelectSession(session)}
-                                            className={`
-                                            cursor-pointer p-4 rounded-xl border-2 transition-all duration-200 flex flex-col h-full
-                                            ${isSelected ? 'border-purple-800 bg-purple-50 shadow-sm' : 'border-gray-100 hover:border-purple-200 hover:bg-gray-50'}
-                                        `}
-                                        >
-                                            <div className="flex justify-between items-start mb-2">
-                                                <span className="inline-block px-2 py-1 bg-white rounded text-xs font-semibold text-gray-500 border border-gray-200 shadow-sm">
-                                                    {session.time}
-                                                </span>
-                                                {isSelected && <CheckCircle className="text-purple-800 h-5 w-5 fill-purple-800 text-white" />}
+                            {isLoading && (
+                                <div className="flex flex-col items-center justify-center py-8 text-gray-500">
+                                    <Loader2 className="h-8 w-8 animate-spin mb-2 text-purple-800" />
+                                    <p>Buscando sessões disponíveis...</p>
+                                </div>
+                            )}
+
+                            {!isLoading && error && (
+                                <div className="p-4 bg-red-50 text-red-600 border border-red-200 rounded-lg text-center">
+                                    {error}
+                                </div>
+                            )}
+
+                            {!isLoading && !error && sessions.length === 0 && (
+                                <div className="text-center py-8 text-gray-500">
+                                    Nenhuma sessão disponível no momento.
+                                </div>
+                            )}
+
+                            {!isLoading && !error && sessions.length > 0 && (
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    {sessions.map(session => {
+                                        const isSelected = selectedSession?.id === session.id;
+                                        return (
+                                            <div
+                                                key={session.id}
+                                                onClick={() => handleSelectSession(session)}
+                                                className={`
+                                                cursor-pointer p-4 rounded-xl border-2 transition-all duration-200 flex flex-col h-full
+                                                ${isSelected ? 'border-purple-800 bg-purple-50 shadow-sm' : 'border-gray-100 hover:border-purple-200 hover:bg-gray-50'}
+                                            `}
+                                            >
+                                                <div className="flex justify-between items-start mb-2">
+                                                    <span className="inline-block px-2 py-1 bg-white rounded text-xs font-semibold text-gray-500 border border-gray-200 shadow-sm">
+                                                        {session.horarioInicio}
+                                                    </span>
+                                                    {isSelected && <CheckCircle className="text-purple-800 h-5 w-5 fill-purple-800 text-white" />}
+                                                </div>
+                                                <h4 className="font-bold text-gray-800 leading-tight mb-1 line-clamp-2">{session.nomePeca}</h4>
+                                                <p className="text-sm text-gray-500 mt-auto flex items-center gap-1">
+                                                    <Calendar className="h-4 w-4" /> {session.data}
+                                                </p>
                                             </div>
-                                            <h4 className="font-bold text-gray-800 leading-tight mb-1 line-clamp-2">{session.title}</h4>
-                                            <p className="text-sm text-gray-500 mt-auto flex items-center gap-1">
-                                                <Calendar className="h-4 w-4" /> {session.date}
-                                            </p>
-                                        </div>
-                                    );
-                                })}
-                            </div>
+                                        );
+                                    })}
+                                </div>
+                            )}
                         </section>
 
                         {/* Step 2: Seat Map */}
@@ -233,23 +287,19 @@ export default function PDV() {
 
                                 {/* Map Container */}
                                 <div className="flex-1 bg-gray-50 rounded-xl border border-gray-100 p-8 flex flex-col items-center justify-center overflow-x-auto relative">
-                                    
-                                    {/* Stage Indicator */}
+
                                     <div className="w-full max-w-2xl h-16 bg-gray-900 rounded-t-3xl flex items-center justify-center text-white font-bold tracking-[0.3em] mb-12 shadow-lg relative overflow-hidden">
                                         <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent"></div>
                                         P A L C O
                                     </div>
 
-                                    {/* Dynamic Seats Layout based on backend data */}
                                     <div className="flex flex-col gap-6 items-center pb-4">
                                         {rowKeys.map(fileira => (
                                             <div key={fileira} className="flex items-center gap-4 w-full justify-center group">
-                                                {/* Row Label */}
                                                 <div className="w-10 h-10 rounded-lg border border-gray-200 flex items-center justify-center font-bold text-gray-700 bg-white shadow-sm shrink-0 group-hover:border-purple-800 group-hover:text-purple-800 transition-colors">
                                                     {fileira}
                                                 </div>
 
-                                                {/* Seats in this Row */}
                                                 <div className="flex gap-2 p-2 rounded-xl bg-white border border-gray-100 shadow-sm flex-wrap justify-center">
                                                     {groupedSeats[fileira]
                                                         .sort((a, b) => a.codigoPosicao.localeCompare(b.codigoPosicao))
@@ -285,7 +335,7 @@ export default function PDV() {
                                                                     )}
                                                                 </button>
                                                             );
-                                                    })}
+                                                        })}
                                                 </div>
                                             </div>
                                         ))}
@@ -387,11 +437,12 @@ export default function PDV() {
 
                                         <button
                                             type="submit"
-                                            disabled={!isFormValid}
+                                            disabled={!isFormValid || isSubmitting}
                                             className="mt-4 w-full bg-purple-800 hover:bg-purple-900 text-white font-semibold py-3 px-4 rounded-lg transition-all flex justify-center items-center gap-2 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-md"
                                         >
-                                            Finalizar Venda
-                                            <CheckCircle2 className="h-5 w-5" />
+                                            {isSubmitting ? 'Processando...' : 'Finalizar Venda'}
+                                            {!isSubmitting && <CheckCircle2 className="h-5 w-5" />}
+                                            {isSubmitting && <Loader2 className="h-5 w-5 animate-spin" />}
                                         </button>
                                     </form>
                                 )}
@@ -417,7 +468,7 @@ export default function PDV() {
                                 </div>
                                 <div className="flex justify-between text-sm">
                                     <span className="text-gray-500">Sessão:</span>
-                                    <span className="font-medium text-gray-800">{selectedSession?.title}</span>
+                                    <span className="font-medium text-gray-800">{selectedSession?.nomePeca}</span>
                                 </div>
                                 <div className="flex justify-between text-sm">
                                     <span className="text-gray-500">Qtd Ingressos:</span>

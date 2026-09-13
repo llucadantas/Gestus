@@ -7,17 +7,15 @@ public record IngressoVendidoResponse(
         Long idSessao,
         Long idAssento,
         String email,
-        Integer numeroAssento,
         String codigoPosicao
 ) {
     public IngressoVendidoResponse(IngressoVendido ingresso) {
         this(
                 ingresso.getId(),
                 ingresso.getSessao().getId(),
-                ingresso.getAssento().getId(),
+                ingresso.getAssentoSessao().getId(),
                 ingresso.getEmail(),
-                ingresso.getAssento().getNAssento(),
-                ingresso.getAssento().getCodigoPosicao()
-        );
+                ingresso.getAssentoSessao().getCodigoPosicao());
+
     }
 }

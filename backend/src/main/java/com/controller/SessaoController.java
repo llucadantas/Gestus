@@ -20,9 +20,8 @@ import java.util.List;
 public class SessaoController {
     private final SessaoService sessaoService;
 
-    @GetMapping
+    @GetMapping("/{idSessao}")
     @ResponseStatus(HttpStatus.OK)
-    @RequestMapping("/{idSessao}")
     public SessaoResponse getSessao(@PathVariable Long idSessao, @AuthenticationPrincipal(expression = "idTeatro") Long idTeatro) throws NotFoundException {
         return sessaoService.getSessaoResponse(idSessao, idTeatro);
     }
@@ -30,12 +29,11 @@ public class SessaoController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<SessaoResponse> getSessoes(@AuthenticationPrincipal(expression = "idTeatro") Long idTeatro) {
-        return sessaoService.getSessoes(idTeatro);
+        return sessaoService.getSessoesResponse(idTeatro);
     }
 
-    @GetMapping
+    @GetMapping("/resumo")
     @ResponseStatus(HttpStatus.OK)
-    @RequestMapping("/resumo")
     public Page<SessaoProjection> getSessoesResumo(@AuthenticationPrincipal(expression = "idTeatro") Long idTeatro,
                                                    @RequestParam(defaultValue = "0") int pagina,
                                                    @RequestParam(defaultValue = "10") int tamanho){

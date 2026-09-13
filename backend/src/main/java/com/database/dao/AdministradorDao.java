@@ -55,7 +55,7 @@ public class AdministradorDao{
         try{
             AdministradorResponse administrador = em.createQuery(
                             """
-                                               SELECT new com.dto.response.AdministradorResponse(a.id, a.email, a.nome, a.teatro.nome)  FROM Administrador a WHERE a.id = :id
+                                               SELECT new com.dto.response.AdministradorResponse(a.id, a.email, a.nome, a.teatro.nome) FROM Administrador a WHERE a.id = :id
                                     """, AdministradorResponse.class)
                     .setParameter("id", id)
                     .getSingleResult();

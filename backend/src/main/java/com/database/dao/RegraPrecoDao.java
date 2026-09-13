@@ -50,14 +50,22 @@ public class RegraPrecoDao {
     }
 
     public Optional<RegraResponse> findByIdAndTeatro_IdResponse(Long idRegra, Long idTeatro) {
-        try{
-            RegraResponse regra = em.createQuery("""
-            SELECT new com.dto.response.RegraResponse(a)  from RegraPreco a WHERE a.teatro.id = :idTeatro and a.id = :idRegra
-                """, RegraResponse.class)
+        try {
+            // 1. Busca a Entidade pura com DISTINCT
+            RegraPreco regra = em.createQuery("""
+            SELECT r
+            FROM RegraPreco r
+            LEFT JOIN FETCH r.meses
+            LEFT JOIN FETCH r.diasSemana
+            WHERE r.teatro.id = :idTeatro AND r.id = :idRegra
+            """, RegraPreco.class)
                     .setParameter("idTeatro", idTeatro)
                     .setParameter("idRegra", idRegra)
                     .getSingleResult();
-            return Optional.of(regra);
+
+            // 2. Mapeia para o DTO usando o Java
+            return Optional.of(new RegraResponse(regra));
+
         } catch (NoResultException e) {
             return Optional.empty();
         }
@@ -65,11 +73,21 @@ public class RegraPrecoDao {
 
 
     public List<RegraResponse> findAllByTeatro_IdResponse(Long idTeatro) {
-        TypedQuery<RegraResponse> query = em.createQuery("""
-            SELECT new com.dto.response.RegraResponse(a) from RegraPreco a WHERE a.teatro.id = :idTeatro
-                """, RegraResponse.class);
+        // 1. Busca as entidades puras, usando DISTINCT e LEFT JOIN
+        TypedQuery<RegraPreco> query = em.createQuery("""
+        SELECT DISTINCT r
+        FROM RegraPreco r
+        LEFT JOIN FETCH r.meses
+        LEFT JOIN FETCH r.diasSemana
+        WHERE r.teatro.id = :idTeatro
+        """, RegraPreco.class);
+
         query.setParameter("idTeatro", idTeatro);
-        return query.getResultList();
+
+        // 2. Converte a lista de entidades para a lista de DTOs usando Streams
+        return query.getResultList().stream()
+                .map(RegraResponse::new)
+                .toList();
     }
 
     @Transactional
@@ -80,7 +98,7 @@ public class RegraPrecoDao {
     public boolean existByTeatro_Id(Long idTeatro) {
         TypedQuery<Long> query = em.createQuery(
                 """
-                            SELECT COUNT(r) from  RegraPreco a WHERE a.teatro.id = :idTeatro
+                            SELECT COUNT(r) from RegraPreco r WHERE r.teatro.id = :idTeatro GROUP BY r.teatro.id
                         """, Long.class);
         query.setParameter("idTeatro", idTeatro);
         return query.getSingleResult() > 0;

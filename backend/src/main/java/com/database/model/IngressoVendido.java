@@ -3,6 +3,8 @@ package com.database.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Entity
 @Table(name = "ingresso_vendido")
 @Getter
@@ -16,15 +18,20 @@ public class IngressoVendido {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
+    private BigDecimal valor;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_sessao", nullable = false)
     private Sessao sessao;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_assento", nullable = false)
-    private Assento assento;
+    private AssentoSessao assentoSessao;
 
-    // Novo campo para armazenar apenas o e-mail em vez da relação com a tabela Cliente
     @Column(name = "email_comprador", nullable = false)
     private String email;
+
+    @Column(name = "nome_cliente")
+    private String nomeCliente;
 }

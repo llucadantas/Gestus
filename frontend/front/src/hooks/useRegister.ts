@@ -18,7 +18,7 @@ export default function useRegister() {
 
         try {
             const dados = await authService.register(nome, password, nomeTeatro, email);
-            console.log('Cadastro realizado com sucesso!', dados);
+
             router.push('/login');
             
 

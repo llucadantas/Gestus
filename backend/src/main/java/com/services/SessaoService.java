@@ -30,55 +30,53 @@ public class SessaoService {
     private final List<ValidadorSessao> validadores;
 
 
-    public List<SessaoResponse> getSessoes(Long idTeatro){
-        List<Sessao> sessoes = sessaoDao.findAllByPropostaAluguel_Teatro_Id(idTeatro);
-        return sessoes.stream()
-                .map(SessaoResponse::new)
-                .toList();
+    public List<SessaoResponse> getSessoesResponse(Long idTeatro){
+        return sessaoDao.findAllByPropostaAluguel_Teatro_IdResponse(idTeatro);
     }
 
     public SessaoResponse getSessaoResponse(Long idSessao, Long idTeatro) throws NotFoundException {
-        return new SessaoResponse(getSessao(idSessao, idTeatro));
+        return sessaoDao.findByIdAndPropostaAluguel_Teatro_Id(idSessao, idTeatro)
+                .orElseThrow(()-> new NotFoundException("Sessao não existe"));
     }
 
-    private Sessao getSessao(Long idSessao, Long idTeatro) throws NotFoundException {
+    private SessaoResponse getSessao(Long idSessao, Long idTeatro) throws NotFoundException {
         return sessaoDao.findByIdAndPropostaAluguel_Teatro_Id(idSessao, idTeatro)
                 .orElseThrow(()-> new NotFoundException("Sessao não encontrada"));
     }
 
     @Transactional
-    public List<Sessao> cadastrarSessoes(ContratoAluguelRequest request, Teatro t, Contrato contrato) {
-        List<Sessao> sessoes = new ArrayList<>();
+    public void cadastrarSessoes(ContratoAluguelRequest request, Teatro t, Contrato contrato) {
         if (request.dataInicio() == null || request.dataFim() == null) {
             throw new ValidacaoException("As datas de início e fim do contrato são obrigatórias e devem estar no formato YYYY-MM-DD.");
+        }
+        if (request.dataFim().isBefore(request.dataInicio())) {
+            throw new ValidacaoException("A data de fim não pode ser anterior à data de início.");
         }
         List<LocalDate> diasDeExibicao = request.dataInicio()
                 .datesUntil(request.dataFim().plusDays(1))
                 .toList();
-
         for (LocalDate data : diasDeExibicao) {
-
             Sessao sessao = Sessao.builder()
                     .dataExibicao(data)
                     .propostaContrato(contrato)
                     .statusSessao(StatusSessao.AGUARDANDO_ASSINATURA)
+                    .valorIngresso(request.valorIngresso())
                     .build();
-
             sessao.setHorarioInicioPeca(request.inicioPeca());
             sessao.setHorarioFimPeca(request.fimPeca());
-
             for (ValidadorSessao validador : validadores) {
                 validador.validar(sessao, t.getId());
             }
-
+            sessao.calcularHorariosOcupacao();
             sessao.setValorSessao(calcularValorFinal(sessao, t.getId()));
-
-            sessoes.add(sessao);
+            contrato.addSessao(sessao);
         }
-        return sessoes;
     }
 
     public BigDecimal calcularValorFinal(Sessao s, Long idTeatro) {
+
+
+
         BigDecimal valorDia = regraPrecoService.obterPrecoAplicavel(s.getDataExibicao(), idTeatro);
         long minutosOcupacao = Duration.between(s.getHorarioOcupacaoInicio(), s.getHorarioOcupacaoFim()).toMinutes();
 

@@ -47,16 +47,17 @@ public class Sessao {
     @Column(name = "valor_ingresso")
     private BigDecimal valorIngresso;
 
+    @Builder.Default
     @OneToMany(mappedBy = "sessao", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<AssentoSessao> assentosSessao =  new ArrayList<>();
+    private List<AssentoSessao> assentosSessao = new ArrayList<>();
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     private StatusSessao statusSessao = StatusSessao.AGUARDANDO_ASSINATURA;
 
     public Sessao(Contrato propostaContrato, LocalDate dataExibicao,
                   LocalTime horarioInicioPeca, LocalTime horarioFimPeca,
-                  BigDecimal valorSessao,
-                  BigDecimal valorIngresso) {
+                  BigDecimal valorSessao, BigDecimal valorIngresso) {
         this.propostaContrato = propostaContrato;
         this.dataExibicao = dataExibicao;
         this.horarioInicioPeca = horarioInicioPeca;
@@ -65,17 +66,24 @@ public class Sessao {
         this.valorIngresso = valorIngresso;
     }
 
-    public void setHorarioInicioPeca(LocalTime horarioInicioPeca) {
-        this.horarioInicioPeca = horarioInicioPeca;
-        if (horarioInicioPeca != null) {
-            this.horarioOcupacaoInicio = horarioInicioPeca.minusHours(1);
+    @PrePersist
+    @PreUpdate
+    public void calcularHorariosOcupacao() {
+        if (this.horarioInicioPeca != null) {
+            this.horarioOcupacaoInicio = this.horarioInicioPeca.minusHours(1);
+        }
+        if (this.horarioFimPeca != null) {
+            this.horarioOcupacaoFim = this.horarioFimPeca.plusHours(1);
         }
     }
 
-    public void setHorarioFimPeca(LocalTime horarioFimPeca) {
-        this.horarioFimPeca = horarioFimPeca;
-        if (horarioFimPeca != null) {
-            this.horarioOcupacaoFim = horarioFimPeca.plusHours(1);
-        }
+    public void addAssento(AssentoSessao assento) {
+        assentosSessao.add(assento);
+        assento.setSessao(this);
+    }
+
+    public void removeAssento(AssentoSessao assento) {
+        assentosSessao.remove(assento);
+        assento.setSessao(null);
     }
 }

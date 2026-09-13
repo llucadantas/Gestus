@@ -13,7 +13,7 @@ import java.util.Set;
 public record RegraResponse(
         Long id,
         Set<DiaSemana> diasSemana,
-        Set<Mes> mes,
+        Set<Mes> meses,
         BigDecimal valor,
         String descricao,
         Long idTeatro

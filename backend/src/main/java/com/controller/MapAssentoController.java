@@ -38,9 +38,8 @@ public class MapAssentoController {
         return colunaService.criarColuna(colunaRequest, idTeatro);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/excluir/{idColuna}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @RequestMapping("/excluir/{idColuna}")
     public void excluirColuna(@AuthenticationPrincipal(expression = "idTeatro") Long idTeatro,
                               @PathVariable Long idColuna) throws NotFoundException {
         colunaService.apagarColuna(idTeatro, idColuna);
@@ -53,8 +52,7 @@ public class MapAssentoController {
         return colunaService.getColunasResponse(idTeatro);
     }
 
-    @GetMapping
-    @RequestMapping("/assentos")
+    @GetMapping("/assentos")
     @ResponseStatus(HttpStatus.OK)
     public List<AssentoResponse> getAssentos(@AuthenticationPrincipal(expression = "idTeatro") Long idTeatro) {
         return assentoService.getAssentos(idTeatro);

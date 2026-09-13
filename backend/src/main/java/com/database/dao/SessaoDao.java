@@ -2,6 +2,7 @@ package com.database.dao;
 
 import com.database.model.Sessao;
 import com.dto.response.SessaoProjection;
+import com.dto.response.SessaoResponse;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
@@ -25,21 +26,34 @@ public class SessaoDao {
     @PersistenceContext
     private EntityManager em;
 
-    public List<Sessao> findAllByPropostaAluguel_Teatro_Id(Long idTeatro) {
+    public List<SessaoResponse> findAllByPropostaAluguel_Teatro_IdResponse(Long idTeatro) {
         TypedQuery<Sessao> query = em.createQuery(
                 """
-    FROM Sessao s where s.propostaContrato.teatro = :idTeatro
-""", Sessao.class
+                SELECT DISTINCT s FROM Sessao s
+                JOIN FETCH s.propostaContrato pc
+                JOIN FETCH pc.peca
+                LEFT JOIN FETCH s.assentosSessao
+                WHERE pc.teatro.id = :idTeatro
+                AND s.statusSessao = com.database.model.enums.StatusSessao.CONFIRMADO
+                """, Sessao.class
         ).setParameter("idTeatro", idTeatro);
-        return query.getResultList();
+
+        return query.getResultList().stream()
+                .map(SessaoResponse::new)
+                .toList();
     }
 
-
-    public Optional<Sessao> findByIdAndPropostaAluguel_Teatro_Id(Long id, Long idTeatro) {
+    public Optional<SessaoResponse> findByIdAndPropostaAluguel_Teatro_Id(Long id, Long idTeatro) {
         try{
-            TypedQuery<Sessao> query = em.createQuery("""
-            FROM Sessao s WHERE s.id = :id AND s.propostaContrato.teatro.id = :idTeatro
-            """, Sessao.class)
+            TypedQuery<SessaoResponse> query = em.createQuery("""
+            SELECT new com.dto.response.SessaoResponse(s)
+            FROM Sessao s
+            JOIN FETCH s.propostaContrato pc
+            JOIN FETCH pc.peca
+            JOIN FETCH s.assentosSessao
+            WHERE s.id = :id
+            AND s.propostaContrato.teatro.id = :idTeatro
+            """, SessaoResponse.class)
                     .setParameter("id", id)
                     .setParameter("idTeatro", idTeatro);
             return Optional.of(query.getSingleResult());
@@ -55,7 +69,7 @@ public class SessaoDao {
             LocalTime ocupacaoFim) {
         TypedQuery<Boolean> query = em.createQuery(
                         """
-                SELECT COUNT(s) > 0 
+                SELECT COUNT(s) > 0
                 FROM Sessao s
                 WHERE s.propostaContrato.teatro.id = :idTeatro
                 AND s.dataExibicao = :data
@@ -83,9 +97,12 @@ public class SessaoDao {
                             s.horarioFimPeca,
                             s.dataExibicao,
                             s.propostaContrato.artista.nome
-                        ) 
-                        FROM Sessao s 
-                        WHERE s.propostaContrato.teatro.id = :idTeatro and s.statusSessao = StatusSessao.CONFIRMADO
+                        )
+                        FROM Sessao s
+                        JOIN s.propostaContrato pc
+                        JOIN pc.peca
+                        JOIN pc.artista
+                        WHERE s.propostaContrato.teatro.id = :idTeatro and s.statusSessao = com.database.model.enums.StatusSessao.CONFIRMADO
                         ORDER BY s.dataExibicao ASC, s.horarioInicioPeca ASC
                         """, SessaoProjection.class)
                 .setParameter("idTeatro", idTeatro);

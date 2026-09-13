@@ -56,12 +56,12 @@ public class AluguelController {
             @PathVariable Long id,
             @AuthenticationPrincipal(expression = "idTeatro")Long idTeatro) {
 
-        contratoService.cancelarContrato(idTeatro,id);
+        contratoService.cancelarContrato(id, idTeatro);
     }
 
     @GetMapping("/assinar")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void assinar(@RequestParam String token){
+    public void assinar(@RequestParam("token") String token){
         contratoService.assinarContrato(token);
     }
 }

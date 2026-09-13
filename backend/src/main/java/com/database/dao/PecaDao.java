@@ -1,6 +1,7 @@
 package com.database.dao;
 
 import com.database.model.Peca;
+import com.dto.response.PecaResponse;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
@@ -35,7 +36,7 @@ public class PecaDao {
         }
     }
 
-    public List<Peca> findAll(){
-        return em.createQuery("from Peca", Peca.class).getResultList();
+    public List<PecaResponse> findAll(){
+        return em.createQuery("select new com.dto.response.PecaResponse(p) from Peca p", PecaResponse.class).getResultList();
     }
 }

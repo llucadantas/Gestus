@@ -70,9 +70,10 @@ export function useRegras() {
             // Usando prevRegras para garantir que pega o estado mais recente
             setRegras(prevRegras => [...prevRegras, novaRegraFormatada]);
             fecharModal();
-        } catch (error) {
+        } catch (error: any) {
             console.error("Erro ao salvar:", error);
-            alert("Não foi possível salvar a regra.");
+            const errorMessage = error.response?.data?.message || "Não foi possível salvar a regra.";
+            alert(errorMessage);
         }
     };
 
@@ -92,9 +93,10 @@ export function useRegras() {
             await regrasService.deletarRegra(id);
             // Atualiza o estado local removendo o item, sem precisar recarregar tudo do servidor
             setRegras(prevRegras => prevRegras.filter(regra => regra.id !== id)); 
-        } catch (error) {
+        } catch (error: any) {
             console.error("Erro ao excluir a regra:", error);
-            alert("Não foi possível excluir a regra.");
+            const errorMessage = error.response?.data?.message || "Não foi possível excluir a regra.";
+            alert(errorMessage);
         }
     };
 
