@@ -193,38 +193,42 @@ export default function PDV() {
     const sortedSelectedSeats = [...selectedSeats].sort((a, b) => a.codigoPosicao.localeCompare(b.codigoPosicao));
 
     return (
-        <div className="flex min-h-screen w-full bg-gray-50">
-            <Sidebar activePage='tickets' />
-            <div className="flex-1 flex flex-col h-screen overflow-hidden bg-gray-100 font-sans">
+        <div className="flex min-h-screen w-full bg-[#000000] relative overflow-hidden font-sans text-[#F8F8F8]">
+            {/* Ambient Background Glows */}
+            <div className="absolute top-[-10%] left-[-10%] w-[40rem] h-[40rem] bg-[#7C3AED] rounded-full mix-blend-screen filter blur-[150px] opacity-[0.08] pointer-events-none"></div>
+            <div className="absolute bottom-[-10%] right-[-10%] w-[40rem] h-[40rem] bg-[#8B5CF6] rounded-full mix-blend-screen filter blur-[150px] opacity-[0.05] pointer-events-none"></div>
+
+            <Sidebar color="#0B0710" activePage='tickets' />
+            <div className="flex-1 flex flex-col h-screen overflow-hidden relative z-10">
                 <Header titulo="Ponto de Venda (PDV)" descricao="Selecione a sessão e os assentos para realizar a venda." />
 
                 {/* Main Content Area */}
-                <main className="flex-1 overflow-y-auto p-6 flex flex-col lg:flex-row gap-6">
+                <main className="flex-1 overflow-y-auto p-6 flex flex-col lg:flex-row gap-6 custom-scrollbar">
                     {/* Left Column: Sessions & Seat Map */}
                     <div className="flex-1 flex flex-col gap-6 min-w-0">
 
                         {/* Step 1: Sessions */}
-                        <section className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
-                            <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
-                                <span className="bg-purple-800 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">1</span>
+                        <section className="bg-[#120B18] rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.5)] border border-violet-500/20 p-5 backdrop-blur-sm">
+                            <h3 className="text-lg font-semibold text-[#F8F8F8] mb-4 flex items-center gap-2">
+                                <span className="bg-[#7C3AED] text-white w-6 h-6 rounded-full flex items-center justify-center text-xs shadow-lg shadow-purple-500/30">1</span>
                                 Selecione a Sessão
                             </h3>
 
                             {isLoading && (
-                                <div className="flex flex-col items-center justify-center py-8 text-gray-500">
-                                    <Loader2 className="h-8 w-8 animate-spin mb-2 text-purple-800" />
+                                <div className="flex flex-col items-center justify-center py-8 text-[#A1A1AA]">
+                                    <Loader2 className="h-8 w-8 animate-spin mb-2 text-[#7C3AED]" />
                                     <p>Buscando sessões disponíveis...</p>
                                 </div>
                             )}
 
                             {!isLoading && error && (
-                                <div className="p-4 bg-red-50 text-red-600 border border-red-200 rounded-lg text-center">
+                                <div className="p-4 bg-red-500/10 text-red-400 border border-red-500/20 rounded-lg text-center">
                                     {error}
                                 </div>
                             )}
 
                             {!isLoading && !error && sessions.length === 0 && (
-                                <div className="text-center py-8 text-gray-500">
+                                <div className="text-center py-8 text-[#A1A1AA]">
                                     Nenhuma sessão disponível no momento.
                                 </div>
                             )}
@@ -238,18 +242,18 @@ export default function PDV() {
                                                 key={session.id}
                                                 onClick={() => handleSelectSession(session)}
                                                 className={`
-                                                cursor-pointer p-4 rounded-xl border-2 transition-all duration-200 flex flex-col h-full
-                                                ${isSelected ? 'border-purple-800 bg-purple-50 shadow-sm' : 'border-gray-100 hover:border-purple-200 hover:bg-gray-50'}
+                                                cursor-pointer p-4 rounded-xl border transition-all duration-300 flex flex-col h-full
+                                                ${isSelected ? 'border-[#7C3AED] bg-[#7C3AED]/10 shadow-[0_0_15px_rgba(124,58,237,0.15)]' : 'border-violet-500/10 hover:border-violet-500/30 hover:bg-[#0B0710]/50'}
                                             `}
                                             >
                                                 <div className="flex justify-between items-start mb-2">
-                                                    <span className="inline-block px-2 py-1 bg-white rounded text-xs font-semibold text-gray-500 border border-gray-200 shadow-sm">
+                                                    <span className="inline-block px-2 py-1 bg-[#120B18] border border-violet-500/20 rounded text-xs font-semibold text-[#C4B5FD] shadow-sm">
                                                         {session.horarioInicio}
                                                     </span>
-                                                    {isSelected && <CheckCircle className="text-purple-800 h-5 w-5 fill-purple-800 text-white" />}
+                                                    {isSelected && <CheckCircle className="h-5 w-5 fill-[#7C3AED] text-white" />}
                                                 </div>
-                                                <h4 className="font-bold text-gray-800 leading-tight mb-1 line-clamp-2">{session.nomePeca}</h4>
-                                                <p className="text-sm text-gray-500 mt-auto flex items-center gap-1">
+                                                <h4 className="font-bold text-[#F8F8F8] leading-tight mb-1 line-clamp-2">{session.nomePeca}</h4>
+                                                <p className="text-sm text-[#A1A1AA] mt-auto flex items-center gap-1">
                                                     <Calendar className="h-4 w-4" /> {session.data}
                                                 </p>
                                             </div>
@@ -261,46 +265,46 @@ export default function PDV() {
 
                         {/* Step 2: Seat Map */}
                         {selectedSession && (
-                            <section className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex-1 flex flex-col animate-in fade-in duration-300">
-                                <div className="flex justify-between items-center mb-6">
-                                    <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-                                        <span className="bg-purple-800 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">2</span>
+                            <section className="bg-[#120B18] rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.5)] border border-violet-500/20 p-6 flex-1 flex flex-col animate-in fade-in duration-300 backdrop-blur-sm">
+                                <div className="flex justify-between items-center mb-6 border-b border-violet-500/10 pb-4">
+                                    <h3 className="text-lg font-semibold text-[#F8F8F8] flex items-center gap-2">
+                                        <span className="bg-[#7C3AED] text-white w-6 h-6 rounded-full flex items-center justify-center text-xs shadow-lg shadow-purple-500/30">2</span>
                                         Selecione os Assentos
                                     </h3>
 
                                     {/* Legend */}
                                     <div className="flex gap-4 text-sm hidden sm:flex">
                                         <div className="flex items-center gap-1.5">
-                                            <div className="w-4 h-4 rounded bg-white border border-gray-300"></div>
-                                            <span className="text-gray-600">Disponível</span>
+                                            <div className="w-4 h-4 rounded bg-[#120B18] border border-violet-500/30"></div>
+                                            <span className="text-[#A1A1AA]">Disponível</span>
                                         </div>
                                         <div className="flex items-center gap-1.5">
-                                            <div className="w-4 h-4 rounded bg-purple-800 border border-purple-900"></div>
-                                            <span className="text-gray-600">Selecionado</span>
+                                            <div className="w-4 h-4 rounded bg-[#7C3AED] border border-[#7C3AED]"></div>
+                                            <span className="text-[#F8F8F8]">Selecionado</span>
                                         </div>
                                         <div className="flex items-center gap-1.5">
-                                            <div className="w-4 h-4 rounded bg-gray-300 border border-gray-400"></div>
-                                            <span className="text-gray-600">Ocupado</span>
+                                            <div className="w-4 h-4 rounded bg-[#0B0710] border border-white/5 opacity-50"></div>
+                                            <span className="text-[#A1A1AA]">Ocupado</span>
                                         </div>
                                     </div>
                                 </div>
 
                                 {/* Map Container */}
-                                <div className="flex-1 bg-gray-50 rounded-xl border border-gray-100 p-8 flex flex-col items-center justify-center overflow-x-auto relative">
+                                <div className="flex-1 bg-[#0B0710]/50 rounded-xl border border-violet-500/10 p-8 flex flex-col items-center justify-center overflow-x-auto relative">
 
-                                    <div className="w-full max-w-2xl h-16 bg-gray-900 rounded-t-3xl flex items-center justify-center text-white font-bold tracking-[0.3em] mb-12 shadow-lg relative overflow-hidden">
-                                        <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent"></div>
+                                    <div className="w-full max-w-2xl h-16 bg-gradient-to-b from-[#120B18] to-[#000000] border border-violet-500/20 rounded-t-3xl flex items-center justify-center text-[#F8F8F8] font-bold tracking-[0.3em] mb-12 shadow-[0_10px_30px_rgba(124,58,237,0.1)] relative overflow-hidden">
+                                        <div className="absolute inset-x-0 bottom-0 h-1 bg-[#7C3AED] opacity-50 blur-sm"></div>
                                         P A L C O
                                     </div>
 
                                     <div className="flex flex-col gap-6 items-center pb-4">
                                         {rowKeys.map(fileira => (
                                             <div key={fileira} className="flex items-center gap-4 w-full justify-center group">
-                                                <div className="w-10 h-10 rounded-lg border border-gray-200 flex items-center justify-center font-bold text-gray-700 bg-white shadow-sm shrink-0 group-hover:border-purple-800 group-hover:text-purple-800 transition-colors">
+                                                <div className="w-10 h-10 rounded-lg border border-violet-500/20 flex items-center justify-center font-bold text-[#F8F8F8] bg-[#120B18] shadow-sm shrink-0 group-hover:border-[#7C3AED] group-hover:text-[#C4B5FD] transition-colors">
                                                     {fileira}
                                                 </div>
 
-                                                <div className="flex gap-2 p-2 rounded-xl bg-white border border-gray-100 shadow-sm flex-wrap justify-center">
+                                                <div className="flex gap-2 p-2 rounded-xl bg-[#120B18] border border-violet-500/10 shadow-sm flex-wrap justify-center">
                                                     {groupedSeats[fileira]
                                                         .sort((a, b) => a.codigoPosicao.localeCompare(b.codigoPosicao))
                                                         .map((assento) => {
@@ -314,23 +318,23 @@ export default function PDV() {
                                                                     onClick={() => handleToggleSeat(assento)}
                                                                     title={isOccupied ? 'Assento Ocupado' : `Assento ${assento.codigoPosicao}`}
                                                                     className={`
-                                                                    w-12 h-12 rounded-lg border flex flex-col items-center justify-center gap-0.5 relative overflow-hidden focus:outline-none focus:ring-2 focus:ring-purple-800 focus:ring-offset-1 transition-transform active:scale-95
-                                                                    ${isOccupied ? 'cursor-not-allowed bg-gray-100 border-gray-300' : 'cursor-pointer hover:scale-105'}
-                                                                    ${isSelected ? 'bg-purple-800 border-purple-900 text-white shadow-md' : ''}
-                                                                    ${!isOccupied && !isSelected ? 'bg-white border-gray-300 hover:border-purple-800 hover:bg-purple-50 text-gray-600' : ''}
+                                                                    w-12 h-12 rounded-lg border flex flex-col items-center justify-center gap-0.5 relative overflow-hidden focus:outline-none focus:ring-2 focus:ring-[#7C3AED] focus:ring-offset-1 focus:ring-offset-[#120B18] transition-all active:scale-95
+                                                                    ${isOccupied ? 'cursor-not-allowed bg-[#0B0710] border-white/5 opacity-50' : 'cursor-pointer hover:scale-105 hover:shadow-[0_0_10px_rgba(124,58,237,0.2)]'}
+                                                                    ${isSelected ? 'bg-[#7C3AED] border-[#8B5CF6] text-[#FFFFFF] shadow-md shadow-purple-900/40' : ''}
+                                                                    ${!isOccupied && !isSelected ? 'bg-[#120B18] border-violet-500/30 hover:border-[#7C3AED] hover:bg-[#7C3AED]/10 text-[#C4B5FD]' : ''}
                                                                 `}
                                                                 >
                                                                     <Armchair
                                                                         className="h-5 w-5"
-                                                                        color={isSelected ? "white" : (isOccupied ? "#9ca3af" : "currentColor")}
+                                                                        color={isSelected ? "white" : (isOccupied ? "#A1A1AA" : "currentColor")}
                                                                         fill={isSelected || isOccupied ? "currentColor" : "none"}
                                                                     />
-                                                                    <span className={`text-[10px] font-bold ${isSelected ? 'text-white' : (isOccupied ? 'text-gray-400' : 'text-gray-700')}`}>
+                                                                    <span className={`text-[10px] font-bold ${isSelected ? 'text-white' : (isOccupied ? 'text-[#A1A1AA]' : 'text-[#A1A1AA]')}`}>
                                                                         {assento.codigoPosicao}
                                                                     </span>
                                                                     {isOccupied && (
                                                                         <div className="absolute inset-0 flex items-center justify-center">
-                                                                            <div className="w-full h-px bg-gray-400 rotate-45"></div>
+                                                                            <div className="w-full h-px bg-[#A1A1AA]/30 rotate-45"></div>
                                                                         </div>
                                                                     )}
                                                                 </button>
@@ -347,15 +351,15 @@ export default function PDV() {
 
                     {/* Right Column: Cart & Checkout */}
                     <div className="w-full lg:w-96 flex flex-col gap-6 shrink-0">
-                        <section className="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex flex-col h-full max-h-[calc(100vh-140px)] sticky top-6">
-                            <h3 className="text-lg font-semibold text-gray-800 mb-4 pb-4 border-b border-gray-100 flex items-center gap-2">
-                                <ShoppingCart className="h-6 w-6 text-purple-800" />
+                        <section className="bg-[#120B18] rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.5)] border border-violet-500/20 p-5 flex flex-col h-full max-h-[calc(100vh-140px)] sticky top-6 backdrop-blur-sm">
+                            <h3 className="text-lg font-semibold text-[#F8F8F8] mb-4 pb-4 border-b border-violet-500/10 flex items-center gap-2">
+                                <ShoppingCart className="h-6 w-6 text-[#7C3AED]" />
                                 Resumo do Pedido
                             </h3>
 
-                            <div className="flex-1 overflow-y-auto pr-1 -mr-1 mb-4 space-y-3">
+                            <div className="flex-1 overflow-y-auto pr-1 -mr-1 mb-4 space-y-3 custom-scrollbar">
                                 {selectedSeats.length === 0 ? (
-                                    <div className="text-center text-gray-400 py-8 flex flex-col items-center gap-2">
+                                    <div className="text-center text-[#A1A1AA] py-8 flex flex-col items-center gap-2">
                                         <Ticket className="h-10 w-10 mb-2 opacity-50" />
                                         <p>Nenhum assento selecionado.</p>
                                         <p className="text-sm">Selecione uma sessão e assentos para começar.</p>
@@ -363,21 +367,21 @@ export default function PDV() {
                                 ) : (
                                     <ul className="space-y-3">
                                         {sortedSelectedSeats.map(seat => (
-                                            <li key={seat.id} className="flex justify-between items-center p-3 bg-gray-50 rounded-lg border border-gray-100 group animate-in slide-in-from-right-2">
+                                            <li key={seat.id} className="flex justify-between items-center p-3 bg-[#0B0710]/50 rounded-lg border border-violet-500/20 group animate-in slide-in-from-right-2">
                                                 <div className="flex items-center gap-3">
-                                                    <div className="w-8 h-8 rounded bg-white border border-gray-200 flex items-center justify-center text-purple-800">
+                                                    <div className="w-8 h-8 rounded bg-[#120B18] border border-violet-500/30 flex items-center justify-center text-[#C4B5FD]">
                                                         <Ticket className="h-4 w-4" />
                                                     </div>
                                                     <div>
-                                                        <p className="text-sm font-bold text-gray-800">Assento {seat.codigoPosicao}</p>
-                                                        <p className="text-xs text-gray-500">Inteira</p>
+                                                        <p className="text-sm font-bold text-[#F8F8F8]">Assento {seat.codigoPosicao}</p>
+                                                        <p className="text-xs text-[#A1A1AA]">Inteira</p>
                                                     </div>
                                                 </div>
                                                 <div className="flex items-center gap-3">
-                                                    <span className="font-medium text-gray-700">{formatCurrency(currentTicketPrice)}</span>
+                                                    <span className="font-medium text-[#C4B5FD]">{formatCurrency(currentTicketPrice)}</span>
                                                     <button
                                                         onClick={() => handleToggleSeat(seat)}
-                                                        className="text-gray-400 hover:text-red-500 transition-colors p-1"
+                                                        className="text-[#A1A1AA] hover:text-red-400 hover:bg-red-500/10 rounded transition-colors p-1"
                                                         title="Remover"
                                                     >
                                                         <Trash2 className="h-4 w-4" />
@@ -389,28 +393,28 @@ export default function PDV() {
                                 )}
                             </div>
 
-                            <div className="mt-auto border-t border-gray-100 pt-4">
+                            <div className="mt-auto border-t border-violet-500/10 pt-4">
                                 <div className="flex justify-between items-center mb-6">
-                                    <span className="text-gray-600 font-medium">Total:</span>
-                                    <span className="text-2xl font-bold text-purple-800">{formatCurrency(totalPrice)}</span>
+                                    <span className="text-[#A1A1AA] font-medium">Total:</span>
+                                    <span className="text-2xl font-bold text-[#F8F8F8]">{formatCurrency(totalPrice)}</span>
                                 </div>
 
                                 {selectedSeats.length > 0 && (
-                                    <form onSubmit={handleFinalize} className="flex flex-col gap-3 animate-in fade-in slide-in-from-bottom-2">
-                                        <h4 className="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-1">Dados do Cliente</h4>
+                                    <form onSubmit={handleFinalize} className="flex flex-col gap-4 animate-in fade-in slide-in-from-bottom-2">
+                                        <h4 className="text-[11px] font-bold text-[#7C3AED] uppercase tracking-wider mb-1">Dados do Cliente</h4>
 
                                         <div>
-                                            <label className="block text-xs text-gray-600 mb-1" htmlFor="customerName">Nome Completo *</label>
+                                            <label className="block text-xs text-[#F8F8F8] font-medium mb-1.5" htmlFor="customerName">Nome Completo *</label>
                                             <div className="relative">
                                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                                    <User className="h-4 w-4 text-gray-400" />
+                                                    <User className="h-4 w-4 text-[#A1A1AA]" />
                                                 </div>
                                                 <input
                                                     type="text"
                                                     id="customerName"
                                                     value={customerName}
                                                     onChange={(e) => setCustomerName(e.target.value)}
-                                                    className="pl-10 w-full bg-gray-50 border border-gray-200 rounded-lg py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-800 focus:border-transparent transition-all"
+                                                    className="pl-10 w-full bg-[#0B0710] border border-violet-500/20 hover:border-violet-500/40 focus:border-[#7C3AED] rounded-lg py-2.5 px-3 text-sm text-[#F8F8F8] placeholder-[#A1A1AA]/50 focus:outline-none focus:ring-0 transition-all"
                                                     placeholder="Ex: João da Silva"
                                                     required
                                                 />
@@ -418,17 +422,17 @@ export default function PDV() {
                                         </div>
 
                                         <div>
-                                            <label className="block text-xs text-gray-600 mb-1" htmlFor="customerEmail">E-mail *</label>
+                                            <label className="block text-xs text-[#F8F8F8] font-medium mb-1.5" htmlFor="customerEmail">E-mail *</label>
                                             <div className="relative">
                                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                                    <Mail className="h-4 w-4 text-gray-400" />
+                                                    <Mail className="h-4 w-4 text-[#A1A1AA]" />
                                                 </div>
                                                 <input
                                                     type="email"
                                                     id="customerEmail"
                                                     value={customerEmail}
                                                     onChange={(e) => setCustomerEmail(e.target.value)}
-                                                    className="pl-10 w-full bg-gray-50 border border-gray-200 rounded-lg py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-800 focus:border-transparent transition-all"
+                                                    className="pl-10 w-full bg-[#0B0710] border border-violet-500/20 hover:border-violet-500/40 focus:border-[#7C3AED] rounded-lg py-2.5 px-3 text-sm text-[#F8F8F8] placeholder-[#A1A1AA]/50 focus:outline-none focus:ring-0 transition-all"
                                                     placeholder="joao@exemplo.com"
                                                     required
                                                 />
@@ -438,7 +442,7 @@ export default function PDV() {
                                         <button
                                             type="submit"
                                             disabled={!isFormValid || isSubmitting}
-                                            className="mt-4 w-full bg-purple-800 hover:bg-purple-900 text-white font-semibold py-3 px-4 rounded-lg transition-all flex justify-center items-center gap-2 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-md"
+                                            className="mt-4 w-full bg-gradient-to-r from-[#7C3AED] to-[#8B5CF6] hover:from-[#6D28D9] hover:to-[#7C3AED] text-white font-bold py-3 px-4 rounded-xl transition-all duration-300 flex justify-center items-center gap-2 shadow-[0_4px_14px_rgba(124,58,237,0.39)] hover:shadow-[0_6px_20px_rgba(124,58,237,0.23)] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-[0_4px_14px_rgba(124,58,237,0.39)] active:scale-[0.98]"
                                         >
                                             {isSubmitting ? 'Processando...' : 'Finalizar Venda'}
                                             {!isSubmitting && <CheckCircle2 className="h-5 w-5" />}
@@ -453,38 +457,40 @@ export default function PDV() {
 
                 {/* Success Modal */}
                 {isModalOpen && (
-                    <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
-                        <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full animate-in zoom-in-95 duration-200">
-                            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 text-green-600">
+                    <div className="fixed inset-0 bg-[#000000]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
+                        <div className="bg-[#120B18] border border-violet-500/20 rounded-2xl shadow-2xl p-8 max-w-md w-full animate-in zoom-in-95 duration-200 relative overflow-hidden">
+                            <div className="absolute top-[-20%] left-[-20%] w-32 h-32 bg-[#7C3AED] rounded-full mix-blend-screen filter blur-[80px] opacity-20"></div>
+
+                            <div className="w-16 h-16 bg-emerald-500/10 border border-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-4 text-emerald-400 shadow-[0_0_15px_rgba(52,211,153,0.15)]">
                                 <CheckCircle2 className="h-10 w-10" />
                             </div>
-                            <h2 className="text-2xl font-bold text-center text-gray-800 mb-2">Venda Concluída!</h2>
-                            <p className="text-center text-gray-600 mb-6">Os ingressos foram gerados com sucesso.</p>
+                            <h2 className="text-2xl font-bold text-center text-[#F8F8F8] mb-2 tracking-tight">Venda Concluída!</h2>
+                            <p className="text-center text-[#A1A1AA] mb-6">Os ingressos foram gerados com sucesso.</p>
 
-                            <div className="bg-gray-50 rounded-lg p-4 mb-6 border border-gray-100 space-y-2">
+                            <div className="bg-[#0B0710]/50 rounded-xl p-5 mb-6 border border-violet-500/10 space-y-3">
                                 <div className="flex justify-between text-sm">
-                                    <span className="text-gray-500">Cliente:</span>
-                                    <span className="font-medium text-gray-800">{customerName}</span>
+                                    <span className="text-[#A1A1AA]">Cliente:</span>
+                                    <span className="font-semibold text-[#F8F8F8]">{customerName}</span>
                                 </div>
                                 <div className="flex justify-between text-sm">
-                                    <span className="text-gray-500">Sessão:</span>
-                                    <span className="font-medium text-gray-800">{selectedSession?.nomePeca}</span>
+                                    <span className="text-[#A1A1AA]">Sessão:</span>
+                                    <span className="font-semibold text-[#F8F8F8] text-right">{selectedSession?.nomePeca}</span>
                                 </div>
                                 <div className="flex justify-between text-sm">
-                                    <span className="text-gray-500">Qtd Ingressos:</span>
-                                    <span className="font-medium text-gray-800">
+                                    <span className="text-[#A1A1AA]">Qtd Ingressos:</span>
+                                    <span className="font-semibold text-[#F8F8F8]">
                                         {selectedSeats.length} ({sortedSelectedSeats.map(s => s.codigoPosicao).join(', ')})
                                     </span>
                                 </div>
-                                <div className="flex justify-between text-sm font-bold border-t border-gray-200 pt-2 mt-2">
-                                    <span className="text-gray-700">Valor Total:</span>
-                                    <span className="text-purple-800">{formatCurrency(totalPrice)}</span>
+                                <div className="flex justify-between text-sm font-bold border-t border-violet-500/10 pt-3 mt-3">
+                                    <span className="text-[#F8F8F8]">Valor Total:</span>
+                                    <span className="text-[#C4B5FD]">{formatCurrency(totalPrice)}</span>
                                 </div>
                             </div>
 
                             <button
                                 onClick={handleReset}
-                                className="w-full bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-3 px-4 rounded-lg transition-colors"
+                                className="w-full bg-[#120B18] hover:bg-[#7C3AED]/10 border border-violet-500/30 text-[#C4B5FD] hover:text-[#FFFFFF] hover:border-[#7C3AED] font-semibold py-3 px-4 rounded-xl transition-all duration-300"
                             >
                                 Nova Venda
                             </button>

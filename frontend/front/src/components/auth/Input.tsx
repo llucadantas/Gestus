@@ -1,4 +1,4 @@
-'use client'; // Necessário no Next.js pois usaremos useState para a senha
+'use client';
 
 import { useState } from 'react';
 
@@ -20,13 +20,12 @@ export default function Input({ label, id, type, placeholder, icon, value, onCha
     const inputType = isPassword && isPasswordVisible ? 'text' : type;
 
     return (
-        <div>
-            <div className="flex justify-between items-center mb-2">
-                <label htmlFor={id} className="block text-sm font-semibold text-gray-700">{label}</label>
-                
-            </div>
-            <div className="relative input-focus rounded-xl border border-gray-300 transition-all duration-200 bg-gray-50 overflow-hidden flex items-center">
-                <div className="pl-4 text-gray-400">
+        <div className="flex flex-col gap-1.5">
+            <label htmlFor={id} className="text-sm font-medium text-[#F8F8F8]">
+                {label}
+            </label>
+            <div className="relative flex items-center bg-[#0B0710] rounded-xl border border-violet-500/20 hover:border-violet-500/40 focus-within:border-[#7C3AED] focus-within:shadow-[0_0_15px_rgba(124,58,237,0.15)] transition-all duration-300 overflow-hidden">
+                <div className="pl-4 text-[#A1A1AA]">
                     <i className={`fa-solid ${icon}`}></i>
                 </div>
                 <input 
@@ -35,7 +34,7 @@ export default function Input({ label, id, type, placeholder, icon, value, onCha
                     name={id} 
                     required 
                     placeholder={placeholder} 
-                    className="w-full p-3.5 pl-3 bg-transparent border-none outline-none text-gray-700 placeholder-gray-400 focus:ring-0"
+                    className="w-full p-3.5 pl-3 bg-transparent border-none outline-none text-[#FFFFFF] placeholder-[#A1A1AA]/50 focus:ring-0"
                     value={value}
                     onChange={onChange}
                 />
@@ -43,7 +42,7 @@ export default function Input({ label, id, type, placeholder, icon, value, onCha
                     <button 
                         type="button" 
                         onClick={() => setIsPasswordVisible(!isPasswordVisible)} 
-                        className="pr-4 text-gray-400 hover:text-gestus focus:outline-none" 
+                        className="pr-4 text-[#A1A1AA] hover:text-[#C4B5FD] transition-colors focus:outline-none" 
                         aria-label="Mostrar senha"
                     >
                         <i className={`fa-regular ${isPasswordVisible ? 'fa-eye-slash' : 'fa-eye'}`}></i>

@@ -1,0 +1,60 @@
+version: "1"
+
+databases:
+  - name: gestus-db
+    databaseName: gestus
+    user: gestus_user
+    plan: free
+
+services:
+  - type: web
+    name: gestus-backend
+    env: docker
+    rootDir: backend
+    plan: free
+    healthCheckPath: /
+    envVars:
+      - key: DB_HOST
+        fromDatabase:
+          name: gestus-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: gestus-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: gestus-db
+          property: database
+      - key: POSTGRES_USER
+        fromDatabase:
+          name: gestus-db
+          property: user
+      - key: POSTGRES_PASSWORD
+        fromDatabase:
+          name: gestus-db
+          property: password
+      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
+        value: update
+      - key: CORS_ALLOWED_ORIGIN
+        sync: false # Configurado manualmente para evitar dependência circular com o frontend
+      - key: JWT_KEY
+        sync: false # Preencher no Dashboard (Dashboard > Environment)
+      - key: EMAIL_USERNAME
+        sync: false
+      - key: EMAIL_PASSWORD
+        sync: false
+
+  - type: web
+    name: gestus-frontend
+    env: node
+    rootDir: frontend/front
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
+    envVars:
+      - key: NEXT_PUBLIC_API_URL
+        fromService:
+          type: web
+          name: gestus-backend
+          envVarKey: RENDER_EXTERNAL_URL

@@ -182,23 +182,23 @@ export default function ContratoAluguel() {
     
     const renderEtapa1 = () => (
         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <h2 className="text-xl font-bold text-gray-800 border-b pb-2">1. Identificação do Artista</h2>
+            <h2 className="text-xl font-bold text-[#F8F8F8] border-b border-violet-500/10 pb-2">1. Identificação do Artista</h2>
             
-            <div className="flex gap-4 items-end">
-                <div className="flex-1">
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">E-mail do Artista / Responsável <span className="text-red-500">*</span></label>
+            <div className="flex flex-col sm:flex-row gap-4 items-end">
+                <div className="flex-1 w-full">
+                    <label className="block text-sm font-semibold text-[#A1A1AA] mb-2">E-mail do Artista / Responsável <span className="text-red-500">*</span></label>
                     <input 
                         type="email" 
                         value={formData.emailBuscaArtista}
                         onChange={(e) => handleChange('emailBuscaArtista', e.target.value)}
-                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-gestus outline-none"
+                        className="w-full px-4 py-3 bg-[#0B0710] border border-violet-500/20 rounded-xl focus:border-[#7C3AED] hover:border-violet-500/40 text-[#F8F8F8] placeholder-[#A1A1AA]/50 outline-none transition-all focus:ring-0"
                         placeholder="contato@exemplo.com"
                     />
                 </div>
                 <button 
                     onClick={handleBuscarEmail}
                     disabled={carregando}
-                    className="px-6 py-3 bg-gestus hover:bg-gestus-dark text-white font-medium rounded-xl transition-colors disabled:opacity-50"
+                    className="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-[#7C3AED] to-[#8B5CF6] hover:from-[#6D28D9] hover:to-[#7C3AED] text-white font-medium rounded-xl transition-all shadow-[0_4px_14px_rgba(124,58,237,0.39)] active:scale-[0.98] disabled:opacity-50 disabled:shadow-none disabled:active:scale-100"
                 >
                     {carregando ? 'Buscando...' : 'Buscar'}
                 </button>
@@ -206,13 +206,13 @@ export default function ContratoAluguel() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="md:col-span-2">
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Nome Completo <span className="text-red-500">*</span></label>
+                    <label className="block text-sm font-semibold text-[#A1A1AA] mb-2">Nome Completo <span className="text-red-500">*</span></label>
                     <input 
                         type="text" 
                         value={formData.artistaNome}
                         onChange={(e) => handleChange('artistaNome', e.target.value)}
                         disabled={formData.artistaEncontrado}
-                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl disabled:bg-gray-100 disabled:text-gray-500 outline-none"
+                        className="w-full px-4 py-3 bg-[#0B0710] border border-violet-500/20 rounded-xl focus:border-[#7C3AED] hover:border-violet-500/40 text-[#F8F8F8] placeholder-[#A1A1AA]/50 outline-none transition-all focus:ring-0 disabled:bg-white/5 disabled:text-[#A1A1AA]/50 disabled:border-transparent"
                     />
                 </div>
             </div>
@@ -221,20 +221,20 @@ export default function ContratoAluguel() {
 
     const renderEtapa2 = () => (
         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <h2 className="text-xl font-bold text-gray-800 border-b pb-2">2. Definição da Peça</h2>
+            <h2 className="text-xl font-bold text-[#F8F8F8] border-b border-violet-500/10 pb-2">2. Definição da Peça</h2>
             
-            <div className="flex gap-4 mb-6">
+            <div className="flex flex-col sm:flex-row gap-4 mb-6">
                 <button 
                     type="button"
                     onClick={() => handleChange('pecaModo', 'selecionar')}
-                    className={`flex-1 py-3 px-4 rounded-xl border-2 font-medium transition-colors ${formData.pecaModo === 'selecionar' ? 'border-gestus bg-purple-50 text-gestus' : 'border-gray-200 text-gray-500 hover:bg-gray-50'}`}
+                    className={`flex-1 py-3 px-4 rounded-xl border font-medium transition-all ${formData.pecaModo === 'selecionar' ? 'border-[#7C3AED] bg-[#7C3AED]/10 text-white shadow-[0_0_15px_rgba(124,58,237,0.15)]' : 'border-violet-500/20 text-[#A1A1AA] hover:bg-[#0B0710]/50 hover:border-violet-500/40'}`}
                 >
                     Selecionar Existente
                 </button>
                 <button 
                     type="button"
                     onClick={() => handleChange('pecaModo', 'nova')}
-                    className={`flex-1 py-3 px-4 rounded-xl border-2 font-medium transition-colors ${formData.pecaModo === 'nova' ? 'border-gestus bg-purple-50 text-gestus' : 'border-gray-200 text-gray-500 hover:bg-gray-50'}`}
+                    className={`flex-1 py-3 px-4 rounded-xl border font-medium transition-all ${formData.pecaModo === 'nova' ? 'border-[#7C3AED] bg-[#7C3AED]/10 text-white shadow-[0_0_15px_rgba(124,58,237,0.15)]' : 'border-violet-500/20 text-[#A1A1AA] hover:bg-[#0B0710]/50 hover:border-violet-500/40'}`}
                 >
                     Cadastrar Nova Peça
                 </button>
@@ -242,11 +242,11 @@ export default function ContratoAluguel() {
 
             {formData.pecaModo === 'selecionar' ? (
                 <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Selecione a Peça <span className="text-red-500">*</span></label>
+                    <label className="block text-sm font-semibold text-[#A1A1AA] mb-2">Selecione a Peça <span className="text-red-500">*</span></label>
                     <select 
                         value={String(formData.pecaId)}
                         onChange={(e) => handleChange('pecaId', e.target.value)}
-                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl outline-none"
+                        className="w-full px-4 py-3 bg-[#0B0710] border border-violet-500/20 rounded-xl outline-none focus:border-[#7C3AED] hover:border-violet-500/40 text-[#F8F8F8] transition-all focus:ring-0"
                     >
                         <option value="">Selecione...</option>
                         {pecasExistentes.map(p => (
@@ -257,21 +257,21 @@ export default function ContratoAluguel() {
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="md:col-span-2">
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">Nome da Peça <span className="text-red-500">*</span></label>
+                        <label className="block text-sm font-semibold text-[#A1A1AA] mb-2">Nome da Peça <span className="text-red-500">*</span></label>
                         <input 
                             type="text" 
                             value={formData.pecaNome}
                             onChange={(e) => handleChange('pecaNome', e.target.value)}
-                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl outline-none"
+                            className="w-full px-4 py-3 bg-[#0B0710] border border-violet-500/20 rounded-xl focus:border-[#7C3AED] hover:border-violet-500/40 text-[#F8F8F8] placeholder-[#A1A1AA]/50 outline-none transition-all focus:ring-0"
                             placeholder="Ex: O Auto da Compadecida"
                         />
                     </div>
                     <div className="md:col-span-2">
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">Descrição (Sinopse)</label>
+                        <label className="block text-sm font-semibold text-[#A1A1AA] mb-2">Descrição (Sinopse)</label>
                         <textarea 
                             value={formData.pecaDescricao}
                             onChange={(e) => handleChange('pecaDescricao', e.target.value)}
-                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl outline-none resize-none h-24"
+                            className="w-full px-4 py-3 bg-[#0B0710] border border-violet-500/20 rounded-xl focus:border-[#7C3AED] hover:border-violet-500/40 text-[#F8F8F8] placeholder-[#A1A1AA]/50 outline-none transition-all focus:ring-0 resize-none h-24"
                             placeholder="Breve resumo sobre a peça..."
                         />
                     </div>
@@ -282,67 +282,67 @@ export default function ContratoAluguel() {
 
     const renderEtapa3 = () => (
         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <h2 className="text-xl font-bold text-gray-800 border-b pb-2">3. Agenda e Horários</h2>
+            <h2 className="text-xl font-bold text-[#F8F8F8] border-b border-violet-500/10 pb-2">3. Agenda e Horários</h2>
             
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Data de Início <span className="text-red-500">*</span></label>
+                    <label className="block text-sm font-semibold text-[#A1A1AA] mb-2">Data de Início <span className="text-red-500">*</span></label>
                     <input 
                         type="date" 
                         value={formData.dataInicio}
                         onChange={(e) => handleChange('dataInicio', e.target.value)}
-                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl outline-none"
+                        className="w-full px-4 py-3 bg-[#0B0710] border border-violet-500/20 rounded-xl outline-none focus:border-[#7C3AED] hover:border-violet-500/40 text-[#F8F8F8] transition-all focus:ring-0 color-scheme-dark"
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Data de Fim <span className="text-red-500">*</span></label>
+                    <label className="block text-sm font-semibold text-[#A1A1AA] mb-2">Data de Fim <span className="text-red-500">*</span></label>
                     <input 
                         type="date" 
                         value={formData.dataFim}
                         onChange={(e) => handleChange('dataFim', e.target.value)}
-                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl outline-none"
+                        className="w-full px-4 py-3 bg-[#0B0710] border border-violet-500/20 rounded-xl outline-none focus:border-[#7C3AED] hover:border-violet-500/40 text-[#F8F8F8] transition-all focus:ring-0 color-scheme-dark"
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Horário Início da Peça <span className="text-red-500">*</span></label>
+                    <label className="block text-sm font-semibold text-[#A1A1AA] mb-2">Horário Início da Peça <span className="text-red-500">*</span></label>
                     <input 
                         type="time" 
                         value={formData.inicioPeca}
                         onChange={(e) => handleChange('inicioPeca', e.target.value)}
-                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl outline-none"
+                        className="w-full px-4 py-3 bg-[#0B0710] border border-violet-500/20 rounded-xl outline-none focus:border-[#7C3AED] hover:border-violet-500/40 text-[#F8F8F8] transition-all focus:ring-0 color-scheme-dark"
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Horário Fim da Peça <span className="text-red-500">*</span></label>
+                    <label className="block text-sm font-semibold text-[#A1A1AA] mb-2">Horário Fim da Peça <span className="text-red-500">*</span></label>
                     <input 
                         type="time" 
                         value={formData.fimPeca}
                         onChange={(e) => handleChange('fimPeca', e.target.value)}
-                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl outline-none"
+                        className="w-full px-4 py-3 bg-[#0B0710] border border-violet-500/20 rounded-xl outline-none focus:border-[#7C3AED] hover:border-violet-500/40 text-[#F8F8F8] transition-all focus:ring-0 color-scheme-dark"
                     />
                 </div>
-                <div className="col-span-2">
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Valor do Ingresso <span className="text-red-500">*</span></label>
+                <div className="sm:col-span-2">
+                    <label className="block text-sm font-semibold text-[#A1A1AA] mb-2">Valor do Ingresso <span className="text-red-500">*</span></label>
                     <div className="relative">
-                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 font-medium">R$</span>
+                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#A1A1AA] font-medium">R$</span>
                         <input 
                             type="number" 
                             step="0.01"
                             min="0"
                             value={formData.valorIngresso}
                             onChange={(e) => handleChange('valorIngresso', e.target.value)}
-                            className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl outline-none"
+                            className="w-full pl-12 pr-4 py-3 bg-[#0B0710] border border-violet-500/20 rounded-xl outline-none focus:border-[#7C3AED] hover:border-violet-500/40 text-[#F8F8F8] transition-all focus:ring-0"
                             placeholder="0,00"
                         />
                     </div>
                 </div>
             </div>
             
-            <div className="bg-blue-50 border border-blue-100 p-4 rounded-xl flex items-start gap-3 mt-4">
-                <i className="fa-solid fa-circle-info text-blue-500 mt-0.5"></i>
-                <div className="text-sm text-blue-800">
+            <div className="bg-[#7C3AED]/10 border border-[#7C3AED]/20 p-4 rounded-xl flex items-start gap-3 mt-4">
+                <i className="fa-solid fa-circle-info text-[#C4B5FD] mt-0.5"></i>
+                <div className="text-sm text-[#C4B5FD]">
                     <p className="font-semibold mb-1">Informações Automáticas:</p>
-                    <ul className="list-disc list-inside space-y-1">
+                    <ul className="list-disc list-inside space-y-1 opacity-80">
                         <li>O sistema reservará 1 hora antes e depois destes horários.</li>
                         <li>O teatro será vinculado automaticamente ao seu perfil logado.</li>
                     </ul>
@@ -352,48 +352,51 @@ export default function ContratoAluguel() {
     );
 
     return (
-        <div className="min-h-screen bg-gray-50 p-6 lg:p-8 font-sans">
-            
-            <div className="mb-8">
+        <div className="min-h-screen bg-[#000000] p-6 lg:p-8 font-sans relative overflow-hidden text-[#F8F8F8]">
+            {/* Ambient Background Glows */}
+            <div className="absolute top-[-10%] left-[-10%] w-[40rem] h-[40rem] bg-[#7C3AED] rounded-full mix-blend-screen filter blur-[150px] opacity-[0.08] pointer-events-none"></div>
+            <div className="absolute bottom-[-10%] right-[-10%] w-[40rem] h-[40rem] bg-[#8B5CF6] rounded-full mix-blend-screen filter blur-[150px] opacity-[0.05] pointer-events-none"></div>
+
+            <div className="mb-8 relative z-10">
                 <button
                     onClick={() => router.back()}
-                    className="inline-flex items-center gap-2 text-gray-500 hover:text-gestus transition-colors mb-4 text-sm font-medium"
+                    className="inline-flex items-center gap-2 text-[#A1A1AA] hover:text-[#C4B5FD] transition-colors mb-4 text-sm font-medium"
                 >
                     <i className="fa-solid fa-arrow-left"></i> Voltar
                 </button>
-                <h1 className="text-2xl font-bold text-gray-800">Novo Contrato de Aluguel</h1>
-                <p className="text-sm text-gray-500">Preencha as etapas para firmar um novo aluguel de espaço.</p>
+                <h1 className="text-2xl font-bold text-[#F8F8F8] tracking-tight">Novo Contrato de Aluguel</h1>
+                <p className="text-sm text-[#A1A1AA] mt-1">Preencha as etapas para firmar um novo aluguel de espaço.</p>
             </div>
 
-            <div className="max-w-4xl mx-auto bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden flex flex-col md:flex-row">
+            <div className="max-w-4xl mx-auto bg-[#120B18] rounded-[2rem] shadow-[0_4px_20px_rgba(0,0,0,0.5)] border border-violet-500/20 overflow-hidden flex flex-col md:flex-row relative z-10 backdrop-blur-xl">
                 
                 {/* Stepper Lateral */}
-                <div className="bg-gestus-dark text-white p-8 md:w-1/3 flex flex-col gap-8">
+                <div className="bg-[#0B0710]/50 border-r border-violet-500/10 text-[#F8F8F8] p-8 md:w-1/3 flex flex-col gap-8">
                     {[
                         { num: 1, label: "Artista", icon: "fa-envelope" },
                         { num: 2, label: "Peça", icon: "fa-masks-theater" },
                         { num: 3, label: "Agenda", icon: "fa-calendar-days" }
                     ].map((step) => (
-                        <div key={step.num} className={`flex items-center gap-4 transition-opacity ${etapa === step.num ? 'opacity-100' : 'opacity-40'}`}>
-                            <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold border-2 ${etapa === step.num ? 'bg-white text-gestus-dark border-white' : 'border-white text-white'}`}>
-                                {etapa > step.num ? <i className="fa-solid fa-check"></i> : step.num}
+                        <div key={step.num} className={`flex items-center gap-4 transition-all duration-300 ${etapa === step.num ? 'opacity-100 scale-105' : 'opacity-40'}`}>
+                            <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold border-2 transition-all ${etapa === step.num ? 'bg-[#7C3AED] text-white border-[#8B5CF6] shadow-[0_0_15px_rgba(124,58,237,0.3)]' : 'border-white/20 text-[#A1A1AA]'}`}>
+                                {etapa > step.num ? <i className="fa-solid fa-check text-emerald-400"></i> : step.num}
                             </div>
                             <div className="font-medium">
-                                <span className="block text-xs font-normal opacity-70">Etapa {step.num}</span>
+                                <span className="block text-[10px] font-bold text-[#7C3AED] uppercase tracking-wider mb-0.5 opacity-80">Etapa {step.num}</span>
                                 {step.label}
                             </div>
                         </div>
                     ))}
                 </div>
                 
-
                 {/* Área do Formulário */}
                 <div className="p-8 md:w-2/3 flex flex-col min-h-[450px]">
-                {errorMessage && (
-                            <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg text-sm">
-                                {errorMessage}
-                            </div>
-                        )}
+                    {errorMessage && (
+                        <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl text-sm flex items-center gap-2">
+                            <i className="fa-solid fa-circle-exclamation"></i>
+                            {errorMessage}
+                        </div>
+                    )}
                     
                     <div className="flex-1">
                         {etapa === 1 && renderEtapa1()}
@@ -402,12 +405,12 @@ export default function ContratoAluguel() {
                     </div>
 
                     {/* Botões de Ação */}
-                    <div className="mt-8 pt-6 border-t border-gray-100 flex justify-between items-center">
+                    <div className="mt-8 pt-6 border-t border-violet-500/10 flex justify-between items-center">
                         <button 
                             type="button"
                             onClick={voltarEtapa}
                             disabled={etapa === 1 || carregando}
-                            className={`px-5 py-2.5 rounded-xl font-medium transition-colors ${etapa === 1 ? 'text-gray-300 cursor-not-allowed' : 'text-gray-600 hover:bg-gray-100'}`}
+                            className={`px-5 py-2.5 rounded-xl font-medium transition-colors ${etapa === 1 ? 'text-white/10 cursor-not-allowed' : 'text-[#A1A1AA] hover:text-[#F8F8F8] hover:bg-white/5'}`}
                         >
                             Anterior
                         </button>
@@ -417,7 +420,7 @@ export default function ContratoAluguel() {
                                 type="button"
                                 onClick={handleProximo}
                                 disabled={!isEtapaValida() || carregando}
-                                className={`px-6 py-2.5 font-medium rounded-xl shadow-sm transition-colors ${isEtapaValida() ? 'bg-gestus hover:bg-gestus-dark text-white' : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}
+                                className={`px-6 py-2.5 font-medium rounded-xl shadow-sm transition-all duration-300 ${isEtapaValida() ? 'bg-gradient-to-r from-[#7C3AED] to-[#8B5CF6] text-white hover:shadow-[0_4px_14px_rgba(124,58,237,0.39)] active:scale-95' : 'bg-white/5 text-[#A1A1AA]/50 cursor-not-allowed'}`}
                             >
                                 {carregando ? 'Salvando...' : 'Próximo'}
                             </button>
@@ -426,7 +429,7 @@ export default function ContratoAluguel() {
                                 type="button"
                                 onClick={handleFinalizar}
                                 disabled={carregando || !isEtapaValida()}
-                                className={`px-6 py-2.5 font-bold rounded-xl shadow-sm transition-colors flex items-center gap-2 ${isEtapaValida() ? 'bg-emerald-500 hover:bg-emerald-600 text-white' : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}
+                                className={`px-6 py-2.5 font-bold rounded-xl shadow-sm transition-all duration-300 flex items-center gap-2 ${isEtapaValida() ? 'bg-gradient-to-r from-emerald-500 to-emerald-400 hover:from-emerald-600 hover:to-emerald-500 text-white shadow-[0_4px_14px_rgba(52,211,153,0.39)] active:scale-95' : 'bg-white/5 text-[#A1A1AA]/50 cursor-not-allowed'}`}
                             >
                                 {carregando ? 'Salvando...' : 'Finalizar Contrato'}
                                 {(!carregando && isEtapaValida()) && <i className="fa-solid fa-check"></i>}

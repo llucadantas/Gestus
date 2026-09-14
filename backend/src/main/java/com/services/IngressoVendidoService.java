@@ -28,7 +28,7 @@ public class IngressoVendidoService {
         Sessao s = assento.getSessao();
 
         IngressoVendido ingresso = IngressoVendido.builder()
-                .sessao(s)
+
                 .assentoSessao(assento)
                 .valor(s.getValorIngresso())
                 .email(request.email())

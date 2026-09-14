@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import Link from 'next/link'; // Importação essencial para Next.js
+import Link from 'next/link'; 
 import {
   Armchair,
   LayoutDashboard,
@@ -11,7 +11,6 @@ import {
 } from 'lucide-react';
 import Logo from './logo';
 import Logout from './logout';
-// import Logout from './logout'; // Comentado para não dar aviso de variável não usada, caso não seja um botão direto.
 
 export type Page = 'menu' | 'tickets' | 'seats' | 'pricing' | 'contracts';
 
@@ -20,7 +19,6 @@ interface SidebarProps {
   activePage: Page;
 }
 
-// Caminho do "Menu" corrigido para a rota absoluta
 const MENU_GERAL = [
   { id: 'menu', label: 'Menu', icon: LayoutDashboard, href: '/menu' },
   { id: 'tickets', label: 'Vender Ingressos', icon: Ticket, href: '/menu/venda' },
@@ -33,7 +31,7 @@ const MENU_GESTAO = [
 ] as const;
 
 const Sidebar: React.FC<SidebarProps> = ({ 
-  color = '#5D1B85', 
+  color = '#0B0710', 
   activePage 
 }) => {
   
@@ -43,17 +41,16 @@ const Sidebar: React.FC<SidebarProps> = ({
 
     return (
       <li key={item.id}>
-        {/* Substituído <a> por <Link> do Next.js para navegação rápida (SPA) */}
         <Link
           href={item.href}
-          className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors ${
+          className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 ${
             isActive
-              ? 'bg-white/15 text-white shadow-sm'
-              : 'text-purple-200 hover:bg-white/10'
+              ? 'bg-[#120B18] border border-violet-500/20 text-[#C4B5FD] shadow-[0_0_10px_rgba(124,58,237,0.1)]'
+              : 'text-[#A1A1AA] hover:bg-[#120B18]/50 hover:text-[#F8F8F8] border border-transparent'
           }`}
           aria-current={isActive ? 'page' : undefined}
         >
-          <Icon size={18} />
+          <Icon size={18} className={isActive ? 'text-[#7C3AED]' : 'text-[#A1A1AA] group-hover:text-[#F8F8F8]'} />
           <span className="font-medium text-sm">{item.label}</span>
         </Link>
       </li>
@@ -62,33 +59,31 @@ const Sidebar: React.FC<SidebarProps> = ({
 
   return (
     <aside
-      className="w-64 text-white flex flex-col shrink-0"
-      style={{ backgroundColor: color }}
+      className="w-64 flex flex-col shrink-0 border-r border-violet-500/20 bg-[#0B0710]/80 backdrop-blur-xl relative z-20"
     >
       <Logo />
 
-      <nav className="flex-1 px-4 py-4 space-y-6 overflow-y-auto custom-scrollbar">
+      <nav className="flex-1 px-4 py-6 space-y-8 overflow-y-auto custom-scrollbar">
         
         <div>
-          <p className="text-xs font-bold text-purple-300 mb-3 px-3 uppercase tracking-wider">
+          <p className="text-[11px] font-bold text-[#7C3AED] mb-3 px-2 uppercase tracking-wider">
             Geral
           </p>
-          <ul className="space-y-1">
+          <ul className="space-y-2">
             {MENU_GERAL.map(renderNavLink)}
           </ul>
         </div>
 
         <div>
-          <p className="text-xs font-bold text-purple-300 mb-3 px-3 uppercase tracking-wider">
+          <p className="text-[11px] font-bold text-[#7C3AED] mb-3 px-2 uppercase tracking-wider">
             Gestão e Eventos
           </p>
-          <ul className="space-y-1">
+          <ul className="space-y-2">
             {MENU_GESTAO.map(renderNavLink)}
           </ul>
         </div>
       </nav>
 
-        {/* Caso o seu './logout' seja o componente do botão inteiro, você pode substituir o <button> abaixo por <Logout /> */}
         <Logout />
     </aside>
   );

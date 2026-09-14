@@ -15,10 +15,10 @@ export default function Logout() {
     }
 };
     return <>
-        <div className="p-4 border-t border-white/10">
-            <button onClick={handleLogout} className="flex items-center gap-3 px-3 py-2.5 w-full text-purple-200 hover:text-white hover:bg-white/10 rounded-xl font-medium transition-colors text-left">
+        <div className="p-4 border-t border-violet-500/20">
+            <button onClick={handleLogout} className="flex items-center gap-3 px-4 py-3 w-full text-[#A1A1AA] hover:text-red-400 hover:bg-red-500/10 hover:border-red-500/20 border border-transparent rounded-xl font-medium transition-all duration-300 text-left">
                 <i className="fa-solid fa-arrow-right-from-bracket w-5 text-center"></i>
-                <span>Sair do Sistema</span>
+                <span className="text-sm">Sair do Sistema</span>
             </button>
         </div>
     </>

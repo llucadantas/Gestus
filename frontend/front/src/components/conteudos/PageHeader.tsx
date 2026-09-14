@@ -15,21 +15,20 @@ export function PageHeader({ titulo, descricao, textoBotaoAcao, iconeBotaoAcao =
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
             <div>
                 <button
-                //TERM QUE MUDAR A ROTAAAAAAAAAAAAA
                     onClick={() => router.back()}
-                    className="inline-flex items-center gap-2 text-gray-500 hover:text-gestus transition-colors mb-4 text-sm font-medium"
+                    className="inline-flex items-center gap-2 text-[#A1A1AA] hover:text-[#C4B5FD] transition-colors mb-4 text-sm font-medium"
                 >
                     <i className="fa-solid fa-arrow-left"></i>
                     Voltar
                 </button>
-                <h1 className="text-2xl font-bold text-gray-800">{titulo}</h1>
-                <p className="text-sm text-gray-500">{descricao}</p>
+                <h1 className="text-2xl font-bold text-[#F8F8F8] tracking-tight">{titulo}</h1>
+                <p className="text-sm text-[#A1A1AA] mt-1">{descricao}</p>
             </div>
             
             {textoBotaoAcao && aoClicarAcao && (
                 <button
                     onClick={aoClicarAcao}
-                    className="bg-gestus hover:bg-gestus-dark text-white px-5 py-2.5 rounded-xl font-medium transition-colors flex items-center gap-2 shadow-sm"
+                    className="bg-gradient-to-r from-[#7C3AED] to-[#8B5CF6] hover:from-[#6D28D9] hover:to-[#7C3AED] text-white px-5 py-2.5 rounded-xl font-medium transition-all duration-300 flex items-center gap-2 shadow-[0_4px_14px_rgba(124,58,237,0.39)] hover:shadow-[0_6px_20px_rgba(124,58,237,0.23)] active:scale-[0.98]"
                 >
                     <i className={`fa-solid ${iconeBotaoAcao}`}></i>
                     {textoBotaoAcao}

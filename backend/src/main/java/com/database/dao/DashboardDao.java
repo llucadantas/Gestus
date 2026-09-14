@@ -17,7 +17,7 @@ public class DashboardDao {
     private EntityManager em;
 
     public Long countIngressosVendidos(Long idTeatro) {
-        return em.createQuery("SELECT COUNT(i) FROM IngressoVendido i WHERE i.sessao.propostaContrato.teatro.id = :idTeatro", Long.class)
+        return em.createQuery("SELECT COUNT(i) FROM IngressoVendido i WHERE i.assentoSessao.sessao.propostaContrato.teatro.id = :idTeatro", Long.class)
                 .setParameter("idTeatro", idTeatro)
                 .getSingleResult();
     }

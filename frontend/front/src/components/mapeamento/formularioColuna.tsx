@@ -36,15 +36,15 @@ export function AddColumnForm({ onAdd, isLoading }: AddColumnFormProps) {
   return (
     <>
       <div className="flex items-center gap-3 mb-6">
-        <div className="p-2 bg-purple-100 text-purple-700 rounded-lg">
+        <div className="p-2 bg-[#7C3AED]/10 text-[#C4B5FD] border border-[#7C3AED]/20 rounded-lg">
           <Settings2 size={20} />
         </div>
-        <h3 className="font-bold text-slate-800">Nova Fileira/Coluna</h3>
+        <h3 className="font-bold text-[#F8F8F8]">Nova Fileira/Coluna</h3>
       </div>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div>
-          <label className="block text-xs font-semibold text-slate-500 mb-1 uppercase tracking-wider">
+          <label className="block text-xs font-semibold text-[#A1A1AA] mb-1.5 uppercase tracking-wider">
             Identificador (Ex: A)
           </label>
           <input
@@ -54,12 +54,12 @@ export function AddColumnForm({ onAdd, isLoading }: AddColumnFormProps) {
             placeholder="A"
             maxLength={5}
             disabled={isLoading}
-            className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-slate-800 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 transition-all uppercase placeholder:text-slate-400"
+            className="w-full bg-[#0B0710] border border-violet-500/20 rounded-xl px-4 py-2.5 text-[#F8F8F8] focus:outline-none focus:ring-0 focus:border-[#7C3AED] hover:border-violet-500/40 transition-all uppercase placeholder:text-[#A1A1AA]/50"
           />
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-slate-500 mb-1 uppercase tracking-wider">
+          <label className="block text-xs font-semibold text-[#A1A1AA] mb-1.5 uppercase tracking-wider">
             Qtd. de Cadeiras
           </label>
           <input
@@ -70,12 +70,12 @@ export function AddColumnForm({ onAdd, isLoading }: AddColumnFormProps) {
             min="1"
             max="100"
             disabled={isLoading}
-            className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-slate-800 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 transition-all placeholder:text-slate-400"
+            className="w-full bg-[#0B0710] border border-violet-500/20 rounded-xl px-4 py-2.5 text-[#F8F8F8] focus:outline-none focus:ring-0 focus:border-[#7C3AED] hover:border-violet-500/40 transition-all placeholder:text-[#A1A1AA]/50"
           />
         </div>
 
         {error && (
-          <div className="text-rose-600 text-sm flex items-start gap-2 bg-rose-50 p-3 rounded-xl border border-rose-100">
+          <div className="text-red-400 text-sm flex items-start gap-2 bg-red-500/10 p-3 rounded-xl border border-red-500/20">
             <Info size={16} className="mt-0.5 shrink-0" />
             <span>{error}</span>
           </div>
@@ -84,7 +84,7 @@ export function AddColumnForm({ onAdd, isLoading }: AddColumnFormProps) {
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full mt-2 bg-[#5D1B85] hover:bg-[#4a156b] text-white font-medium py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition-all active:scale-[0.98] shadow-md shadow-purple-900/10 disabled:opacity-70 disabled:active:scale-100"
+          className="w-full mt-2 bg-gradient-to-r from-[#7C3AED] to-[#8B5CF6] hover:from-[#6D28D9] hover:to-[#7C3AED] text-white font-medium py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition-all active:scale-[0.98] shadow-[0_4px_14px_rgba(124,58,237,0.39)] hover:shadow-[0_6px_20px_rgba(124,58,237,0.23)] disabled:opacity-70 disabled:active:scale-100 disabled:shadow-none"
         >
           <Plus size={18} />
           <span>{isLoading ? 'Cadastrando...' : 'Cadastrar Fileira'}</span>
