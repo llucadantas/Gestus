@@ -12,9 +12,9 @@ services:
     env: docker
     rootDir: backend
     plan: free
-    healthCheckPath: /
     envVars:
       - key: DB_HOST
+      - value: "8080"
         fromDatabase:
           name: gestus-db
           property: host
