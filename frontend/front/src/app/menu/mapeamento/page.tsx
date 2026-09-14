@@ -17,7 +17,6 @@ export default function TheaterManager() {
     error,
     adicionarColuna,
     deleteColumn,
-    updateSeat,
     reload
   } = useMapAssentos();
 
