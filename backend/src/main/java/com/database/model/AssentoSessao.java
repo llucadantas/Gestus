@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "assento_sessao", uniqueConstraints = {@UniqueConstraint(columnNames = {"n_assento", "id_sessao"})})
+@Table(name = "assento_sessao", uniqueConstraints = {@UniqueConstraint(columnNames = {"codigo_posicao", "id_sessao"})})
 @Getter
 @Setter
 @NoArgsConstructor
@@ -18,9 +18,9 @@ public class AssentoSessao {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false)
+    @Column(nullable = false, name = "n_assento")
     private Integer nAssento;
-    @Column(nullable = false)
+    @Column(nullable = false, name = "codigo_posicao")
     private String codigoPosicao;
 
     @Enumerated(EnumType.STRING)
