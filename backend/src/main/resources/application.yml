@@ -10,8 +10,8 @@ spring:
   config:
     import: "optional:file:.env[.properties]"
   mail:
-    host: smtp.gmail.com
-    port: 587
+    host: smtp-relay.brevo.com
+    port: 2525
     username: ${EMAIL_USERNAME}
     password: ${EMAIL_PASSWORD}
     properties:
