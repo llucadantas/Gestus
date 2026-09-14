@@ -22,44 +22,12 @@ public class AssentoService {
 
     @Transactional(readOnly = true)
     public List<AssentoResponse> getAssentos(Long idTeatro) {
-        return assentoDao.findAllByTeatroId(idTeatro)
-                .stream()
-                .map(AssentoResponse::new)
-                .toList();
+        return assentoDao.findAllByTeatroIdResponse(idTeatro);
     }
 
     public List<Assento> getAssentosModel(Long idTeatro) {
         return assentoDao.findAllByTeatroId(idTeatro);
     }
-
-
-
-//    @Transactional
-//    public void criarAssentos(Long idTeatro) throws NotFoundException {
-//        excluirTodos(idTeatro);
-//
-//        List<Coluna> colunas = colunaService.getColunas(idTeatro);
-//        if (colunas == null || colunas.isEmpty()) {
-//            throw new NotFoundException("Sem colunas cadastradas para o teatro ID: " + idTeatro);
-//        }
-//
-//        List<Assento> novosAssentos = new ArrayList<>();
-//
-//        for (Coluna coluna : colunas) {
-//            for (int i = 1; i <= coluna.getQntdAssento(); i++) {
-//                novosAssentos.add(
-//                        Assento.builder()
-//                                .nAssento(i)
-//                                .codigoPosicao(coluna.getIdentificadorColuna() + "-" + i)
-//                                .coluna(coluna)
-//                                .build()
-//                );
-//            }
-//        }
-//
-//        assentoDao.saveAll(novosAssentos);
-//    }
-
 
     @Transactional
     public List<Assento> criarAssentoColuna(Coluna c){

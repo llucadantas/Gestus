@@ -22,11 +22,7 @@ public class IngressoVendido {
     private BigDecimal valor;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_sessao", nullable = false)
-    private Sessao sessao;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_assento", nullable = false)
+    @JoinColumn(name = "id_assento", nullable = false, unique = true)
     private AssentoSessao assentoSessao;
 
     @Column(name = "email_comprador", nullable = false)

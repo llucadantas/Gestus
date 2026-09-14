@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "assento_sessao")
+@Table(name = "assento_sessao", uniqueConstraints = {@UniqueConstraint(columnNames = {"n_assento", "id_sessao"})})
 @Getter
 @Setter
 @NoArgsConstructor
@@ -18,7 +18,9 @@ public class AssentoSessao {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false)
     private Integer nAssento;
+    @Column(nullable = false)
     private String codigoPosicao;
 
     @Enumerated(EnumType.STRING)
@@ -27,8 +29,11 @@ public class AssentoSessao {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_sessao")
     private Sessao sessao;
-
+    @Column(nullable = false)
     private String fileira;
+
+    @Version
+    private Long version;
 
     public AssentoSessao(Assento a){
         this.nAssento = a.getNAssento();
@@ -37,8 +42,6 @@ public class AssentoSessao {
     }
 
     public boolean isDisponivel() {
-        if(this.estadoAssento == StatusAssento.LIVRE)
-            return true;
-        return false;
+        return this.estadoAssento == StatusAssento.LIVRE;
     }
 }

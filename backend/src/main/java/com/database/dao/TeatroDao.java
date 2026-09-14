@@ -29,7 +29,7 @@ public class TeatroDao{
 
     public TeatroResponse findByIdResponse(Long idTeatro) {
         return em.createQuery("""
-        SELECT new com.dto.response.TeatroResponse(t)
+        SELECT new com.dto.response.TeatroResponse(t.id, t.nome, t.administrador.id)
         FROM Teatro t
         WHERE t.id = :idTeatro
 """, TeatroResponse.class).setParameter("idTeatro", idTeatro).getSingleResult();

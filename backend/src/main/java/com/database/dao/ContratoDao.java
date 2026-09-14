@@ -31,7 +31,7 @@ public class ContratoDao {
    public List<ContratoAluguelResponse> findAllByTeatro_Id(Long idTeatro) {
       TypedQuery<Contrato> query = em.createQuery(""" 
             
-              SELECT c FROM Contrato c
+              SELECT DISTINCT c FROM Contrato c
                       JOIN FETCH c.peca
                       JOIN FETCH c.artista
                       LEFT JOIN FETCH c.sessoes
@@ -45,17 +45,17 @@ public class ContratoDao {
 
    public Optional<ContratoAluguelResponse> findByIdAndTeatro_IdResponse(Long idAluguel, Long idTeatro) {
       try{
-         ContratoAluguelResponse contrato = em.createQuery("""
-            SELECT new com.dto.response.ContratoAluguelResponse(c) from Contrato c
+         Contrato contrato = em.createQuery("""
+            from Contrato c
             JOIN FETCH c.peca
             JOIN FETCH c.artista
             JOIN FETCH c.sessoes
             WHERE c.teatro.id = :idTeatro and c.id = :idAluguel
-                """, ContratoAluguelResponse.class)
+                """, Contrato.class)
                  .setParameter("idTeatro", idTeatro)
                  .setParameter("idAluguel", idAluguel)
                  .getSingleResult();
-         return Optional.of(contrato);
+         return Optional.of(new ContratoAluguelResponse(contrato));
       } catch (NoResultException e) {
          return Optional.empty();
       }
@@ -98,7 +98,7 @@ public class ContratoDao {
 
    public List<Contrato> findAllStatusAtivoAndStatusEmAnalise() {
       TypedQuery<Contrato> query = em.createQuery(""" 
-            from Contrato a WHERE a.status = "ATIVO" and a.status = "EM_ANALISE"
+            from Contrato a WHERE a.status = "ATIVO" or a.status = "EM_ANALISE"
                 """, Contrato.class);
       return query.getResultList();
    }

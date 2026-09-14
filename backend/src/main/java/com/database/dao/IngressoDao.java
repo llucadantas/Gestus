@@ -21,21 +21,20 @@ public class IngressoDao {
 
     public List<IngressoVendidoResponse> findByEmail(String email){
         return em.createQuery("""
-        SELECT new com.dto.response.IngressoVendidoResponse(ingresso)
+        SELECT new com.dto.response.IngressoVendidoResponse(ingresso.id, ingresso.assentoSessao.id, ingresso.email, ingresso.assentoSessao.codigoPosicao)
         FROM IngressoVendido ingresso
-        JOIN FETCH ingresso.assentoSessao
+        JOIN ingresso.assentoSessao
         where ingresso.email = :email
 """, IngressoVendidoResponse.class).setParameter("email", email).getResultList();
     }
 
     public List<IngressoVendidoResponse> findByTeatroId(Long idTeatro){
         return em.createQuery("""
-        SELECT new com.dto.response.IngressoVendidoResponse(ingresso)
+        SELECT new com.dto.response.IngressoVendidoResponse(ingresso.id, ingresso.assentoSessao.id, ingresso.email, ingresso.assentoSessao.codigoPosicao)
         FROM IngressoVendido ingresso
-        JOIN FETCH ingresso.assentoSessao
-        where ingresso.sessao.propostaContrato.teatro.id = :idTeatro
+        JOIN ingresso.assentoSessao assento
+        where assento.sessao.propostaContrato.teatro.id = :idTeatro
 """, IngressoVendidoResponse.class).setParameter("idTeatro", idTeatro).getResultList();
     }
-
 
 }

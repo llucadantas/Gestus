@@ -24,6 +24,6 @@ public class Administrador {
     private String nome;
     private String senha;
 
-    @OneToOne(mappedBy="administrador", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy="administrador", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Teatro teatro;
 }

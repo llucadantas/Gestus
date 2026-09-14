@@ -55,7 +55,7 @@ public class Contrato {
     public void calcularValorTotal() {
         BigDecimal total = BigDecimal.ZERO;
         for (Sessao sessao : sessoes) {
-            if (sessao.getValorSessao() != null) { // Proteção extra
+            if (sessao.getValorSessao() != null) {
                 total = total.add(sessao.getValorSessao());
             }
         }
@@ -64,11 +64,11 @@ public class Contrato {
 
     public void addSessao(Sessao sessao) {
         sessoes.add(sessao);
-        sessao.setPropostaContrato(this); // Sincroniza o outro lado!
+        sessao.setPropostaContrato(this);
     }
 
     public void removeSessao(Sessao sessao) {
         sessoes.remove(sessao);
-        sessao.setPropostaContrato(null); // Desfaz a ligação no outro lado!
+        sessao.setPropostaContrato(null);
     }
 }

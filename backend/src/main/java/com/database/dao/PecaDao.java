@@ -37,6 +37,6 @@ public class PecaDao {
     }
 
     public List<PecaResponse> findAll(){
-        return em.createQuery("select new com.dto.response.PecaResponse(p) from Peca p", PecaResponse.class).getResultList();
+        return em.createQuery("select new com.dto.response.PecaResponse(p.id, p.nome, p.descricao) from Peca p", PecaResponse.class).getResultList();
     }
 }

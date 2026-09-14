@@ -9,7 +9,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "assento")
+@Table(name = "assento", uniqueConstraints = {@UniqueConstraint(columnNames = {"n_assento", "id_coluna"})})
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -26,6 +26,5 @@ public class Assento {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_coluna")
-    @JsonIgnore
     private Coluna coluna;
 }

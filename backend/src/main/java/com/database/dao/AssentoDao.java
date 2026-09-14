@@ -1,6 +1,7 @@
 package com.database.dao;
 
 import com.database.model.Assento;
+import com.dto.response.AssentoResponse;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
@@ -25,8 +26,19 @@ public class AssentoDao {
 
     public List<Assento> findAllByTeatroId(Long idTeatro){
         TypedQuery<Assento> query = em.createQuery("""
-            from Assento a where a.coluna.teatro.id = :idTeatro
+            from Assento a
+             join fetch a.coluna
+             where a.coluna.teatro.id = :idTeatro
 """, Assento.class);
+        query.setParameter("idTeatro", idTeatro);
+        return query.getResultList();
+    }
+
+    public List<AssentoResponse> findAllByTeatroIdResponse(Long idTeatro){
+        TypedQuery<AssentoResponse> query = em.createQuery("""
+            select new com.dto.response.AssentoResponse(a.codigoPosicao)
+            from Assento a where a.coluna.teatro.id = :idTeatro
+""", AssentoResponse.class);
         query.setParameter("idTeatro", idTeatro);
         return query.getResultList();
     }

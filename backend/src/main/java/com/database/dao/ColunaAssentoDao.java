@@ -38,7 +38,7 @@ public class ColunaAssentoDao {
     }
 
     public  List<Coluna> findAllByTeatro_Id(Long idTeatro) {
-        return em.createQuery(" from Coluna c where c.teatro.id = :idTeatro", Coluna.class)
+        return em.createQuery(" from Coluna c left join fetch c.assentos where c.teatro.id = :idTeatro", Coluna.class)
                 .setParameter("idTeatro", idTeatro)
                 .getResultList();
     }

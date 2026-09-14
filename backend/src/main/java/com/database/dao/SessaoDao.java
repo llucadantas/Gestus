@@ -45,18 +45,18 @@ public class SessaoDao {
 
     public Optional<SessaoResponse> findByIdAndPropostaAluguel_Teatro_Id(Long id, Long idTeatro) {
         try{
-            TypedQuery<SessaoResponse> query = em.createQuery("""
-            SELECT new com.dto.response.SessaoResponse(s)
+            TypedQuery<Sessao> query = em.createQuery("""
+       
             FROM Sessao s
             JOIN FETCH s.propostaContrato pc
             JOIN FETCH pc.peca
             JOIN FETCH s.assentosSessao
             WHERE s.id = :id
             AND s.propostaContrato.teatro.id = :idTeatro
-            """, SessaoResponse.class)
+            """, Sessao.class)
                     .setParameter("id", id)
                     .setParameter("idTeatro", idTeatro);
-            return Optional.of(query.getSingleResult());
+            return Optional.of(new SessaoResponse(query.getSingleResult()));
         }catch(NoResultException e){
             return Optional.empty();
         }
