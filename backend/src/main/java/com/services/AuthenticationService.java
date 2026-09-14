@@ -63,7 +63,7 @@ public class AuthenticationService {
     public ResponseEntity<Void> logout() {
         ResponseCookie cookieLimpo = ResponseCookie.from("jwt_gestus", "")
                 .httpOnly(true)
-                .secure(false)
+                .secure(true)
                 .path("/")
                 .maxAge(0) // 0 segundos: destrói o cookie no navegador
                 .sameSite("Lax")
@@ -93,10 +93,10 @@ public class AuthenticationService {
 
         ResponseCookie cookie = ResponseCookie.from("jwt_gestus", token)
                 .httpOnly(true)
-                .secure(false) // Defina como true quando for para produção com HTTPS
+                .secure(true) // Defina como true quando for para produção com HTTPS
                 .path("/")
                 .maxAge(24 * 60 * 60) // 1 dia
-                .sameSite("Strict") // O bloqueio contra CSRF
+                .sameSite("None") // O bloqueio contra CSRF
                 .build();
 
         return ResponseEntity.ok()

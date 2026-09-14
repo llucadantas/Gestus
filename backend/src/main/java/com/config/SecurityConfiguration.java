@@ -76,6 +76,8 @@ public class SecurityConfiguration {
         // Permite todos os cabeçalhos (como Authorization para o seu JWT)
         configuration.setAllowedHeaders(List.of("*"));
 
+        configuration.addExposedHeader("Authorization");
+
         // Necessário se for trabalhar com cookies futuramente
         configuration.setAllowCredentials(true);
 
