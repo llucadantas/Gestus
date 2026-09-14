@@ -67,8 +67,13 @@ public class SecurityConfiguration {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        // Coloque aqui a URL onde seu Next.js está rodando
-        configuration.setAllowedOrigins(List.of(allowedOrigin));
+        // Permite múltiplos domínios separados por vírgula e remove barras no final (trailing slashes)
+        List<String> origins = java.util.Arrays.stream(allowedOrigin.split(","))
+                .map(String::trim)
+                .map(url -> url.endsWith("/") ? url.substring(0, url.length() - 1) : url)
+                .toList();
+
+        configuration.setAllowedOrigins(origins);
 
         // Permite os métodos comuns e o OPTIONS (necessário para o preflight)
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
