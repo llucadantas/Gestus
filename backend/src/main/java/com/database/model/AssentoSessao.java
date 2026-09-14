@@ -32,9 +32,6 @@ public class AssentoSessao {
     @Column(nullable = false)
     private String fileira;
 
-    @Version
-    private Long version;
-
     public AssentoSessao(Assento a){
         this.nAssento = a.getNAssento();
         this.codigoPosicao = a.getCodigoPosicao();
