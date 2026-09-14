@@ -9,7 +9,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "assento", uniqueConstraints = {@UniqueConstraint(columnNames = {"n_assento", "id_coluna"})})
+@Table(name = "assento")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
