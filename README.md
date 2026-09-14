@@ -298,4 +298,5 @@ Para novos desenvolvedores entrando no Gestus:
 * Exportação de Relatórios Gerenciais PDF (Fechamento e Liquidação Diária).
 * Pagamento Integrado.
 
-![alt text](download.svg)
+
+![download.svg](Modelo Entidade-Relacionamento)
