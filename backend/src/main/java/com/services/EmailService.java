@@ -30,7 +30,7 @@ public class EmailService {
             MimeMessage mensagem = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mensagem, true, "UTF-8");
 
-            helper.setFrom(remetente); // Utilizando a variável que você já tinha declarado
+            helper.setFrom("lucasdantasps2015@gmail.com"); // Utilizando a variável que você já tinha declarado
             helper.setTo(emailArtista);
             helper.setSubject("Ação Necessária: Novo Contrato Gestus");
             Context context = new Context();

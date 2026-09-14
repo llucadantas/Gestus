@@ -12,17 +12,15 @@ public class ContratoEventListener {
 
     private final EmailService emailService;
 
-    @Value("${app.frontend.url:http://localhost:8080}")
-    private String frontendUrl;
 
     @EventListener
     public void onContratoCriado(ContratoCriadoEvent event) {
-        String linkAssinatura = frontendUrl + "/v1/aluguel/assinar?token=" + event.tokenAssinatura();
+        String link = "https://gestus-backend.onrender.com/v1/aluguel/assinar?token=" + event.tokenAssinatura();
         emailService.enviarEmailAssinaturaHTML(
                 event.emailArtista(), 
                 event.nomeArtista(), 
                 event.nomePeca(), 
-                linkAssinatura
+                link
         );
     }
 }
