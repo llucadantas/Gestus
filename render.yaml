@@ -12,11 +12,13 @@ services:
     env: docker
     rootDir: backend
     plan: free
+    healthCheckPath: /health # Certifique-se de liberar /health no Spring Security (.permitAll())
     envVars:
+      - key: PORT
+        value: "8080"
       - key: SERVER_PORT
         value: "8080"
       - key: DB_HOST
-        value: "8080"
         fromDatabase:
           name: gestus-db
           property: host
@@ -39,9 +41,9 @@ services:
       - key: SPRING_JPA_HIBERNATE_DDL_AUTO
         value: update
       - key: CORS_ALLOWED_ORIGIN
-        sync: false # Configurado manualmente para evitar dependência circular com o frontend
+        sync: false
       - key: JWT_KEY
-        sync: false # Preencher no Dashboard (Dashboard > Environment)
+        sync: false
       - key: EMAIL_USERNAME
         sync: false
       - key: EMAIL_PASSWORD
