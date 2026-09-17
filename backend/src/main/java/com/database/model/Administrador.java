@@ -19,11 +19,13 @@ public class Administrador {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
+    @Column(nullable = false)
     private String nome;
+    @Column(nullable = false)
     private String senha;
 
-    @OneToOne(mappedBy="administrador", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToOne(mappedBy="administrador", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Teatro teatro;
 }

@@ -22,7 +22,6 @@ public class Teatro {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "admin_id", referencedColumnName = "id")
     private Administrador administrador;
-
     @OneToMany(mappedBy = "teatro", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RegraPreco> regras = new ArrayList<>();
 }

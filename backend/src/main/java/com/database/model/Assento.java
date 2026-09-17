@@ -1,10 +1,6 @@
 package com.database.model;
 
-import com.database.model.state.assento.EstadoAssento;
-import com.database.model.state.assento.EstadoInativo;
-import com.database.model.state.assento.EstadoLivre;
-import com.database.model.state.assento.EstadoOcupado;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,10 +16,10 @@ public class Assento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @Column(nullable = false)
     private Integer nAssento;
+    @Column(nullable = false)
     private String codigoPosicao;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_coluna")
     private Coluna coluna;

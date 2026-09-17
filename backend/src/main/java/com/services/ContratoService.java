@@ -5,23 +5,18 @@ import org.springframework.context.ApplicationEventPublisher;
 import com.database.model.*;
 import com.database.dao.*;
 import com.database.model.enums.StatusContrato;
-import com.database.model.factory.EstadoContratoFactory;
+import com.factory.EstadoContratoFactory;
 import com.database.model.state.contrato.EstadoContrato;
 import com.dto.requests.ContratoAluguelRequest;
 import com.dto.response.ContratoAluguelResponse;
 import com.exception.NotFoundException;
-import com.exception.ValidacaoException;
 import com.services.strategy.sessao.ValidadorContrato;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-
-import static org.yaml.snakeyaml.nodes.Tag.STR;
 
 @Service
 @RequiredArgsConstructor

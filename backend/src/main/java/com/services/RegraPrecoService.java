@@ -17,8 +17,6 @@ import java.time.LocalDate;
 
 import java.util.List;
 
-
-
 @Service
 @RequiredArgsConstructor
 public class RegraPrecoService {

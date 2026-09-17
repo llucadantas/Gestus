@@ -1,4 +1,4 @@
-package com.database.model.factory;
+package com.factory;
 
 import com.database.model.enums.StatusContrato;
 import com.database.model.state.contrato.EstadoAtivo;
@@ -9,17 +9,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 
-@Component // Transforma a Factory em um Bean gerenciado pelo Spring
-@RequiredArgsConstructor // Injeta o service automaticamente
+@Component
+@RequiredArgsConstructor
 public class EstadoContratoFactory {
-
-    // O Spring vai injetar o Service real (com repositórios, transações, etc.)
     private final AssentoService assentoService;
 
     // O método deixa de ser estático
     public EstadoContrato obterEstado(StatusContrato status) {
         return switch (status) {
-            case EM_ANALISE -> new EstadoEmAnalise(assentoService); // Passa o service real!
+            case EM_ANALISE -> new EstadoEmAnalise(assentoService);
             case ATIVO -> new EstadoAtivo();
             case CANCELADO, FINALIZADO -> throw new IllegalStateException("Contrato em estado final não permite alterações.");
         };
